@@ -34,6 +34,7 @@ const ModificarPermisos = () => {
 
   return (
     <div className="modificar-permisos-container">
+    <div className="modificar-permisos-card">
       <h2>Modificar Permisos de un Rol</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -57,6 +58,7 @@ const ModificarPermisos = () => {
         <button type="submit">Modificar Permisos</button>
       </form>
       {message && <p>{message}</p>}
+    </div>
     </div>
   );
 };

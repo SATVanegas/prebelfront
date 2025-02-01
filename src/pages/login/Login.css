@@ -6,6 +6,8 @@
   height: 100vh;
   background: linear-gradient(to bottom, #3a8dde, #ffffff);
   font-family: Arial, sans-serif;
+  max-width: 600px;
+  width: 100%;
 }
 
 .login-box {

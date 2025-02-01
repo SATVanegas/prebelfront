@@ -34,6 +34,7 @@ const CrearRol = () => {
 
   return (
     <div className="crear-rol-container">
+      <div className="crear-rol-card">
       <h2>Crear Rol</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -57,6 +58,7 @@ const CrearRol = () => {
         <button type="submit">Crear Rol</button>
       </form>
       {message && <p>{message}</p>}
+    </div>
     </div>
   );
 };

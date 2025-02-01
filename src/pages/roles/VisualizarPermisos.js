@@ -33,6 +33,7 @@ const VisualizarPermisos = () => {
 
   return (
     <div className="visualizar-permisos-container">
+    <div className="visualizar-permisos-card">
       <h2>Visualizar Permisos por Usuario</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -57,6 +58,7 @@ const VisualizarPermisos = () => {
           </ul>
         </div>
       )}
+    </div>
     </div>
   );
 };

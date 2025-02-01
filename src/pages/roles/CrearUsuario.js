@@ -35,6 +35,7 @@ const CrearUsuario = () => {
 
   return (
     <div className="crear-usuario-container">
+      <div className="crear-usuario-card">
       <h2>Crear Usuario</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -67,6 +68,7 @@ const CrearUsuario = () => {
         <button type="submit">Crear Usuario</button>
       </form>
       {message && <p>{message}</p>}
+    </div>
     </div>
   );
 };
