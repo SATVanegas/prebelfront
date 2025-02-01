@@ -1,9 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext"; // Importa el contexto
+import "./Login.css";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(""); // Para manejar respuestas del backend
+  const [message, setMessage] = useState(""); 
+  const navigate = useNavigate();
+  const { login } = useAuth(); // Obtiene la función login del contexto
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -11,15 +16,13 @@ const LoginForm = () => {
     try {
       const response = await fetch(`http://localhost:8080/api/login/${email}/${password}`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Usuario autenticado:", data);
-        setMessage(`Bienvenido, ${data.name} tu rol es: ${data.roleEnum}`);
+        login(data); 
+        navigate("/"); 
       } else {
         const errorText = await response.text();
         setMessage(`Error: ${errorText}`);
