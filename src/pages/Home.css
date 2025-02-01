@@ -1,10 +1,8 @@
-/* Estilos generales */
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
 }
 
-/* Fondo degradado en tonos azul claro */
 .home-container {
   display: flex;
   justify-content: center;
@@ -14,7 +12,6 @@ body {
   color: #333;
 }
 
-/* Tarjeta con sombra, bordes redondeados y efecto de vidrio esmerilado */
 .home-card {
   background: rgba(255, 255, 255, 0.8);
   padding: 30px;
@@ -26,7 +23,6 @@ body {
   backdrop-filter: blur(10px);
 }
 
-/* Títulos y texto */
 h2 {
   margin-bottom: 10px;
   font-size: 24px;
@@ -38,7 +34,6 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* Botones */
 .button-container {
   display: flex;
   flex-direction: column;
@@ -64,7 +59,6 @@ h2 {
   box-shadow: 0px 4px 10px rgba(91, 159, 212, 0.4);
 }
 
-/* Botón de cerrar sesión */
 .logout-btn {
   padding: 12px;
   font-size: 16px;
@@ -84,7 +78,6 @@ h2 {
   box-shadow: 0px 4px 10px rgba(217, 83, 79, 0.4);
 }
 
-/* Mensaje de error */
 .error-message {
   text-align: center;
   color: #333;

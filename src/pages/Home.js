@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "./login/AuthContext"; // Importa el contexto
-import './Home.css'; // Importa los estilos mejorados
+import { useAuth } from "./login/AuthContext"; 
+import './Home.css'; 
 
 const Home = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth(); // Obtiene el usuario y la función logout
+  const { user, logout } = useAuth(); 
 
   if (!user) {
     return <p className="error-message">No tienes acceso. Por favor, inicia sesión.</p>;

@@ -56,6 +56,5 @@
 .prebel-logo {
   width: 250px;
   margin-bottom: 20px;
-  opacity: 10;  /* Ajusta la opacidad para fusionarse con el fondo */
- /* Esto ayuda a que se vea más integrado */
+  opacity: 10; 
 }

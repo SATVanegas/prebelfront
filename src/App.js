@@ -16,7 +16,7 @@ const ProtectedRoute = ({ element }) => {
 };
 
 const Navigation = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <nav>
@@ -24,8 +24,7 @@ const Navigation = () => {
         <Link to="" className="App-link"></Link>
       ) : (
         <>
-          <Link to="/" className="App-link">Home</Link>
-          <button onClick={logout} className="App-link">Cerrar Sesión</button>
+          <Link to="/" className="home-btn">Home</Link>
         </>
       )}
     </nav>

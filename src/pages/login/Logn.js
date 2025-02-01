@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext"; // Importa el contexto
+import { useAuth } from "./AuthContext"; 
 import "./Login.css";
 import logo from './/logo.png';
 
@@ -9,7 +9,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(""); 
   const navigate = useNavigate();
-  const { login } = useAuth(); // Obtiene la función login del contexto
+  const { login } = useAuth(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
