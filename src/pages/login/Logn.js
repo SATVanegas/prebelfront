@@ -19,7 +19,7 @@ const LoginForm = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("Usuario autenticado:", data);
-        setMessage(`Bienvenido, ${data.name} tu rol es: ${data.role.roleEnum}`);
+        setMessage(`Bienvenido, ${data.name} tu rol es: ${data.roleEnum}`);
       } else {
         const errorText = await response.text();
         setMessage(`Error: ${errorText}`);
