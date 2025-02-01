@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import logo from './logo.svg';
 import './App.css';
 import { AuthProvider, useAuth } from './pages/login/AuthContext';
 import Login from './pages/login/Logn';
@@ -22,7 +21,7 @@ const Navigation = () => {
   return (
     <nav>
       {!user ? (
-        <Link to="/login" className="App-link">Login</Link>
+        <Link to="" className="App-link"></Link>
       ) : (
         <>
           <Link to="/" className="App-link">Home</Link>
@@ -39,7 +38,6 @@ function App() {
       <Router>
         <div className="App">
           <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
             <Navigation />
             <Routes>
               <Route path="/login" element={<Login />} />
