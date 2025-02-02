@@ -5,12 +5,13 @@ const CrearUsuario = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [roleId, setRoleId] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const user = { name, email, password };
+    const user = { name, email, password, roleId };
 
     try {
       const response = await fetch('http://localhost:8080/api/register', {
@@ -62,6 +63,15 @@ const CrearUsuario = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Rol:</label>
+          <input
+            type="roleId"
+            value={roleId}
+            onChange={(e) => setRoleId(e.target.value)}
             required
           />
         </div>
