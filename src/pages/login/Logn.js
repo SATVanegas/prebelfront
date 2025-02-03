@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext"; // Importa el contexto
+import { useAuth } from "./AuthContext"; 
 import "./Login.css";
+import logo from './/logo.png';
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(""); 
   const navigate = useNavigate();
-  const { login } = useAuth(); // Obtiene la función login del contexto
+  const { login } = useAuth(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,10 +23,10 @@ const LoginForm = () => {
       if (response.ok) {
         const data = await response.json();
         if (data) {
-          login(data); // Establece el usuario en el contexto
-          navigate("/"); // Redirige al Home después de login
+          login(data); 
+          navigate("/"); 
         } else {
-          setMessage("Datos inválidos o vacíos."); // Mensaje si no se recibe un dato válido
+          setMessage("Datos inválidos o vacíos."); 
         }
       } else {
         setMessage(`Error: Usuario no encontrado`);
@@ -38,8 +39,11 @@ const LoginForm = () => {
 
   return (
     <div className="login-container">
+      <img src={logo} alt="Prebel Logo" className="prebel-logo"style={{ width: '250px', marginBottom: '20px' }} />
+      <div className="login-box">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
+      <div className="form-group">
         <input
           type="email"
           placeholder="Email"
@@ -47,6 +51,8 @@ const LoginForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+        </div>
+        <div className="form-group">
         <input
           type="password"
           placeholder="Contraseña"
@@ -54,9 +60,11 @@ const LoginForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        </div>
         <button type="submit">Iniciar Sesión</button>
+        {message && <p className="message">{message}</p>}
       </form>
-      {message && <p>{message}</p>}
+    </div>
     </div>
   );
 };
