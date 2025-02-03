@@ -22,7 +22,9 @@ const LoginForm = () => {
 
       if (response.ok) {
         const data = await response.json();
-        login(data); 
+        const permissionsResponse = await fetch(`http://localhost:8080/api/roles/user/${data.id}`);
+        const permissionsData = await permissionsResponse.json();
+        login(data, permissionsData); 
         navigate("/"); 
       } else {
         const errorText = await response.text();

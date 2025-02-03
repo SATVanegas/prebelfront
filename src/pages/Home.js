@@ -11,16 +11,35 @@ const Home = () => {
     return <p className="error-message">No tienes acceso. Por favor, inicia sesión.</p>;
   }
 
+  // Definir permisos para cada módulo
+  const permisos = {
+    roles: ["ADMIN"],
+    programacion: ["ADMIN", "LABORATORY_TECHNICIAN", "STABILITY_TECHNICIAN", "PACKAGING_TECHNICIAN", "COORDINATOR"],
+    matriz: ["ADMIN", "STABILITY_TECHNICIAN", "COORDINATOR"],
+    reportes: ["ADMIN", "STABILITY_TECHNICIAN", "COORDINATOR"]
+  };
+
+  // Verifica si el usuario tiene permiso para un módulo
+  const tieneAcceso = (modulo) => permisos[modulo]?.includes(user.roleEnum);
+
   return (
     <div className="home-container">
       <div className="home-card">
         <h2>Bienvenido, {user.name}</h2>
         <p className="role-text">Tu rol es: <strong>{user.roleEnum}</strong></p>
         <div className="button-container">
-          <button className="primary-btn" onClick={() => navigate('/roles')}>Control de Roles</button>
-          <button className="primary-btn" onClick={() => navigate('/programacion')}>Programación Semanal</button>
-          <button className="primary-btn" onClick={() => navigate('/matriz')}>Matriz de Estabilidades</button>
-          <button className="primary-btn" onClick={() => navigate('/reportes')}>Reportes</button>
+          {tieneAcceso("roles") && (
+            <button className="primary-btn" onClick={() => navigate('/roles')}>Control de Roles</button>
+          )}
+          {tieneAcceso("programacion") && (
+            <button className="primary-btn" onClick={() => navigate('/programacion')}>Programación Semanal</button>
+          )}
+          {tieneAcceso("matriz") && (
+            <button className="primary-btn" onClick={() => navigate('/matriz')}>Matriz de Estabilidades</button>
+          )}
+          {tieneAcceso("reportes") && (
+            <button className="primary-btn" onClick={() => navigate('/reportes')}>Reportes</button>
+          )}
           <button className="logout-btn" onClick={() => { logout(); navigate('/login'); }}>
             Cerrar Sesión
           </button>
