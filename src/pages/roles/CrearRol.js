@@ -6,6 +6,7 @@ const CrearRol = () => {
   const [modules, setModules] = useState([]); // Lista de módulos obtenidos del backend
   const [selectedModules, setSelectedModules] = useState([]); // Módulos seleccionados con permisos
   const [selectedModule, setSelectedModule] = useState(''); // Módulo seleccionado en el desplegable
+  const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
 
   // Obtener la lista de módulos desde el backend
@@ -61,6 +62,7 @@ const CrearRol = () => {
 
     const roleRequest = {
       roleName,
+      description,
       modules: selectedModules
     };
 
@@ -74,6 +76,9 @@ const CrearRol = () => {
       if (response.ok) {
         setMessage('Rol creado exitosamente');
         setRoleName('');
+        if (description) {
+          setDescription('');
+        }
         setSelectedModules([]);
       } else {
         const errorText = await response.text();
@@ -94,7 +99,10 @@ const CrearRol = () => {
             <label>Rol:</label>
             <input type="text" value={roleName} onChange={(e) => setRoleName(e.target.value)} required />
           </div>
-
+          <div className="form-group">
+          <label>Descripción:</label>
+            <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
+          </div>
           <div className="form-group">
             <label>Módulos disponibles:</label>
             <select value={selectedModule} onChange={(e) => setSelectedModule(e.target.value)}>
@@ -107,7 +115,6 @@ const CrearRol = () => {
             </select>
             <button type="button" onClick={addModule}>Añadir Módulo</button>
           </div>
-
           {/* Lista de módulos seleccionados con permisos */}
           {selectedModules.length > 0 && (
             <div className="form-group">
@@ -129,7 +136,6 @@ const CrearRol = () => {
               ))}
             </div>
           )}
-
           <button type="submit">Crear Rol</button>
         </form>
         {message && <p>{message}</p>}
