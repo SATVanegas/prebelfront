@@ -6,7 +6,7 @@ const CrearUsuario = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [number, setNumber] = useState('');
-  const [roleEnum, setRoleEnum] = useState('');
+  const [roleName, setRoleName] = useState('');
   const [roles, setRoles] = useState([]); // Estado para almacenar los roles
   const [message, setMessage] = useState('');
 
@@ -51,7 +51,7 @@ const CrearUsuario = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const user = { name, email, password, number, roleEnum };
+    const user = { name, email, password, number, roleName };
 
     try {
       const response = await fetch('http://localhost:8080/api/register', {
@@ -106,7 +106,7 @@ const CrearUsuario = () => {
               value={number}
               onChange={(e) => setNumber(e.target.value)}
               placeholder="Ingrese su número de celular"
-              pattern="[0-9]{10}" // Asegura que el número sea solo dígitos (puedes ajustar el patrón si es necesario)
+              pattern="[0-9]+"
             />
           </div>
           <div className="form-group">
@@ -121,8 +121,8 @@ const CrearUsuario = () => {
           </div>
           <div className="form-group">
             <label>Rol:</label>
-            <select value={roleEnum} 
-            onChange={(e) => setRoleEnum(e.target.value)} 
+            <select value={roleName} 
+            onChange={(e) => setRoleName(e.target.value)} 
             required>
               <option value="">Seleccione un rol</option>
               {roles.map((role, index) => (

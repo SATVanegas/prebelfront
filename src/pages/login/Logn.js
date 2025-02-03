@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext"; 
+import { useAuth } from "./AuthContext"; // Importa el contexto
 import "./Login.css";
-import logo from './/logo.png';
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(""); 
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth(); // Obtiene la función login del contexto
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,13 +21,14 @@ const LoginForm = () => {
 
       if (response.ok) {
         const data = await response.json();
-        const permissionsResponse = await fetch(`http://localhost:8080/api/roles/user/${data.id}`);
-        const permissionsData = await permissionsResponse.json();
-        login(data, permissionsData); 
-        navigate("/"); 
+        if (data) {
+          login(data); // Establece el usuario en el contexto
+          navigate("/"); // Redirige al Home después de login
+        } else {
+          setMessage("Datos inválidos o vacíos."); // Mensaje si no se recibe un dato válido
+        }
       } else {
-        const errorText = await response.text();
-        setMessage(`Error: ${errorText}`);
+        setMessage(`Error: Usuario no encontrado`);
       }
     } catch (error) {
       console.error("Error en la autenticación:", error);
@@ -38,32 +38,25 @@ const LoginForm = () => {
 
   return (
     <div className="login-container">
-      <img src={logo} alt="Prebel Logo" className="prebel-logo"style={{ width: '250px', marginBottom: '20px' }} />
-      <div className="login-box">
-        <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit">Iniciar Sesión</button>
-          {message && <p className="message">{message}</p>}
-        </form>
-      </div>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Iniciar Sesión</button>
+      </form>
+      {message && <p>{message}</p>}
     </div>
   );
 };

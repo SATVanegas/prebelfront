@@ -20,13 +20,13 @@ const Home = () => {
   };
 
   // Verifica si el usuario tiene permiso para un módulo
-  const tieneAcceso = (modulo) => permisos[modulo]?.includes(user.roleEnum);
+  const tieneAcceso = (modulo) => permisos[modulo]?.includes(user.roleName);
 
   return (
     <div className="home-container">
       <div className="home-card">
         <h2>Bienvenido, {user.name}</h2>
-        <p className="role-text">Tu rol es: <strong>{user.roleEnum}</strong></p>
+        <p className="role-text">Tu rol es: <strong>{user.roleName}</strong></p>
         <div className="button-container">
           {tieneAcceso("roles") && (
             <button className="primary-btn" onClick={() => navigate('/roles')}>Control de Roles</button>
