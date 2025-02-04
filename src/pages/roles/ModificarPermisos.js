@@ -9,7 +9,8 @@ const ModificarPermisos = () => {
   const [selectedModule, setSelectedModule] = useState('');
   const [selectedPermissions, setSelectedPermissions] = useState([]);
   const [message, setMessage] = useState('');
-  const [modulesToRemove, setModulesToRemove] = useState([]); // Agregado para los módulos a eliminar
+  const [modulesToRemove, setModulesToRemove] = useState([]);
+  const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -69,32 +70,26 @@ const ModificarPermisos = () => {
     fetchRoleDetails();
   }, [selectedRoleName]);
 
-  const handleAddModule = () => {
-    if (!selectedModule || selectedPermissions.length === 0) {
-      alert("Selecciona un módulo y al menos un permiso");
+  const handleModifyPermissions = () => {
+    if (!selectedModule) {
+      alert("Selecciona un módulo primero");
       return;
     }
-
-    const newModule = {
-      moduleName: selectedModule,
-      permissions: selectedPermissions,
-    };
-
-    setCurrentModules(prev => {
-      const exists = prev.some(m => m.moduleName === selectedModule);
-      if (exists) {
-        return prev.map(m => m.moduleName === selectedModule ? newModule : m);
-      }
-      return [...prev, newModule];
-    });
-
-    setSelectedModule('');
-    setSelectedPermissions([]);
+    const existingModule = currentModules.find(m => m.moduleName === selectedModule);
+    setSelectedPermissions(existingModule ? existingModule.permissions : []);
+    setShowPermissionsDialog(true);
   };
 
-  const handleRemoveModule = (moduleName) => {
-    setModulesToRemove(prev => [...prev, moduleName]); // Agregar módulo a eliminar
-    setCurrentModules(prev => prev.filter(m => m.moduleName !== moduleName));
+  const handleDeleteModule = () => {
+    if (!selectedModule) {
+      alert("Selecciona un módulo primero");
+      return;
+    }
+    const confirmDelete = window.confirm(`¿Estás seguro de eliminar el módulo ${selectedModule} del rol ${selectedRoleName}?`);
+    if (confirmDelete) {
+      setCurrentModules(prev => prev.filter(m => m.moduleName !== selectedModule));
+      setModulesToRemove(prev => [...prev, selectedModule]);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -108,7 +103,7 @@ const ModificarPermisos = () => {
     const updateData = {
       roleName: selectedRoleName,
       modules: currentModules,
-      modulesToRemove: modulesToRemove, // Agregar los módulos a eliminar
+      modulesToRemove: modulesToRemove,
     };
 
     try {
@@ -137,7 +132,11 @@ const ModificarPermisos = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Rol:</label>
-            <select value={selectedRoleName} onChange={(e) => setSelectedRoleName(e.target.value)} required>
+            <select
+              value={selectedRoleName}
+              onChange={(e) => setSelectedRoleName(e.target.value)}
+              required
+            >
               <option value="">Seleccione un rol</option>
               {roles.map((role, index) => (
                 <option key={index} value={role}>
@@ -148,40 +147,94 @@ const ModificarPermisos = () => {
           </div>
 
           <div className="form-group">
-            <label>Módulos disponibles:</label>
-            <select value={selectedModule} onChange={(e) => setSelectedModule(e.target.value)}>
-              <option value="">Seleccione un módulo</option>
-              {modules.map((module, index) => (
-                <option key={index} value={module}>
-                  {module}
-                </option>
-              ))}
-            </select>
+            <label>Módulos:</label>
+            <div className="module-actions">
+              <select
+                value={selectedModule}
+                onChange={(e) => setSelectedModule(e.target.value)}
+              >
+                <option value="">Seleccione un módulo</option>
+                {modules.map((module, index) => (
+                  <option key={index} value={module}>
+                    {module}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={handleModifyPermissions}
+                className="modify-button"
+              >
+                Modificar Permisos
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteModule}
+                className="delete-button"
+              >
+                Eliminar Módulo
+              </button>
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>Permisos:</label>
-            {['CREATE', 'READ', 'UPDATE', 'DELETE'].map(perm => (
-              <label key={perm} className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={selectedPermissions.includes(perm)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedPermissions([...selectedPermissions, perm]);
-                    } else {
-                      setSelectedPermissions(selectedPermissions.filter(p => p !== perm));
-                    }
+          {showPermissionsDialog && (
+            <div className="permissions-dialog">
+              <h3>Permisos para {selectedModule}</h3>
+              <div className="permissions-list">
+                {['CREATE', 'READ', 'UPDATE', 'DELETE'].map((perm) => (
+                  <label key={perm} className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={selectedPermissions.includes(perm)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedPermissions([...selectedPermissions, perm]);
+                        } else {
+                          setSelectedPermissions(
+                            selectedPermissions.filter((p) => p !== perm)
+                          );
+                        }
+                      }}
+                    />
+                    {perm}
+                  </label>
+                ))}
+              </div>
+              <div className="dialog-buttons">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newModule = {
+                      moduleName: selectedModule,
+                      permissions: selectedPermissions,
+                    };
+                    setCurrentModules((prev) => {
+                      const exists = prev.some(
+                        (m) => m.moduleName === selectedModule
+                      );
+                      if (exists) {
+                        return prev.map((m) =>
+                          m.moduleName === selectedModule ? newModule : m
+                        );
+                      }
+                      return [...prev, newModule];
+                    });
+                    setShowPermissionsDialog(false);
                   }}
-                />
-                {perm}
-              </label>
-            ))}
-          </div>
-
-          <button type="button" onClick={handleAddModule} className="add-button">
-            Añadir Módulo
-          </button>
+                  className="save-button"
+                >
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowPermissionsDialog(false)}
+                  className="cancel-button"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="current-modules">
             <h3>Módulos asignados:</h3>
@@ -189,12 +242,9 @@ const ModificarPermisos = () => {
               <div key={index} className="module-item">
                 <div className="module-header">
                   <span className="module-name">{mod.moduleName}</span>
-                  <button type="button" onClick={() => handleRemoveModule(mod.moduleName)} className="remove-button">
-                    ✕
-                  </button>
-                </div>
-                <div className="module-permissions">
-                  {mod.permissions.join(', ')}
+                  <div className="module-permissions">
+                    {mod.permissions.join(', ')}
+                  </div>
                 </div>
               </div>
             ))}
