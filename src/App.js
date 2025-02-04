@@ -9,6 +9,9 @@ import CrearUsuario from './pages/roles/CrearUsuario';
 import CrearRol from './pages/roles/CrearRol';
 import ModificarPermisos from './pages/roles/ModificarPermisos';
 import VisualizarPermisos from './pages/roles/VisualizarPermisos';
+import Matriz from './pages/matriz/matriz';
+import Reportes from './pages/reportes/reportes';
+import Programacion from './pages/programacion/programacion';
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
@@ -52,6 +55,9 @@ function App() {
               <Route path="/crear-rol" element={<ProtectedRoute element={<CrearRol />} />} />
               <Route path="/modificar-permisos" element={<ProtectedRoute element={<ModificarPermisos />} />} />
               <Route path="/visualizar-permisos" element={<ProtectedRoute element={<VisualizarPermisos />} />} />
+              <Route path="/matriz" element={<ProtectedRoute element={<Matriz />} />} />
+              <Route path="/reportes" element={<ProtectedRoute element={<Reportes />} />} />
+              <Route path="/programacion" element={<ProtectedRoute element={<Programacion />} />} />
             </Routes>
           </header>
         </div>
