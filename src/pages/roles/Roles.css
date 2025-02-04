@@ -20,8 +20,10 @@
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  align-items: center; 
   position: absolute;
   top: 20px;
+  gap: 20px; 
 }
 
 .roles-card {
@@ -52,8 +54,13 @@
   gap: 0.5rem;
   box-sizing: border-box;
   height: 50px; 
-  min-width: 120px; 
+  width: 100%; 
+  flex: 1;
+  line-height: 1;
 }
+
+.back-btn { white-space: nowrap; }
+.home-btn { white-space: nowrap; }
 
 .back-btn:hover, .home-btn:hover {
   background: #f0f0f0; 
