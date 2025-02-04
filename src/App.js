@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import { AuthProvider, useAuth } from './pages/login/AuthContext';
 import Login from './pages/login/Logn';
@@ -17,14 +17,18 @@ const ProtectedRoute = ({ element }) => {
 
 const Navigation = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <nav>
-      {!user ? (
-        <Link to="" className="App-link"></Link>
-      ) : (
+    <nav className="navigation">
+      {user && (
         <>
-          <Link to="/" className="home-btn">Home</Link>
+          <button onClick={() => navigate(-1)} className="back-button">
+            ⬅ <span>Atrás</span>
+          </button>
+          <Link to="/" className="home-btn">
+            🏠 <span>Home</span>
+          </Link>
         </>
       )}
     </nav>
