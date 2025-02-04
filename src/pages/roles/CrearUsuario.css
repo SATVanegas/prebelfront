@@ -28,7 +28,7 @@
 
 .form-group {
   margin-bottom: 15px;
-  text-align: left; /* Alinea las etiquetas y campos a la izquierda */
+  text-align: left; 
 }
 
 label {
@@ -44,8 +44,8 @@ select {
   border-radius: 5px;
   font-size: 14px;
   padding: 10px;
-  width: 100%; /* Todos los campos de texto y select tendrán el mismo ancho */
-  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  width: 100%; 
+  box-sizing: border-box; 
 }
 
 button {

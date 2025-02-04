@@ -77,6 +77,33 @@ const VisualizarPermisos = () => {
               onChange={setSelectedUser}
               placeholder="Escribe para buscar..."
               isSearchable
+              styles={{
+                control: (base, state) => ({
+                  ...base,
+                  border: state.isFocused ? "2px solid #3498db" : "2px solid #bdc3c7",
+                  boxShadow: state.isFocused ? "0 0 8px rgba(52, 152, 219, 0.3)" : "none",
+                  "&:hover": {
+                    border: "2px solid #3498db",
+                  },
+                  borderRadius: "6px",
+                  padding: "5px",
+                  fontSize: "14px",
+                }),
+                menu: (base) => ({
+                  ...base,
+                  borderRadius: "6px",
+                  backgroundColor: "white",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  fontSize: "14px",
+                }),
+                option: (base, { isFocused, isSelected }) => ({
+                  ...base,
+                  backgroundColor: isSelected ? "#3498db" : isFocused ? "#ecf0f1" : "white",
+                  color: isSelected ? "white" : "#2c3e50",
+                  padding: "10px",
+                  cursor: "pointer",
+                }),
+              }}
             />
           </div>
           <button type="submit">Obtener Permisos</button>
