@@ -1,62 +1,158 @@
+/* Login.css */
+:root {
+  --primary-blue: #1A3D6A;
+  --secondary-blue: #3a8dde;
+  --accent: #FF6B6B;
+  --background-gradient: linear-gradient(135deg, #1A3D6A 0%, #3a8dde 100%);
+  --input-focus: rgba(26, 61, 106, 0.2);
+}
+
 .login-container {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: linear-gradient(to bottom, #3a8dde, #ffffff);
-  font-family: Arial, sans-serif;
-  max-width: 600px;
-  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  background: var(--background-gradient);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 .login-box {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 350px;
-  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 3rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 450px;
+  transition: box-shadow 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.login-box:hover {
+  transform: none;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
 }
 
 .login-box h2 {
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 24px;
+  margin-bottom: 2rem;
+  color: var(--primary-blue);
+  font-size: 2.4rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
 }
 
 .login-box input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
+  padding: 1.2rem;
+  border: 2px solid rgba(26, 61, 106, 0.1);
+  border-radius: 0.8rem;
+  font-size: 1.6rem;
+  transition: all 0.3s ease;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px var(--input-focus);
 }
 
 .login-box button {
   width: 100%;
-  padding: 12px;
-  background-color: #007bff;
+  padding: 1.4rem;
+  background: var(--background-gradient);
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 0.8rem;
+  font-size: 1.6rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .login-box button:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+  transform: scale(1.02);
+}
+
+.login-box button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+  transition: all 0.5s ease;
+}
+
+.login-box button:hover::after {
+  left: 120%;
 }
 
 .message {
-  margin-top: 15px;
-  color: red;
-  font-size: 14px;
+  margin-top: 1.5rem;
+  color: var(--accent);
+  font-size: 1.4rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.message::before {
+  content: '⚠️';
+  font-size: 1.2em;
 }
 
 .prebel-logo {
-  width: 250px;
-  margin-bottom: 20px;
-  opacity: 10; 
+  width: 40%;
+  margin-bottom: 2rem;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@media (max-width: 480px) {
+  .login-box {
+    padding: 2rem;
+    border-radius: 1rem;
+  }
+  
+  .login-box h2 {
+    font-size: 2rem;
+  }
+  
+  .login-box input {
+    font-size: 1.4rem;
+    padding: 1rem;
+  }
+  
+  .login-box button {
+    font-size: 1.4rem;
+    padding: 1.2rem;
+  }
 }

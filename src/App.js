@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import { AuthProvider, useAuth } from './pages/login/AuthContext';
-import Login from './pages/login/Logn';
+import Login from './pages/login/Login';
 import Home from './pages/Home';
 import Roles from './pages/roles/Roles';
 import CrearUsuario from './pages/roles/CrearUsuario';
@@ -18,10 +18,12 @@ const ProtectedRoute = ({ element }) => {
 const Navigation = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = window.location.pathname;
+  const ocultarBotones = location === "/login" || location === "/";
 
   return (
     <nav className="navigation">
-      {user && (
+      {user && !ocultarBotones && (
         <>
           <button onClick={() => navigate(-1)} className="back-button">
             ⬅ <span>Atrás</span>
