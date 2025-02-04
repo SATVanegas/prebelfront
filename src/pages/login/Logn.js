@@ -29,7 +29,14 @@ const LoginForm = () => {
           setMessage("Datos inválidos o vacíos."); 
         }
       } else {
-        setMessage(`Error: Usuario no encontrado`);
+        const errorData = await response.json();
+        if (response.status === 401) {
+          setMessage("Contraseña incorrecta.");
+        } else if (response.status === 404) {
+          setMessage("Usuario no encontrado.");
+        } else {
+          setMessage(`Error: ${errorData.message || "Error desconocido"}`);
+        }
       }
     } catch (error) {
       console.error("Error en la autenticación:", error);
@@ -39,32 +46,32 @@ const LoginForm = () => {
 
   return (
     <div className="login-container">
-      <img src={logo} alt="Prebel Logo" className="prebel-logo"style={{ width: '250px', marginBottom: '20px' }} />
+      <img src={logo} alt="Prebel Logo" className="prebel-logo" style={{ width: '250px', marginBottom: '20px' }} />
       <div className="login-box">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        </div>
-        <div className="form-group">
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        </div>
-        <button type="submit">Iniciar Sesión</button>
-        {message && <p className="message">{message}</p>}
-      </form>
-    </div>
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit">Iniciar Sesión</button>
+          {message && <p className="message">{message}</p>}
+        </form>
+      </div>
     </div>
   );
 };
