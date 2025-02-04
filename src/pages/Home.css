@@ -5,7 +5,7 @@
   height: 100vh;
   width: 100vw;
   padding: 20px;
-  background: linear-gradient(135deg, #1A3D6A 0%, #3a8dde 100%);
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   overflow: hidden;
   box-sizing: border-box;
@@ -32,7 +32,7 @@
 }
 
 .home-card h2 {
-  color: #1A3D6A;
+  color: #153354;
   font-size: 2.4rem;
   margin-bottom: 1rem;
   text-align: center;
@@ -47,7 +47,7 @@
 }
 
 .role-text strong {
-  color: #1A3D6A;
+  color: #153354;
   font-weight: 700;
 }
 
@@ -56,11 +56,10 @@
   gap: 1.5rem;
   max-height: 60vh;
   overflow-y: auto;
-  padding: 1rem 0.5rem; /* Padding lateral reducido */
+  padding: 1rem 0.5rem; 
   margin: 10px 0;
-  /* Nuevos estilos para scroll interno */
   scrollbar-width: thin;
-  scrollbar-color: #1A3D6A #f0f0f0;
+  scrollbar-color: #153354 #f0f0f0;
 }
 
 .primary-btn, .logout-btn {
@@ -79,7 +78,7 @@
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, #1A3D6A 0%, #3a8dde 100%);
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
   color: white;
 }
 
@@ -105,7 +104,6 @@
   position: relative;
 }
 
-/* Efecto brillo para ambos botones */
 .primary-btn::after, .logout-btn::after {
   content: '';
   position: absolute;
