@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import './App.css';
 import { AuthProvider, useAuth } from './pages/login/AuthContext';
 import Login from './pages/login/Login';
@@ -18,35 +18,12 @@ const ProtectedRoute = ({ element }) => {
   return user ? element : <Navigate to="/login" />;
 };
 
-const Navigation = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const location = window.location.pathname;
-  const ocultarBotones = location === "/login" || location === "/";
-
-  return (
-    <nav className="navigation">
-      {user && !ocultarBotones && (
-        <>
-          <button onClick={() => navigate(-1)} className="back-button">
-            ⬅ <span>Atrás</span>
-          </button>
-          <Link to="/" className="home-btn">
-            🏠 <span>Home</span>
-          </Link>
-        </>
-      )}
-    </nav>
-  );
-};
-
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="App">
           <header className="App-header">
-            <Navigation />
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<ProtectedRoute element={<Home />} />} />
