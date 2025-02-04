@@ -85,10 +85,18 @@ const ModificarPermisos = () => {
       alert("Selecciona un módulo primero");
       return;
     }
+    
     const confirmDelete = window.confirm(`¿Estás seguro de eliminar el módulo ${selectedModule} del rol ${selectedRoleName}?`);
+    
     if (confirmDelete) {
-      setCurrentModules(prev => prev.filter(m => m.moduleName !== selectedModule));
+      setCurrentModules(prev => {
+        const updated = prev.filter(m => m.moduleName !== selectedModule);
+        setMessage(`Módulo ${selectedModule} eliminado exitosamente del rol ${selectedRoleName}`);
+        return updated;
+      });
+      
       setModulesToRemove(prev => [...prev, selectedModule]);
+      setSelectedModule(''); // Limpiar selección
     }
   };
 
