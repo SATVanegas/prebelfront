@@ -91,12 +91,12 @@ const ModificarPermisos = () => {
     if (confirmDelete) {
       setCurrentModules(prev => {
         const updated = prev.filter(m => m.moduleName !== selectedModule);
-        setMessage(`Módulo ${selectedModule} eliminado exitosamente del rol ${selectedRoleName}`);
+        setMessage(<span className="succes">Módulo {selectedModule} eliminado exitosamente del rol {selectedRoleName}</span>);
         return updated;
       });
       
       setModulesToRemove(prev => [...prev, selectedModule]);
-      setSelectedModule(''); // Limpiar selección
+      setSelectedModule('');
     }
   };
 
@@ -122,7 +122,7 @@ const ModificarPermisos = () => {
       });
 
       if (response.ok) {
-        setMessage('Permisos actualizados correctamente');
+        setMessage(<span className="succes">Permisos actualizados correctamente</span>);
       } else {
         const errorText = await response.text();
         setMessage(`Error: ${errorText}`);
