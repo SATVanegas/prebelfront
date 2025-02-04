@@ -6,7 +6,7 @@
   height: 100vh;
   width: 100vw;
   padding: 20px;
-  background: linear-gradient(135deg, #1A3D6A 0%, #3a8dde 100%);
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   overflow: hidden;
   box-sizing: border-box;
@@ -38,18 +38,18 @@
   cursor: pointer;
   transition: all 0.3s ease;
   background: transparent;
-  border: 2px solid #1A3D6A;
-  color: #1A3D6A;
+  border: 2px solid #153354;
+  color: #153354;
 }
 
 .back-btn:hover, .home-btn:hover {
-  background: #1A3D6A;
+  background: #153354;
   color: white;
   transform: scale(1.05);
 }
 
 h2 {
-  color: #1A3D6A;
+  color: #153354;
   font-size: 2.4rem;
   margin-bottom: 2rem;
   text-align: center;
@@ -67,7 +67,7 @@ h2 {
 .primary-btn {
   width: 100%;
   padding: 1.4rem;
-  background: linear-gradient(135deg, #1A3D6A 0%, #3a8dde 100%);
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
   color: white;
   border: none;
   border-radius: 0.8rem;
