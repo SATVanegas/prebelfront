@@ -3,19 +3,18 @@ import './CrearRol.css';
 
 const CrearRol = () => {
   const [roleName, setRoleName] = useState('');
-  const [modules, setModules] = useState([]); // Lista de módulos obtenidos del backend
-  const [selectedModules, setSelectedModules] = useState([]); // Módulos seleccionados con permisos
-  const [selectedModule, setSelectedModule] = useState(''); // Módulo seleccionado en el desplegable
+  const [modules, setModules] = useState([]); 
+  const [selectedModules, setSelectedModules] = useState([]); 
+  const [selectedModule, setSelectedModule] = useState(''); 
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
 
-  // Obtener la lista de módulos desde el backend
   useEffect(() => {
     const fetchModules = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/modules'); 
         if (response.ok) {
-          const data = await response.json(); // Recibe un array de strings
+          const data = await response.json(); 
           setModules(data);
         } else {
           console.error('Error al obtener los módulos');
@@ -28,14 +27,14 @@ const CrearRol = () => {
     fetchModules();
   }, []);
 
-  // Agregar un módulo con permisos por defecto
+ 
   const addModule = () => {
     if (selectedModule && !selectedModules.some(mod => mod.moduleName === selectedModule)) {
       setSelectedModules([...selectedModules, { moduleName: selectedModule, permissions: [] }]);
     }
   };
 
-  // Manejar cambios en los permisos
+ 
   const togglePermission = (moduleName, permission) => {
     setSelectedModules(prevModules =>
       prevModules.map(mod =>
@@ -43,15 +42,15 @@ const CrearRol = () => {
           ? {
               ...mod,
               permissions: mod.permissions.includes(permission)
-                ? mod.permissions.filter(p => p !== permission) // Quitar permiso si ya está seleccionado
-                : [...mod.permissions, permission] // Agregar permiso si no está seleccionado
+                ? mod.permissions.filter(p => p !== permission) 
+                : [...mod.permissions, permission] 
             }
           : mod
       )
     );
   };
 
-  // Enviar el formulario
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -91,19 +90,19 @@ const CrearRol = () => {
   };
 
   return (
-    <div className="crear-rol-container">
-      <div className="crear-rol-card">
+    <div className="crear-rol-container-unique">
+      <div className="crear-rol-card-unique">
         <h2>Crear Rol</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="form-group-unique">
             <label>Rol:</label>
             <input type="text" value={roleName} onChange={(e) => setRoleName(e.target.value)} required />
           </div>
-          <div className="form-group">
+          <div className="form-group-unique">
           <label>Descripción:</label>
             <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
-          <div className="form-group">
+          <div className="form-group-unique">
             <label>Módulos disponibles:</label>
             <select value={selectedModule} onChange={(e) => setSelectedModule(e.target.value)}>
               <option value="">Seleccione un módulo</option>
@@ -117,7 +116,7 @@ const CrearRol = () => {
           </div>
           {/* Lista de módulos seleccionados con permisos */}
           {selectedModules.length > 0 && (
-            <div className="form-group">
+            <div className="form-group-unique">
               <h3>Módulos y permisos:</h3>
               {selectedModules.map((mod, index) => (
                 <div key={index} className="module-permissions">
