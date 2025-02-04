@@ -7,12 +7,11 @@ const CrearUsuario = () => {
   const [password, setPassword] = useState('');
   const [number, setNumber] = useState('');
   const [roleName, setRoleName] = useState('');
-  const [roles, setRoles] = useState([]); // Estado para almacenar los roles
+  const [roles, setRoles] = useState([]); 
   const [message, setMessage] = useState('');
 
   const formRef = useRef(null);
 
-  // Efecto para configurar la validación personalizada
   useEffect(() => {
     const form = formRef.current;
     if (form) {
@@ -29,14 +28,13 @@ const CrearUsuario = () => {
     }
   }, []);
 
-  // Obtener roles desde el backend
   useEffect(() => {
     const fetchRoles = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/roles'); // Ajusta la URL según tu API
         if (response.ok) {
           const data = await response.json();
-          setRoles(data); // Suponiendo que `data` es un array de objetos { id, name }
+          setRoles(data); 
         } else {
           console.error('Error al obtener los roles');
         }

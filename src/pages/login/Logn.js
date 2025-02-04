@@ -29,7 +29,14 @@ const LoginForm = () => {
           setMessage("Datos inválidos o vacíos."); 
         }
       } else {
-        setMessage(`Error: Usuario no encontrado`);
+        const errorData = await response.json();
+        if (response.status === 401) {
+          setMessage("Contraseña incorrecta.");
+        } else if (response.status === 404) {
+          setMessage("Usuario no encontrado.");
+        } else {
+          setMessage(`Error: ${errorData.message || "Error desconocido"}`);
+        }
       }
     } catch (error) {
       console.error("Error en la autenticación:", error);
