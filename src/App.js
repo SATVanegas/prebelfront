@@ -12,6 +12,10 @@ import VisualizarPermisos from './pages/roles/VisualizarPermisos';
 import Matriz from './pages/matriz/matriz';
 import Reportes from './pages/reportes/reportes';
 import Programacion from './pages/programacion/programacion';
+import ConsultarReporte from './pages/reportes/ConsultarReporte';
+import AnadirReporte from './pages/reportes/AnadirReporte';
+import EditarReporte from './pages/reportes/EditarReporte';
+import EliminarReporte from './pages/reportes/EliminarReporte';
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
@@ -35,6 +39,10 @@ function App() {
               <Route path="/matriz" element={<ProtectedRoute element={<Matriz />} />} />
               <Route path="/reportes" element={<ProtectedRoute element={<Reportes />} />} />
               <Route path="/programacion" element={<ProtectedRoute element={<Programacion />} />} />
+              <Route path="/reportes/consultar" element={<ConsultarReporte />} />
+              <Route path="/reportes/anadir" element={<AnadirReporte />} />
+              <Route path="/reportes/editar" element={<EditarReporte />} />
+              <Route path="/reportes/eliminar" element={<EliminarReporte />} />
             </Routes>
           </header>
         </div>
