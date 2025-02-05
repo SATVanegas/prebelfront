@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   height: 100vh;
   width: 100vw;
   padding: 20px;
@@ -38,8 +39,8 @@
   margin: auto; 
 }
 
-.back-btn, .home-btn {
-  padding: 0.8rem 1.5rem;
+.btn {
+  padding: 0.8rem 1.2rem;
   font-size: 1.4rem;
   border-radius: 0.8rem;
   font-weight: 600;
@@ -53,16 +54,21 @@
   justify-content: center;
   gap: 0.5rem;
   box-sizing: border-box;
-  height: 50px; 
+  min-height: 50px; 
   width: 100%; 
   flex: 1;
-  line-height: 1;
+  line-height: 1.2;
 }
 
-.back-btn { white-space: nowrap; }
-.home-btn { white-space: nowrap; }
+.btn { white-space: nowrap; text-align: center;}
 
-.back-btn:hover, .home-btn:hover {
+.btn::before {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1.2em;
+}
+
+.btn:hover {
   background: #f0f0f0; 
   transform: scale(1.02);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);

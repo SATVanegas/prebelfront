@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Roles.css';
 
 const Roles = () => {
@@ -9,12 +9,12 @@ const Roles = () => {
     <div className="roles-container">
       {/* Contenedor de botones de navegación fuera del card */}
       <div className="nav-container">
-        <button className="back-btn" onClick={() => navigate(-1)}>
-          ← Atrás
+        <button className="btn" onClick={() => navigate(-1)}>
+          🔙 Atrás
         </button>
-        <Link to="/" className="home-btn">
+        <button className="btn" onClick={() => navigate('/')}> 
           🏠 Inicio
-        </Link>
+        </button>
       </div>
 
       {/* Card principal */}
