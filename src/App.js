@@ -35,7 +35,6 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="App">
-          <div  className='animated-bg' />
           <header className="App-header">
             <Routes>
               <Route path="/login" element={<Login />} />
