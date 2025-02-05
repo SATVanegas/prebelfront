@@ -89,7 +89,7 @@ const VisualizarPermisos = () => {
               isSearchable
             />
           </div>
-          <button type="submit">Obtener Permisos</button>
+          <button type="submit" className="sub-btn">Obtener Permisos</button>
         </form>
         {message && <p className="message">{message}</p>}
         {permissions.length > 0 && (
