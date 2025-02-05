@@ -8,7 +8,7 @@ const CrearRol = () => {
   const [modules, setModules] = useState([]); 
   const [selectedModules, setSelectedModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState('');
-  const [expandedModule, setExpandedModule] = useState(''); // Estado para controlar el módulo expandido
+  const [expandedModule, setExpandedModule] = useState('');
   const [message, setMessage] = useState('');
 
   useEffect(() => {

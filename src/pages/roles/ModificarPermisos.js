@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {FiCheckSquare, FiPlus, FiEdit } from 'react-icons/fi';
 import './ModificarPermisos.css';
 
 const ModificarPermisos = () => {
@@ -8,6 +9,7 @@ const ModificarPermisos = () => {
   const [modules, setModules] = useState([]);
   const [currentModules, setCurrentModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState('');
+  const [expandedModule, setExpandedModule] = useState('');
   const [selectedPermissions, setSelectedPermissions] = useState([]);
   const [message, setMessage] = useState('');
   const [modulesToRemove, setModulesToRemove] = useState([]);
@@ -134,11 +136,16 @@ const ModificarPermisos = () => {
     }
   };
 
+  const handleExpandModule = (moduleName) => {
+    setExpandedModule(expandedModule === moduleName ? '' : moduleName); 
+  };
+
   const navigate = useNavigate();
 
   return (
     <div className="modificar-permisos-container">
-      <div className="nav-container">
+      
+       <div className="nav-container">
         <button className="btn" onClick={() => navigate(-1)}>
           🔙 Atrás
         </button>
@@ -146,6 +153,7 @@ const ModificarPermisos = () => {
           🏠 Inicio
         </button>
       </div>
+
       <div className="modificar-permisos-card">
         <h2>Modificar Permisos de Rol</h2>
         <form onSubmit={handleSubmit}>
