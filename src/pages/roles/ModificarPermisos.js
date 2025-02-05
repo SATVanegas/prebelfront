@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {FiCheckSquare, FiPlus, FiEdit } from 'react-icons/fi';
 import './ModificarPermisos.css';
 
 const ModificarPermisos = () => {
