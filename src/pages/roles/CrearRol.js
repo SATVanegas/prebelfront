@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {FiCheckSquare, FiPlus, FiEdit } from 'react-icons/fi';
 import './CrearRol.css';
 
 const CrearRol = () => {
@@ -7,9 +8,9 @@ const CrearRol = () => {
   const [modules, setModules] = useState([]); 
   const [selectedModules, setSelectedModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState('');
+  const [expandedModule, setExpandedModule] = useState(''); // Estado para controlar el módulo expandido
   const [message, setMessage] = useState('');
 
-  
   useEffect(() => {
     const fetchModules = async () => {
       try {
@@ -32,6 +33,7 @@ const CrearRol = () => {
     if (selectedModule && !selectedModules.some(mod => mod.moduleName === selectedModule)) {
       setSelectedModules([...selectedModules, { moduleName: selectedModule, permissions: [] }]);
     }
+    setExpandedModule(selectedModule);
   };
 
   const togglePermission = (moduleName, permission) => {
@@ -83,11 +85,14 @@ const CrearRol = () => {
     }
   };
 
+  const handleExpandModule = (moduleName) => {
+    setExpandedModule(expandedModule === moduleName ? '' : moduleName); 
+  };
+
   const navigate = useNavigate();
 
   return (
     <div className="crear-rol-container">
-      
       <div className="nav-container">
         <button className="btn" onClick={() => navigate(-1)}>
           🔙 Atrás
@@ -98,51 +103,100 @@ const CrearRol = () => {
       </div>
 
       <div className="crear-rol-card">
-        <h2>Crear Rol</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Rol:</label>
-            <input type="text" value={roleName} onChange={(e) => setRoleName(e.target.value)} required />
+        <h1 className="title">Crear Nuevo Rol</h1>
+        
+        <form onSubmit={handleSubmit} className="role-form">
+          <div className="input-group">
+            <label className="input-label">Nombre del Rol</label>
+            <input
+              type="text"
+              value={roleName}
+              onChange={(e) => setRoleName(e.target.value)}
+              className="text-input"
+              placeholder="Ej: Administrador"
+              required
+            />
           </div>
 
-          <div className="form-group">
-            <label>Módulos disponibles:</label>
-            <select value={selectedModule} onChange={(e) => setSelectedModule(e.target.value)}>
-              <option value="">Seleccione un módulo</option>
-              {modules.map((module, index) => (
-                <option key={index} value={module}>
-                  {module}
-                </option>
-              ))}
-            </select>
-            <button type="button" onClick={addModule}>Añadir Módulo</button>
-          </div>
-
-          {/* Lista de módulos seleccionados con permisos */}
-          {selectedModules.length > 0 && (
-            <div className="form-group">
-              <h3>Módulos y permisos:</h3>
-              {selectedModules.map((mod, index) => (
-                <div key={index} className="module-permissions">
-                  <h4>{mod.moduleName}</h4>
-                  {['CREATE', 'READ', 'UPDATE', 'DELETE'].map((perm) => (
-                    <label key={perm} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={mod.permissions.includes(perm)}
-                        onChange={() => togglePermission(mod.moduleName, perm)}
-                      />
-                      {perm}
-                    </label>
+          <div className="module-selector">
+            <div className="selector-header">
+              <h3 className="section-title">Seleccionar Módulos</h3>
+              <div className="selector-controls">
+                <select
+                  value={selectedModule}
+                  onChange={(e) => setSelectedModule(e.target.value)}
+                  className="module-dropdown"
+                >
+                  <option value="">Selecciona un módulo</option>
+                  {modules.map((module, index) => (
+                    <option key={index} value={module}>
+                      {module}
+                    </option>
                   ))}
-                </div>
-              ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={addModule}
+                  className="add-module-btn"
+                  disabled={!selectedModule}
+                >
+                  <FiPlus className="btn-icon" />
+                  Añadir Módulo
+                </button>
+              </div>
             </div>
-          )}
 
-          <button type="submit">Crear Rol</button>
+            {selectedModules.length > 0 && (
+              <div className="selected-modules">
+                {selectedModules.map((mod, index) => (
+                  <div key={index} className="module-card">
+                    <div className="module-header">
+                      <h4 className="module-title">{mod.moduleName}</h4>
+                      <button
+                        type="button"
+                        onClick={() => handleExpandModule(mod.moduleName)}
+                        className="edit-btn"
+                      >
+                        <FiEdit />
+                      </button>
+                    </div>
+                    {expandedModule === mod.moduleName ? (
+                      <div className="permissions-grid">
+                        {['CREATE', 'READ', 'UPDATE', 'DELETE'].map((perm) => (
+                          <button
+                            key={perm}
+                            type="button"
+                            className={`permission-btn ${mod.permissions.includes(perm) ? 'active' : ''}`}
+                            onClick={() => togglePermission(mod.moduleName, perm)}
+                          >
+                            <FiCheckSquare className="check-icon" />
+                            {perm}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="permissions-collapsed">
+                        <span>Permisos (haz click para editar)</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="form-actions">
+            <button type="submit" className="submit-btn">
+              Crear Rol
+            </button>
+          </div>
         </form>
-        {message && <p>{message}</p>}
+
+        {message && (
+          <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>
+            {message}
+          </div>
+        )}
       </div>
     </div>
   );
