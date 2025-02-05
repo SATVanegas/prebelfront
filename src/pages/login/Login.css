@@ -111,3 +111,34 @@
     width: 40%;
   }
 }
+
+.reset-password-link {
+  margin-top: 1rem;
+  color: var(--primary-blue);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.reset-password-link:hover {
+  color: var(--secondary-blue);
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1.5px solid rgba(26, 61, 106, 0.1);
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px var(--input-focus);
+}
