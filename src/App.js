@@ -16,6 +16,14 @@ import ConsultarReporte from './pages/reportes/ConsultarReporte';
 import AnadirReporte from './pages/reportes/AnadirReporte';
 import EditarReporte from './pages/reportes/EditarReporte';
 import EliminarReporte from './pages/reportes/EliminarReporte';
+import ConsultarProgramacion from './pages/programacion/ConsultarProgramacion';
+import AnadirProgramacion from './pages/programacion/AnadirProgramacion';
+import EditarProgramacion from './pages/programacion/EditarProgramacion';
+import EliminarProgramacion from './pages/programacion/EliminarProgramacion';
+import ConsultarMatriz from './pages/matriz/ConsultarMatriz';
+import AnadirMatriz from './pages/matriz/AnadirMatriz';
+import EditarMatriz from './pages/matriz/EditarMatriz';
+import EliminarMatriz from './pages/matriz/EliminarMatriz';
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
@@ -43,6 +51,14 @@ function App() {
               <Route path="/reportes/anadir" element={<AnadirReporte />} />
               <Route path="/reportes/editar" element={<EditarReporte />} />
               <Route path="/reportes/eliminar" element={<EliminarReporte />} />
+              <Route path="/programacion/consultar" element={<ConsultarProgramacion />} />
+              <Route path="/programacion/anadir" element={<AnadirProgramacion />} />
+              <Route path="/programacion/editar" element={<EditarProgramacion />} />
+              <Route path="/programacion/eliminar" element={<EliminarProgramacion />} />
+              <Route path="/matriz/consultar" element={<ConsultarMatriz />} />
+              <Route path="/matriz/anadir" element={<AnadirMatriz />} />
+              <Route path="/matriz/editar" element={<EditarMatriz />} />
+              <Route path="/matriz/eliminar" element={<EliminarMatriz />} />
             </Routes>
           </header>
         </div>
