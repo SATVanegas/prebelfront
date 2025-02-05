@@ -1,4 +1,4 @@
-.reportes-container {
+.weekly-planner-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,7 +16,7 @@
 
 .nav-container {
   height: 60px;
-  width: 40%;
+  width: 50%;
   max-width: 600px;
   margin: 0 auto;
   display: flex;
@@ -27,7 +27,7 @@
   gap: 20px; 
 }
 
-.matriz-card {
+.task-card {
   background: rgba(255, 255, 255, 0.95);
   padding: 3rem;
   border-radius: 1.5rem;
@@ -39,17 +39,128 @@
   margin: auto; 
 }
 
-.matriz-card h2 {
+.form-group {
   margin-bottom: 15px;
+  text-align: left; 
+}
+
+label {
   color: #333;
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.botones-container {
+input,
+select {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 10px;
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.btn {
+  padding: 0.8rem 1.2rem;
+  font-size: 1.4rem;
+  border-radius: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  border: none;
+  color: #153354;
   display: flex;
-  flex-direction: column;
-  gap: 15px; 
   align-items: center;
-  width: 100%;
-  margin-top: 20px;
+  justify-content: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  min-height: 50px; 
+  width: 100%; 
+  flex: 1;
+  line-height: 1.2;
 }
 
+.btn:hover {
+  background: #f0f0f0; 
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sub-btn {
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+  color: white;
+}
+
+.sub-btn:hover {
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+  transform: scale(1.02);
+  z-index: 1;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.select-container {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.select-container button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.select-container button:hover {
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group input[type="date"],
+.form-group input[type="time"] {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 10px;
+  width: 48%; 
+  margin-right: 4%;
+  box-sizing: border-box;
+}
+
+.form-group input[type="date"]:last-child,
+.form-group input[type="time"]:last-child {
+  margin-right: 0;
+}
+
+h1 {
+  color: #fff;
+  margin-top: 80px;
+}
+
+h3 {
+  margin-top: 20px;
+  font-size: 1.6rem;
+  color: #153354;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+li {
+  margin-bottom: 15px;
+  background-color: rgba(255, 255, 255, 0.85);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
