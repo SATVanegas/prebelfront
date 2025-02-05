@@ -1,232 +1,329 @@
-/* Estilos generales */
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #f4f4f9;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 .crear-rol-container {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  height: 100vh;
-  width: 100vw;
-  padding: 20px;
-  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  box-sizing: border-box;
-  position: relative;
+  padding-top: 80px; 
+  min-height: 100vh; 
+  box-sizing: border-box; 
 }
 
 .crear-rol-card {
   background: rgba(255, 255, 255, 0.95);
-  padding: 3rem;
+  padding: 1.5rem;
   border-radius: 1.5rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  width: 60%;
-  height: auto;
-  backdrop-filter: blur(10px);
-  margin: auto; 
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin: 50px 0; 
+  backdrop-filter: blur(8px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.nav-container {
-  height: 60px;
-  width: 50%;
-  max-width: 600px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center; 
+.title {
+  color: #2c3e50;
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-align: center;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.title::after {
+  content: '';
   position: absolute;
-  top: 20px;
-  gap: 20px; 
-}
-
-.nav-btn {
-  padding: 0.8rem 1.2rem;
-  font-size: 1.4rem;
-  border-radius: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: white;
-  border: none;
-  color: #153354;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  box-sizing: border-box;
-  min-height: 50px; 
-  width: 100%; 
-  flex: 1;
-  line-height: 1.2;
-}
-
-.nav-btn { white-space: nowrap; text-align: center;}
-
-.nav-btn::before {
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 1.2em;
-}
-
-.nav-btn:hover {
-  background: #f0f0f0; 
-  transform: scale(1.02);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #3a8dde;
+  border-radius: 2px;
 }
 
 .role-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1.5rem;
+  min-height: min-content;
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 .input-label {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-left: 0.5rem;
 }
 
 .text-input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 16px;
+  padding: 0.8rem 1.2rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f8fafc;
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: #3a8dde;
+  box-shadow: 0 0 0 3px rgba(58, 141, 222, 0.15);
+  background: white;
 }
 
 .module-selector {
-  background: #f9f9f9;
-  padding: 15px;
-  border-radius: 8px;
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 2px solid #e2e8f0;
 }
 
 .selector-header {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  color: #2c3e50;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.selector-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .module-dropdown {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  background: white;
+  min-width: 200px;
+  transition: all 0.3s ease;
+}
+
+.module-dropdown:focus {
+  border-color: #3a8dde;
+  box-shadow: 0 0 0 3px rgba(58, 141, 222, 0.15);
 }
 
 .add-module-btn {
-  display: flex;
-  flex-direction: row;
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 0.5rem;
   background: #3a8dde;
   color: white;
-  padding: 8px 12px;
+  padding: 0.7rem 1.5rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .add-module-btn:hover {
-  background: #153354;
+  background: #2b6cb0;
+  transform: translateY(-1px);
+}
+
+.add-module-btn:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .selected-modules {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .module-card {
   background: white;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  height: 20%;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.module-card:hover {
+  border-color: #3a8dde;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .module-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
 
 .module-title {
-  font-size: 16px;
-  font-weight: bold;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
 }
 
 .edit-btn {
-  width: 20%;
   background: none;
   border: none;
   cursor: pointer;
-  color: #153354;
+  color: #718096;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  color: #3a8dde;
+  background: rgba(58, 141, 222, 0.1);
 }
 
 .permissions-grid {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 .permission-btn {
-  background: #7ea9e9;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.permission-btn:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
 }
 
 .permission-btn.active {
   background: #3a8dde;
+  border-color: #3a8dde;
   color: white;
+}
+
+.permissions-collapsed {
+  color: #718096;
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.permissions-collapsed:hover {
+  color: #3a8dde;
+}
+
+.form-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .submit-btn {
-  background: #28a745;
+  background: #3a8dde;
   color: white;
-  padding: 10px;
+  padding: 0.8rem 2rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: 0.3s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 200px;
 }
 
 .submit-btn:hover {
-  background: #218838;
+  background: #2b6cb0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(58, 141, 222, 0.25);
 }
 
 .status-message {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 6px;
-  text-align: center;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .status-message.success {
-  background: #d4edda;
-  color: #155724;
+  background: #e6fffa;
+  color: #2b6cb0;
+  border: 2px solid #81e6d9;
 }
 
 .status-message.error {
-  background: #f8d7da;
-  color: #721c24;
+  background: #fff5f5;
+  color: #c53030;
+  border: 2px solid #fc8181;
+}
+
+@media (max-width: 768px) {
+  .crear-rol-card {
+    padding: 1.5rem;
+    max-height: 85vh;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .selector-controls {
+    flex-direction: column;
+  }
+  
+  .module-dropdown {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .add-module-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .crear-rol-card {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .text-input {
+    padding: 0.7rem 1rem;
+  }
 }
