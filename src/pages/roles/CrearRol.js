@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './CrearRol.css';
 
 const CrearRol = () => {
   const [roleName, setRoleName] = useState('');
   const [modules, setModules] = useState([]); 
-  const [selectedModules, setSelectedModules] = useState([]); 
-  const [selectedModule, setSelectedModule] = useState(''); 
-  const [description, setDescription] = useState('');
+  const [selectedModules, setSelectedModules] = useState([]);
+  const [selectedModule, setSelectedModule] = useState('');
   const [message, setMessage] = useState('');
 
+  
   useEffect(() => {
     const fetchModules = async () => {
       try {
@@ -27,14 +28,12 @@ const CrearRol = () => {
     fetchModules();
   }, []);
 
- 
   const addModule = () => {
     if (selectedModule && !selectedModules.some(mod => mod.moduleName === selectedModule)) {
       setSelectedModules([...selectedModules, { moduleName: selectedModule, permissions: [] }]);
     }
   };
 
- 
   const togglePermission = (moduleName, permission) => {
     setSelectedModules(prevModules =>
       prevModules.map(mod =>
@@ -50,7 +49,6 @@ const CrearRol = () => {
     );
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -61,7 +59,6 @@ const CrearRol = () => {
 
     const roleRequest = {
       roleName,
-      description,
       modules: selectedModules
     };
 
@@ -75,9 +72,6 @@ const CrearRol = () => {
       if (response.ok) {
         setMessage('Rol creado exitosamente');
         setRoleName('');
-        if (description) {
-          setDescription('');
-        }
         setSelectedModules([]);
       } else {
         const errorText = await response.text();
@@ -89,20 +83,29 @@ const CrearRol = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   return (
-    <div className="crear-rol-container-unique">
-      <div className="crear-rol-card-unique">
+    <div className="crear-rol-container">
+      
+      <div className="nav-container">
+        <button className="btn" onClick={() => navigate(-1)}>
+          🔙 Atrás
+        </button>
+        <button className="btn" onClick={() => navigate('/')}> 
+          🏠 Inicio
+        </button>
+      </div>
+
+      <div className="crear-rol-card">
         <h2>Crear Rol</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-group-unique">
+          <div className="form-group">
             <label>Rol:</label>
             <input type="text" value={roleName} onChange={(e) => setRoleName(e.target.value)} required />
           </div>
-          <div className="form-group-unique">
-          <label>Descripción:</label>
-            <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
-          </div>
-          <div className="form-group-unique">
+
+          <div className="form-group">
             <label>Módulos disponibles:</label>
             <select value={selectedModule} onChange={(e) => setSelectedModule(e.target.value)}>
               <option value="">Seleccione un módulo</option>
@@ -114,9 +117,10 @@ const CrearRol = () => {
             </select>
             <button type="button" onClick={addModule}>Añadir Módulo</button>
           </div>
+
           {/* Lista de módulos seleccionados con permisos */}
           {selectedModules.length > 0 && (
-            <div className="form-group-unique">
+            <div className="form-group">
               <h3>Módulos y permisos:</h3>
               {selectedModules.map((mod, index) => (
                 <div key={index} className="module-permissions">
@@ -135,6 +139,7 @@ const CrearRol = () => {
               ))}
             </div>
           )}
+
           <button type="submit">Crear Rol</button>
         </form>
         {message && <p>{message}</p>}

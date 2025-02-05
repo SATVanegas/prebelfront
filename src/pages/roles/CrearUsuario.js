@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './CrearUsuario.css';
 
 const CrearUsuario = () => {
@@ -7,12 +8,12 @@ const CrearUsuario = () => {
   const [password, setPassword] = useState('');
   const [number, setNumber] = useState('');
   const [roleName, setRoleName] = useState('');
-  const [roles, setRoles] = useState([]); // Estado para almacenar los roles
+  const [roles, setRoles] = useState([]);
   const [message, setMessage] = useState('');
 
   const formRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Efecto para configurar la validación personalizada
   useEffect(() => {
     const form = formRef.current;
     if (form) {
@@ -29,14 +30,13 @@ const CrearUsuario = () => {
     }
   }, []);
 
-  // Obtener roles desde el backend
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/roles'); // Ajusta la URL según tu API
+        const response = await fetch('http://localhost:8080/api/roles');
         if (response.ok) {
           const data = await response.json();
-          setRoles(data); // Suponiendo que `data` es un array de objetos { id, name }
+          setRoles(data);
         } else {
           console.error('Error al obtener los roles');
         }
@@ -75,8 +75,17 @@ const CrearUsuario = () => {
   };
 
   return (
-    <div className="crear-usuario-container">
-      <div className="crear-usuario-card">
+    <div className="roles-container">
+      <div className="nav-container">
+        <button className="btn" onClick={() => navigate(-1)}>
+          🔙 Atrás
+        </button>
+        <button className="btn" onClick={() => navigate('/')}> 
+          🏠 Inicio
+        </button>
+      </div>
+      
+      <div className="roles-card">
         <h2>Crear Usuario</h2>
         <form ref={formRef} onSubmit={handleSubmit}>
           <div className="form-group">
@@ -121,9 +130,7 @@ const CrearUsuario = () => {
           </div>
           <div className="form-group">
             <label>Rol:</label>
-            <select value={roleName} 
-            onChange={(e) => setRoleName(e.target.value)} 
-            required>
+            <select value={roleName} onChange={(e) => setRoleName(e.target.value)} required>
               <option value="">Seleccione un rol</option>
               {roles.map((role, index) => (
                 <option key={index} value={role}>
@@ -132,7 +139,7 @@ const CrearUsuario = () => {
               ))}
             </select>
           </div>
-          <button type="submit">Crear Usuario</button>
+          <button type="submit" className="sub-btn">Crear Usuario</button>
         </form>
         {message && <p>{message}</p>}
       </div>

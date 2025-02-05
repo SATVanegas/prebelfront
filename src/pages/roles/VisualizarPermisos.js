@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import Select from "react-select";
 import "./VisualizarPermisos.css";
 
@@ -39,9 +40,9 @@ const VisualizarPermisos = () => {
       const response = await fetch('http://localhost:8080/api/roles/user', {
         method: 'POST',
         headers: {
-          'Content-Type': 'text/plain',  // Importante: Enviar como texto plano
+          'Content-Type': 'text/plain',
         },
-        body: selectedUser.value.trim(),  // Solo enviamos el nombre
+        body: selectedUser.value.trim(), 
       });
 
       if (!response.ok) {
@@ -58,14 +59,23 @@ const VisualizarPermisos = () => {
     }
   };
 
-  // Convertir los usuarios a un formato compatible con react-select
   const userOptions = users.map((user) => ({
     value: user,
     label: user,
   }));
 
+  const navigate = useNavigate();
+
   return (
     <div className="visualizar-permisos-container">
+      <div className="nav-container">
+        <button className="btn" onClick={() => navigate(-1)}>
+          🔙 Atrás
+        </button>
+        <button className="btn" onClick={() => navigate('/')}> 
+          🏠 Inicio
+        </button>
+      </div>
       <div className="visualizar-permisos-card">
         <h2>Visualizar Permisos por Usuario</h2>
         <form onSubmit={handleSubmit}>
@@ -77,33 +87,6 @@ const VisualizarPermisos = () => {
               onChange={setSelectedUser}
               placeholder="Escribe para buscar..."
               isSearchable
-              styles={{
-                control: (base, state) => ({
-                  ...base,
-                  border: state.isFocused ? "2px solid #3498db" : "2px solid #bdc3c7",
-                  boxShadow: state.isFocused ? "0 0 8px rgba(52, 152, 219, 0.3)" : "none",
-                  "&:hover": {
-                    border: "2px solid #3498db",
-                  },
-                  borderRadius: "6px",
-                  padding: "5px",
-                  fontSize: "14px",
-                }),
-                menu: (base) => ({
-                  ...base,
-                  borderRadius: "6px",
-                  backgroundColor: "white",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  fontSize: "14px",
-                }),
-                option: (base, { isFocused, isSelected }) => ({
-                  ...base,
-                  backgroundColor: isSelected ? "#3498db" : isFocused ? "#ecf0f1" : "white",
-                  color: isSelected ? "white" : "#2c3e50",
-                  padding: "10px",
-                  cursor: "pointer",
-                }),
-              }}
             />
           </div>
           <button type="submit">Obtener Permisos</button>

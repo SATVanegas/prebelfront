@@ -1,29 +1,42 @@
-.crear-usuario-container {
-  align-items: center;
-  background: linear-gradient(135deg, #a8c0ff, #c1e1ff);
-  color: #333;
+.roles-container {
   display: flex;
-  height: 100vh;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  max-width: 600px;
-  width: 100%;
-}
-
-.crear-usuario-card {
-  background: rgba(243, 243, 243, 0.9);
-  border-radius: 12px;
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  padding: 30px;
   text-align: center;
-  width: 100%;
-  backdrop-filter: blur(10px);
+  height: 100vh;
+  width: 100vw;
+  padding: 20px;
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
 }
 
-.crear-usuario-card h2 {
-  color: #333;
-  font-size: 24px;
-  margin-bottom: 20px;
+.nav-container {
+  height: 60px;
+  width: 50%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  position: absolute;
+  top: 20px;
+  gap: 20px; 
+}
+
+.roles-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 3rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  backdrop-filter: blur(10px);
+  margin: auto; 
 }
 
 .form-group {
@@ -48,22 +61,43 @@ select {
   box-sizing: border-box; 
 }
 
-button {
-  background: #5a9fd4;
-  border: none;
-  border-radius: 8px;
-  color: white;
+.btn {
+  padding: 0.8rem 1.2rem;
+  font-size: 1.4rem;
+  border-radius: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 12px;
-  text-transform: uppercase;
-  transition: all 0.3s ease-in-out;
-  width: 100%;
+  transition: all 0.3s ease;
+  background: white;
+  border: none;
+  color: #153354;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  min-height: 50px; 
+  width: 100%; 
+  flex: 1;
+  line-height: 1.2;
 }
 
-button:hover {
-  background: #3b82c4;
-  box-shadow: 0px 4px 10px rgba(91, 159, 212, 0.4);
-  transform: scale(1.05);
+.btn:hover {
+  background: #f0f0f0; 
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
+.sub-btn {
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+  color: white;
+}
+
+.sub-btn:hover {
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+  transform: scale(1.02);
+  z-index: 1;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
