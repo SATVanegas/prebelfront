@@ -1,16 +1,30 @@
 .reportes-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100vh;
+  width: 100vw;
+  padding: 20px;
+  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+  }
+
+  .nav-container {
+    height: 60px;
+    width: 40%;
+    max-width: 600px;
+    margin: 0 auto;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100%;
-    padding: 20px;
-    background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    overflow: auto;
-    box-sizing: border-box;
-    position: relative;
+    justify-content: space-between;
+    align-items: center; 
+    position: absolute;
+    top: 20px;
+    gap: 20px; 
   }
   
   .reportes-container .nav-container {
@@ -29,15 +43,14 @@
   
   .reportes-container .matriz-card {
     background: rgba(255, 255, 255, 0.95);
-    padding: 3rem;
-    border-radius: 1.5rem;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: 600px;
-    max-height: 80vh;
-    backdrop-filter: blur(10px);
-    margin: auto; 
-    box-sizing: border-box;
+  padding: 3rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  backdrop-filter: blur(10px);
+  margin: auto; 
   }
   
   .reportes-container .back-btn, 

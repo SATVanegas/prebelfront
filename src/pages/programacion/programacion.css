@@ -3,19 +3,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   padding: 20px;
   background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  overflow: auto;
+  overflow: hidden;
   box-sizing: border-box;
   position: relative;
 }
 
-.reportes-container .nav-container {
+.nav-container {
   height: 60px;
-  width: 100%;
+  width: 40%;
   max-width: 600px;
   margin: 0 auto;
   display: flex;
@@ -24,10 +25,9 @@
   position: absolute;
   top: 20px;
   gap: 20px; 
-  box-sizing: border-box;
 }
 
-.reportes-container .matriz-card {
+.matriz-card {
   background: rgba(255, 255, 255, 0.95);
   padding: 3rem;
   border-radius: 1.5rem;
@@ -37,60 +37,19 @@
   max-height: 80vh;
   backdrop-filter: blur(10px);
   margin: auto; 
-  box-sizing: border-box;
 }
 
-.reportes-container .back-btn, 
-.reportes-container .home-btn {
-  padding: 0.8rem 1.5rem;
-  font-size: 1.4rem;
-  border-radius: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: white;
-  border: none;
-  color: #153354;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  box-sizing: border-box;
-  height: 50px; 
-  width: 100%; 
-  max-width: 250px;
-  line-height: 1;
+.matriz-card h2 {
+  margin-bottom: 15px;
+  color: #333;
 }
 
-.reportes-container .back-btn { white-space: nowrap; }
-.reportes-container .home-btn { white-space: nowrap; }
-
-.reportes-container .back-btn:hover, 
-.reportes-container .home-btn:hover {
-  background: #f0f0f0; 
-  transform: scale(1.02);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.reportes-container .button-container {
+.botones-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.reportes-container .primary-btn {
-  padding: 1rem;
-  font-size: 1.2rem;
-  border-radius: 0.8rem;
-  background-color: #3a8dde;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  gap: 15px; 
+  align-items: center;
   width: 100%;
-  max-width: 300px;
+  margin-top: 20px;
 }
 
-.reportes-container .primary-btn:hover {
-  background-color: #3077b5;
-}

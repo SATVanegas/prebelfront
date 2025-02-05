@@ -1,4 +1,3 @@
-/* Estilos generales */
 .visualizar-permisos-container {
     display: flex;
     flex-direction: column;
@@ -13,7 +12,6 @@
     box-sizing: border-box;
 }
 
-/* Contenedor de navegación */
 .nav-container {
     display: flex;
     justify-content: center;
@@ -44,16 +42,16 @@
     transform: scale(1.05);
 }
 
-/* Tarjeta de visualización de permisos */
 .visualizar-permisos-card {
     background: rgba(255, 255, 255, 0.95);
-    padding: 2.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 600px;
-    max-height: 75vh;
-    overflow-y: auto;
+  padding: 3rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  backdrop-filter: blur(10px);
+  margin: auto; 
 }
 
 h2 {
@@ -61,7 +59,6 @@ h2 {
     margin-bottom: 1rem;
 }
 
-/* Formulario */
 .form-group {
     margin-bottom: 1.2rem;
     text-align: left;
@@ -91,7 +88,6 @@ label {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Mensajes de error o información */
 .message {
     margin-top: 1rem;
     font-weight: bold;
@@ -108,7 +104,6 @@ label {
     color: #333;
 }
 
-/* Cada ítem en la lista de permisos */
 .permission-item {
     display: flex;
     justify-content: space-between;
@@ -117,24 +112,22 @@ label {
     background: #f8f9fa;
     border-radius: 5px;
     margin-bottom: 8px;
-    gap: 20px; /* Aumenta separación entre módulo y permisos */
-    flex-wrap: wrap; /* Permite saltos de línea en pantallas pequeñas */
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
-/* Nombre del módulo */
 .module-name {
     font-weight: bold;
     color: #007bff;
-    flex: 1; /* Ocupa el espacio disponible */
-    min-width: 150px; /* Evita que se haga muy pequeño */
+    flex: 1;
+    min-width: 150px;
 }
 
-/* Lista de permisos */
 .permissions-list-right {
     color: #555;
-    padding-left: 15px; /* Aumenta espacio con respecto al nombre */
-    flex: 2; /* Da más espacio para los permisos */
-    white-space: nowrap; /* Evita saltos de línea si hay espacio */
+    padding-left: 15px;
+    flex: 2;
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Agrega "..." si el texto es muy largo */
+    text-overflow: ellipsis;
 }
