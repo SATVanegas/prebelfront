@@ -57,43 +57,43 @@ const WeeklyPlanner = () => {
     fetchRoles();
   }, []);
 
- // Cargar tareas desde el backend con filtro de usuario o rol
- useEffect(() => {
-  const fetchTasks = async () => {
-    try {
-      let url = "http://localhost:8080/api/weeklycalendar";
+  // Cargar tareas desde el backend con filtro de usuario o rol
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        let url = "http://localhost:8080/api/weeklycalendar";
 
-      // Verificar si se ha seleccionado un usuario o un rol
-      const filter = {
-        userName: selectedUser ? selectedUser.value : null,
-        roleName: selectedRole ? selectedRole.value : null,
-      };
+        // Verificar si se ha seleccionado un usuario o un rol
+        const filter = {
+          userName: selectedUser ? selectedUser.value : null,
+          roleName: selectedRole ? selectedRole.value : null,
+        };
 
-      // Si hay filtro, lo enviamos en el cuerpo de la solicitud
-      const response = await fetch(url, {
-        method: 'POST', 
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(filter),
-      });
+        // Si hay filtro, lo enviamos en el cuerpo de la solicitud
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(filter),
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        setTasks(data);
-      } else {
-        console.error("Error al cargar las tareas");
+        if (response.ok) {
+          const data = await response.json();
+          setTasks(data);
+        } else {
+          console.error("Error al cargar las tareas");
+        }
+      } catch (err) {
+        console.error("Error al cargar las tareas:", err);
+        setError("Error al cargar las tareas");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Error al cargar las tareas:", err);
-      setError("Error al cargar las tareas");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchTasks();
-}, [selectedUser, selectedRole]); // Dependiendo de las selecciones de usuario o rol
+    fetchTasks();
+  }, [selectedUser, selectedRole]); // Dependiendo de las selecciones de usuario o rol
 
 
   // Función para manejar los cambios en el formulario de tarea
@@ -171,40 +171,41 @@ const WeeklyPlanner = () => {
   return (
     <div className="weekly-planner-container">
       <div className="nav-container">
-        <button className="btn" onClick={() => navigate(-1)}>
+        <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
         </button>
-        <button className="btn" onClick={() => navigate('/')}>
+        <button className="nav-btn" onClick={() => navigate('/')}>
           🏠 Inicio
         </button>
       </div>
-      <h1>Calendario Semanal</h1>
 
-      {loading ? (
-        <p>Cargando tareas...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : tasks.length === 0 ? (
-        <p>No se han registrado tareas. Añadir una nueva tarea a continuación:</p>
-      ) : (
-        <div>
-          <ul>
-            {tasks.map((task) => (
-              <li key={task.id} className="task-card">
-                <h3>{task.title}</h3>
-                <p>{task.description}</p>
-                <p>
-                {task.startDateTime ? newTask.startDateTime = new Date(newTask.startDateTime).toISOString() : "Fecha no válida"} -{" "}
-  {task.endDateTime ? newTask.endDateTime = new Date(newTask.endDateTime).toISOString() : "Fecha no válida"}
-                </p>
-                <p>Asignado a: {task.assignedTo}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <form onSubmit={handleAddTask} className="task-card">
+        <h1 className="title">Calendario Semanal</h1>
+
+        {loading ? (
+          <p>Cargando tareas...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : tasks.length === 0 ? (
+          <p>No se han registrado tareas. Añadir una nueva tarea a continuación:</p>
+        ) : (
+          <div>
+            <ul>
+              {tasks.map((task) => (
+                <li key={task.id} className="task-card">
+                  <h3>{task.title}</h3>
+                  <p>{task.description}</p>
+                  <p>
+                    {task.startDateTime ? newTask.startDateTime = new Date(newTask.startDateTime).toISOString() : "Fecha no válida"} -{" "}
+                    {task.endDateTime ? newTask.endDateTime = new Date(newTask.endDateTime).toISOString() : "Fecha no válida"}
+                  </p>
+                  <p>Asignado a: {task.assignedTo}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <h3>Añadir Nueva Tarea</h3>
         <div className="form-group">
           <label>Título:</label>
@@ -247,7 +248,7 @@ const WeeklyPlanner = () => {
         </div>
 
         <div className="select-container">
-          <button type="button" onClick={() => setShowUserSelect(!showUserSelect)}>
+          <button type="button" className="primary-btn" onClick={() => setShowUserSelect(!showUserSelect)}>
             Agregar por Usuario
           </button>
           {showUserSelect && (
@@ -260,7 +261,7 @@ const WeeklyPlanner = () => {
             />
           )}
 
-          <button type="button" onClick={() => setShowRoleSelect(!showRoleSelect)}>
+          <button type="button" className="primary-btn" onClick={() => setShowRoleSelect(!showRoleSelect)}>
             Agregar por Rol
           </button>
           {showRoleSelect && (
@@ -274,7 +275,7 @@ const WeeklyPlanner = () => {
           )}
         </div>
 
-        <button type="submit" className="sub-btn">Añadir Tarea</button>
+        <button type="submit" className="primary-btn">Añadir Tarea</button>
       </form>
     </div>
   );
