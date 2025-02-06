@@ -6,23 +6,23 @@ const Reportes = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="reportes-container"> {/* Agregar clase única */}
+    <div className="matriz-container">
       <div className="nav-container">
-        <button className="back-btn" onClick={() => navigate(-1)}>
-          ← Atrás
+        <button className="nav-btn" onClick={() => navigate(-1)}>
+          🔙 Atrás
         </button>
-        <Link to="/" className="home-btn">
+        <button className="nav-btn" onClick={() => navigate('/')}> 
           🏠 Inicio
-        </Link>
+        </button>
       </div>
 
       <div className="matriz-card">
-        <h2>Reportes</h2>
-        <div className="button-container">
-          <button className="primary-btn" onClick={() => navigate('/matriz/consultar')}>Consultar Programacion</button>
-          <button className="primary-btn" onClick={() => navigate('/matriz/anadir')}>Añadir Programación</button>
-          <button className="primary-btn" onClick={() => navigate('/matriz/editar')}>Editar Programación</button>
-          <button className="primary-btn" onClick={() => navigate('/matriz/eliminar')}>Eliminar Programación</button>
+        <h2 className='title'>Matriz de estabilidad</h2>
+        <div className="bt-container">
+          <button className="primary-btn" onClick={() => navigate('/matriz/consultar')}>Consultar matriz</button>
+          <button className="primary-btn" onClick={() => navigate('/matriz/anadir')}>Crear matriz</button>
+          <button className="primary-btn" onClick={() => navigate('/matriz/editar')}>Editar matriz</button>
+          <button className="primary-btn" onClick={() => navigate('/matriz/eliminar')}>Eliminar matriz</button>
         </div>
       </div>
     </div>
