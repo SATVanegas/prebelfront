@@ -24,6 +24,7 @@ import ConsultarMatriz from './pages/matriz/ConsultarMatriz';
 import AnadirMatriz from './pages/matriz/AnadirMatriz';
 import EditarMatriz from './pages/matriz/EditarMatriz';
 import EliminarMatriz from './pages/matriz/EliminarMatriz';
+import ComingSoon from './pages/Coming-soon';
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
@@ -59,6 +60,7 @@ function App() {
               <Route path="/matriz/anadir" element={<AnadirMatriz />} />
               <Route path="/matriz/editar" element={<EditarMatriz />} />
               <Route path="/matriz/eliminar" element={<EliminarMatriz />} />
+              <Route path="/coming-soon" element={<ComingSoon />} />
             </Routes>
           </header>
         </div>

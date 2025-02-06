@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom'; 
+import { useNavigate} from 'react-router-dom'; 
 import './reportes.css';
 
 const Reportes = () => {
@@ -19,10 +19,10 @@ const Reportes = () => {
       <div className="reportes-card">
         <h2 className='title'>Reportes</h2>
         <div className="bt-container">
-          <button className="primary-btn" onClick={() => navigate('/reportes/consultar')}>Consultar Reporte</button>
-          <button className="primary-btn" onClick={() => navigate('/reportes/anadir')}>Añadir Reporte</button>
-          <button className="primary-btn" onClick={() => navigate('/reportes/editar')}>Editar Reporte</button>
-          <button className="primary-btn" onClick={() => navigate('/reportes/eliminar')}>Eliminar Reporte</button>
+          <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Consultar Reporte</button>
+          <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Añadir Reporte</button>
+          <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Editar Reporte</button>
+          <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Eliminar Reporte</button>
         </div>
       </div>
     </div>

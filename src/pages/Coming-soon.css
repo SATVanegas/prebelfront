@@ -1,0 +1,32 @@
+.coming-container {
+    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px; 
+  min-height: 100vh; 
+  box-sizing: border-box;
+} 
+
+.coming-card {
+    padding: 2rem;
+    border-radius: 1.5rem;
+    width: 90%;
+    max-width: 500px; 
+    min-height: auto; 
+    max-height: 80vh; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .logo {
+    width: 100%;
+  }
+
+  .text2 {
+    color: white;
+  }
