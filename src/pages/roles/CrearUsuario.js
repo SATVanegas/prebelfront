@@ -88,7 +88,7 @@ const CrearUsuario = () => {
       </div>
       
       <div className="crear-usuario-card">
-        <h2>Crear Usuario</h2>
+        <h2 className='title'>Crear Usuario</h2>
         <form ref={formRef} onSubmit={handleSubmit} className="form">
           <div className="form-group">
             <label>Nombre:</label>

@@ -77,7 +77,7 @@ const VisualizarPermisos = () => {
         </button>
       </div>
       <div className="visualizar-permisos-card">
-        <h2>Visualizar Permisos por Usuario</h2>
+        <h2 className="title">Visualizar Permisos por Usuario</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Seleccionar Usuario:</label>
