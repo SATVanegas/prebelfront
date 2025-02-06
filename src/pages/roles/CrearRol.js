@@ -94,10 +94,10 @@ const CrearRol = () => {
   return (
     <div className="crear-rol-container">
       <div className="nav-container">
-        <button className="btn" onClick={() => navigate(-1)}>
+        <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
         </button>
-        <button className="btn" onClick={() => navigate('/')}> 
+        <button className="nav-btn" onClick={() => navigate('/')}> 
           🏠 Inicio
         </button>
       </div>
