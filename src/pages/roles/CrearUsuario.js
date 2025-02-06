@@ -38,10 +38,12 @@ const CrearUsuario = () => {
           const data = await response.json();
           setRoles(data);
         } else {
-          console.error('Error al obtener los roles');
+          const errorText = await response.text();
+        setMessage(`Error: ${errorText}`);
         }
       } catch (error) {
-        console.error('Error en la conexión con el servidor:', error);
+        console.error('Error al crear el rol:', error);
+      setMessage('Error en la conexión con el servidor.');
       }
     };
 
@@ -141,11 +143,11 @@ const CrearUsuario = () => {
           </div>
           <button type="submit" className="primary-btn">Crear Usuario</button>
         </form>
-        {message.text && (
-  <div className={`message-box ${message.type}`}>
-    {message.text}
-  </div>
-)}
+        {message && (
+          <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>
+            {message}
+            </div>
+        )}
       </div>
     </div>
   );
