@@ -25,7 +25,7 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="home-card">
-        <h2>Bienvenido, {user.name}</h2>
+        <h2 className='title'>Bienvenido, {user.name}</h2>
         <p className="role-text">Tu rol es: <strong>{user.roleName}</strong></p>
         <div className="button-container">
           {tieneAcceso("roles") && (
