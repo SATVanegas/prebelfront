@@ -16,6 +16,10 @@
   text-align: center;
 }
 
+.form {
+  width: 100%;
+}
+
 .form-group {
   margin-bottom: 15px;
   text-align: left; 
