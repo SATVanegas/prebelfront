@@ -69,10 +69,10 @@ const VisualizarPermisos = () => {
   return (
     <div className="visualizar-permisos-container">
       <div className="nav-container">
-        <button className="btn" onClick={() => navigate(-1)}>
+        <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
         </button>
-        <button className="btn" onClick={() => navigate('/')}> 
+        <button className="nav-btn" onClick={() => navigate('/')}> 
           🏠 Inicio
         </button>
       </div>
@@ -89,7 +89,7 @@ const VisualizarPermisos = () => {
               isSearchable
             />
           </div>
-          <button type="submit" className="sub-btn">Obtener Permisos</button>
+          <button type="submit" className="primary-btn">Obtener Permisos</button>
         </form>
         {message && <p className="message">{message}</p>}
         {permissions.length > 0 && (
