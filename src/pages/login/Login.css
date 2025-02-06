@@ -122,8 +122,8 @@ background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%
 }
 
 .prebel-logo {
-  width: 30%;
-  margin-bottom: 1rem;
+  width: 20%;
+  margin-bottom: 5rem;
 }
 
 @media (max-width: 480px) {
