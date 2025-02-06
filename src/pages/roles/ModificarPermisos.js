@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FiCheckSquare, FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import './ModificarPermisos.css';
 
@@ -9,10 +10,8 @@ const ModificarPermisos = () => {
   const [currentModules, setCurrentModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState('');
   const [expandedModule, setExpandedModule] = useState('');
-  const [selectedPermissions, setSelectedPermissions] = useState([]);
   const [message, setMessage] = useState('');
   const [modulesToRemove, setModulesToRemove] = useState([]);
-  const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -72,16 +71,6 @@ const ModificarPermisos = () => {
     fetchRoleDetails();
   }, [selectedRoleName]);
 
-  const handleModifyPermissions = () => {
-    if (!selectedModule) {
-      alert("Selecciona un módulo primero");
-      return;
-    }
-    const existingModule = currentModules.find(m => m.moduleName === selectedModule);
-    setSelectedPermissions(existingModule ? existingModule.permissions : []);
-    setShowPermissionsDialog(true);
-  };
-
   const handleDeleteModule = () => {
     if (!selectedModule) {
       alert("Selecciona un módulo primero");
@@ -102,11 +91,23 @@ const ModificarPermisos = () => {
     }
   };
 
+  const addModule = () => {
+    if (selectedModule && !currentModules.some(mod => mod.moduleName === selectedModule)) {
+      setCurrentModules([...currentModules, { moduleName: selectedModule, permissions: [] }]);
+      setExpandedModule(selectedModule);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!selectedRoleName) {
       setMessage('Selecciona un rol primero');
+      return;
+    }
+
+    if (!selectedModule || !modulesToRemove) {
+      setMessage('Seleccione un módulo para añadir o eliminar');
       return;
     }
 
@@ -135,6 +136,21 @@ const ModificarPermisos = () => {
     }
   };
 
+  const togglePermission = (moduleName, permission) => {
+    setCurrentModules(prevModules =>
+      prevModules.map(mod =>
+        mod.moduleName === moduleName
+          ? {
+              ...mod,
+              permissions: mod.permissions.includes(permission)
+                ? mod.permissions.filter(p => p !== permission)
+                : [...mod.permissions, permission]
+            }
+          : mod
+      )
+    );
+  };
+
   const handleExpandModule = (moduleName) => {
     setExpandedModule(expandedModule === moduleName ? '' : moduleName); 
   };
@@ -145,16 +161,16 @@ const ModificarPermisos = () => {
     <div className="modificar-permisos-container">
       
        <div className="nav-container">
-        <button className="btn" onClick={() => navigate(-1)}>
+        <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
         </button>
-        <button className="btn" onClick={() => navigate('/')}> 
+        <button className="nav-btn" onClick={() => navigate('/')}> 
           🏠 Inicio
         </button>
       </div>
 
       <div className="modificar-permisos-card">
-        <h2>Modificar Permisos de Rol</h2>
+        <h2 className='title'>Modificar Permisos de Rol</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Rol:</label>
@@ -172,118 +188,88 @@ const ModificarPermisos = () => {
             </select>
           </div>
 
-          <div className="form-group">
-            <label>Módulos:</label>
-            <div className="module-actions">
-              <select
-                value={selectedModule}
-                onChange={(e) => setSelectedModule(e.target.value)}
-              >
-                <option value="">Seleccione un módulo</option>
-                {modules.map((module, index) => (
-                  <option key={index} value={module}>
-                    {module}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={handleModifyPermissions}
-                className="modify-button"
-              >
-                Modificar Permisos
-              </button>
-              <button
-                type="button"
-                onClick={handleDeleteModule}
-                className="delete-button"
-              >
-                Eliminar Módulo
-              </button>
-            </div>
-          </div>
+          <div className="module-selector">
+      <div className="selector-header">
+        <h3 className="section-title">Módulos del Rol</h3>
+        <div className="selector-controls">
+          <select
+            value={selectedModule}
+            onChange={(e) => setSelectedModule(e.target.value)}
+            className="module-dropdown"
+          >
+            <option value="">Selecciona un módulo</option>
+            {modules.map((module, index) => (
+              <option key={index} value={module}>
+                {module}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={addModule}
+            className="add-module-btn"
+            disabled={!selectedModule}
+          >
+            <FiPlus className="btn-icon" />
+            Añadir Módulo
+          </button>
+        </div>
+      </div>
 
-          {showPermissionsDialog && (
-            <div className="permissions-dialog">
-              <h3>Permisos para {selectedModule}</h3>
-              <div className="permissions-list">
-                {['CREATE', 'READ', 'UPDATE', 'DELETE'].map((perm) => (
-                  <label key={perm} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={selectedPermissions.includes(perm)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedPermissions([...selectedPermissions, perm]);
-                        } else {
-                          setSelectedPermissions(
-                            selectedPermissions.filter((p) => p !== perm)
-                          );
-                        }
-                      }}
-                    />
-                    {perm}
-                  </label>
-                ))}
-              </div>
-              <div className="dialog-buttons">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const newModule = {
-                      moduleName: selectedModule,
-                      permissions: selectedPermissions,
-                    };
-                    setCurrentModules((prev) => {
-                      const exists = prev.some(
-                        (m) => m.moduleName === selectedModule
-                      );
-                      if (exists) {
-                        return prev.map((m) =>
-                          m.moduleName === selectedModule ? newModule : m
-                        );
-                      }
-                      return [...prev, newModule];
-                    });
-                    setShowPermissionsDialog(false);
-                  }}
-                  className="save-button"
-                >
-                  Guardar
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowPermissionsDialog(false)}
-                  className="cancel-button"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          )}
-
-          <div className="current-modules">
-            <h3>Módulos asignados:</h3>
-            {currentModules.map((mod, index) => (
-              <div key={index} className="module-item">
-                <div className="module-header">
-                  <span className="module-name">{mod.moduleName}</span>
-                  <div className="module-permissions">
-                    {mod.permissions.join(', ')}
-                  </div>
+      {currentModules.length > 0 && (
+        <div className="selected-modules">
+          {currentModules.map((mod, index) => (
+            <div key={index} className="module-card">
+              <div className="module-header">
+                <h4 className="module-title">{mod.moduleName}</h4>
+                <div className="module-actions">
+                  <button
+                    type="button"
+                    onClick={() => handleExpandModule(mod.moduleName)}
+                    className="edit-btn"
+                  >
+                    <FiEdit />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteModule(mod.moduleName)}
+                    className="delete-btn"
+                  >
+                    <FiTrash2 />
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-
-          <button type="submit" className="submit-button">
-            Guardar Cambios
-          </button>
-        </form>
-
-        {message && <p className="message">{message}</p>}
-      </div>
+              {expandedModule === mod.moduleName && (
+                <div className="permissions-grid">
+                  {['CREATE', 'READ', 'UPDATE', 'DELETE'].map((perm) => (
+                    <button
+                      key={perm}
+                      type="button"
+                      className={`permission-btn ${
+                        mod.permissions.includes(perm) ? 'active' : ''
+                      }`}
+                      onClick={() => togglePermission(mod.moduleName, perm)}
+                    >
+                      <FiCheckSquare className="check-icon" />
+                      {perm}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
+    <div className='guardar-container'>
+    <button type="submit" className="primary-btn">
+      Guardar Cambios
+    </button>
+    {message && <p className="message">{message}</p>}
+    </div>
+  </form>
+</div>
+</div>
   );
 };
 

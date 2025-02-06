@@ -77,10 +77,10 @@ const CrearUsuario = () => {
   return (
     <div className="roles-container">
       <div className="nav-container">
-        <button className="btn" onClick={() => navigate(-1)}>
+        <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
         </button>
-        <button className="btn" onClick={() => navigate('/')}> 
+        <button className="nav-btn" onClick={() => navigate('/')}> 
           🏠 Inicio
         </button>
       </div>
@@ -139,9 +139,13 @@ const CrearUsuario = () => {
               ))}
             </select>
           </div>
-          <button type="submit" className="sub-btn">Crear Usuario</button>
+          <button type="submit" className="primary-btn">Crear Usuario</button>
         </form>
-        {message && <p>{message}</p>}
+        {message.text && (
+  <div className={`message-box ${message.type}`}>
+    {message.text}
+  </div>
+)}
       </div>
     </div>
   );

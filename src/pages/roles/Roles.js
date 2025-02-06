@@ -7,20 +7,16 @@ const Roles = () => {
 
   return (
     <div className="roles-container">
-      {/* Contenedor de botones de navegación fuera del card */}
       <div className="nav-container">
-        <button className="btn" onClick={() => navigate(-1)}>
+        <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
         </button>
-        <button className="btn" onClick={() => navigate('/')}> 
+        <button className="nav-btn" onClick={() => navigate('/')}> 
           🏠 Inicio
         </button>
       </div>
-
-      {/* Card principal */}
       <div className="roles-card">
         <h2>Control de Roles</h2>
-        
         <div className="button-container">
           <button 
             className="primary-btn" 
