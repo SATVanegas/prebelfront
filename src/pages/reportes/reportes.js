@@ -6,19 +6,19 @@ const Reportes = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="reportes-container"> {/* Agregar clase única */}
+    <div className="reportes-container">
       <div className="nav-container">
-        <button className="back-btn" onClick={() => navigate(-1)}>
-          ← Atrás
+        <button className="nav-btn" onClick={() => navigate(-1)}>
+          🔙 Atrás
         </button>
-        <Link to="/" className="home-btn">
+        <button className="nav-btn" onClick={() => navigate('/')}> 
           🏠 Inicio
-        </Link>
+        </button>
       </div>
 
-      <div className="matriz-card">
-        <h2>Reportes</h2>
-        <div className="button-container">
+      <div className="reportes-card">
+        <h2 className='title'>Reportes</h2>
+        <div className="bt-container">
           <button className="primary-btn" onClick={() => navigate('/reportes/consultar')}>Consultar Reporte</button>
           <button className="primary-btn" onClick={() => navigate('/reportes/anadir')}>Añadir Reporte</button>
           <button className="primary-btn" onClick={() => navigate('/reportes/editar')}>Editar Reporte</button>
