@@ -16,7 +16,7 @@ const Roles = () => {
         </button>
       </div>
       <div className="roles-card">
-        <h2>Control de Roles</h2>
+        <h2 className='title'>Control de Roles</h2>
         <div className="button-container">
           <button 
             className="primary-btn" 
