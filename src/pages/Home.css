@@ -68,6 +68,8 @@
   max-height: 50vh; 
   padding: 1rem;
   width: 100%;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .primary-btn, .logout-btn {
@@ -83,6 +85,9 @@
   overflow: hidden;
   transform-origin: center;
   margin: 4px 0;
+  transform: scale(1);
+  transition: transform 0.3s ease, background 0.3s ease;
+  backface-visibility: hidden;
 }
 
 .primary-btn {
@@ -94,6 +99,9 @@
   background: linear-gradient(135deg, #102a46 0%, #3a8dde 100%);
   transform: scale(1.02);
   z-index: 1;
+  transform: scale(1.02) translateZ(0);
+  margin: 4px 0;
+  position: static;
 }
 
 .logout-btn {
@@ -107,6 +115,10 @@
   color: white;
   transform: scale(1.02);
   z-index: 1;
+  z-index: 1;
+  transform: scale(1.02) translateZ(0);
+  margin: 4px 0;
+  position: static;
 }
 
 .primary-btn::before, .logout-btn::before {

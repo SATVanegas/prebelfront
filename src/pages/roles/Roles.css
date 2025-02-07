@@ -7,15 +7,16 @@
   background: var(--background-gradient);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: rgb(26,61,106);
-background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%, rgba(255,255,255,1) 100%);
+  background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%, rgba(255,255,255,1) 100%);
   background-size: 300% 300%;
   animation: gradientAnimation 10s ease infinite;
   width: 100vw;
   height: 100vh;
-  transform: translateZ(0); /* Acelera la renderización con GPU */
+  transform: translateZ(0); 
   will-change: background-position; 
   -webkit-animation: gradientAnimation 10s ease infinite;
   -moz-animation: gradientAnimation 10s ease infinite;
+  padding-top: 50px; 
 }
 
 @media (max-width: 480px) {
@@ -62,7 +63,7 @@ background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%
   gap: 15px;
   position: fixed;
   padding: 15px;
-  z-index: 1000;
+  z-index: 1000; 
 }
 
 .roles-card {
@@ -81,6 +82,7 @@ background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%
   align-items: center;
   box-sizing: border-box;
   text-align: center;
+  margin-top: 60px; 
 }
 
 .roles-card:hover {
@@ -96,7 +98,7 @@ background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%
 
 .btn {
   width: 100%;
-  padding: 1rem;
+  padding: 2rem;
   border: none;
   border-radius: 0.8rem;
   font-size: 1.4rem;
@@ -182,6 +184,7 @@ background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Tablets (pantallas medianas) */
 @media (max-width: 768px) {
   .roles-card {
     max-width: 90%;
@@ -190,20 +193,46 @@ background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%
   }
 
   .nav-container {
-    position: fixed;
-    top: 0;
-    padding: 1rem;
-    display: flex;
-    gap: 1rem;
     flex-direction: column;
-    height: auto;
-    margin: 15px auto;
     gap: 10px;
+    height: auto;
+    padding: 1rem;
+    margin-top: 60px;
   }
   
   .btn {
     width: 100%;
     font-size: 1.1rem;
     padding: 0.9rem;
+  }
+}
+
+/* Teléfonos grandes */
+@media (max-width: 480px) {
+  .roles-container {
+    padding: 1rem;
+  }
+
+  .roles-card {
+    width: 90%;
+    max-width: 350px;
+    padding: 1.2rem;
+  }
+
+  .btn {
+    font-size: 1.1rem;
+    padding: 0.9rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .roles-card {
+    max-width: 500px;
+    padding: 3rem;
+  }
+
+  .btn {
+    font-size: 1rem;
+    padding: 0.8rem;
   }
 }
