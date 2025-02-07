@@ -70,15 +70,15 @@
   width: 100%;
   overflow-y: auto;
   width: 100%;
+  flex-grow: 1;
 }
 
 .primary-btn, .logout-btn {
   width: 100%;
-  padding: 1rem;
+  padding: 1.2vh;
   border: none;
   border-radius: 0.8rem;
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -154,25 +154,21 @@
 
 @media (max-width: 768px) {
   .home-card {
-    max-width: 90%;
-    padding: 1.5rem;
+    width: 95vw;
+    padding: 2vh;
     max-height: 85vh;
   }
 
-  .button-container {
-    max-height: 50vh;
-  }
-
   .home-card h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
 
   .role-text {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .primary-btn, .logout-btn {
-    font-size: 1.2rem;
-    padding: 0.8rem;
+    font-size: 1rem;
+    padding: 1vh;
   }
 }

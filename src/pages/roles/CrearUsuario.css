@@ -1,69 +1,22 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow-y: auto; 
-  box-sizing: border-box;
-}
-
-.crear-usuario-container {
+.user-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10vh 5vh;
   flex-direction: column;
-  background: rgb(26,61,106);
-  background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%, rgba(255,255,255,1) 100%);
-  background-size: 300% 300%;
-  animation: gradientAnimation 10s ease infinite;
   width: 100%;
-  min-height: 100vh; 
-  padding: 12px;
-}
-
-@keyframes gradientAnimation {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.nav-buttons {
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 15px;
-  z-index: 1000; 
-  margin-top: 20px; 
-}
-
-.nav-btn {
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 0.8rem;
-  font-weight: bold;
-  cursor: pointer;
-  background: white;
-  border: none;
-  color: #153354;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-}
-
-.nav-btn:hover {
-  background: #f0f0f0;
-  transform: scale(1.05);
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .crear-usuario-card {
+  margin-top: 5rem;
   background: rgba(255, 255, 255, 0.95);
-  padding: 2rem;
+  padding: 3vh 3vw;
   border-radius: 1.5rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  width: 100%;
-  max-width: 500px;
-  min-height: auto; /* Se adapta dinámicamente */
+  width: min(90vw, 500px);
   backdrop-filter: blur(10px);
   transition: box-shadow 0.3s ease;
   display: flex;
@@ -71,19 +24,25 @@ html, body {
   align-items: center;
   box-sizing: border-box;
   text-align: center;
-  margin-top: 250px; 
-  z-index: 10;
 }
 
 .form {
   width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+}
+
+.form-group {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 label {
   color: #333;
+  display: block;
   font-weight: bold;
   margin-bottom: 5px;
 }
@@ -92,9 +51,10 @@ input,
 select {
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 12px;
-  padding: 5px;
+  font-size: 14px;
+  padding: 10px;
   width: 100%;
+  max-width: 100%;
   height: 40px;
   box-sizing: border-box;
 }
@@ -103,10 +63,13 @@ select {
   appearance: none;
   background-color: white;
   color: #333;
+  padding: 10px;
   border: 1.5px solid rgba(26, 61, 106, 0.1);
   border-radius: 0.5rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   transition: all 0.3s ease;
+  box-sizing: border-box;
+  height: auto;
 }
 
 .form-group input[type="email"],
@@ -115,72 +78,24 @@ select {
   padding: 0.8rem;
   border: 1.5px solid rgba(26, 61, 106, 0.1);
   border-radius: 0.5rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   transition: all 0.3s ease;
-  box-sizing: border-box;
 }
 
-.form-group input[type="email"]:focus,
-.form-group input[type="tel"]:focus {
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 2px var(--input-focus);
-}
-
-/* Tablets (pantallas medianas) */
 @media (max-width: 768px) {
   .crear-usuario-card {
-    max-width: 400px;
-    padding: 1.5rem;
-    border-radius: 1rem;
+    width: 95vw;
+    max-width: 90%;
+    padding: 5vw;
   }
 
-  .form {
-    gap: 0.8rem;
-  }
-
-  input,
-  select {
-    font-size: 0.95rem;
-    padding: 0.7rem;
-  }
-}
-
-/* Teléfonos grandes */
-@media (max-width: 480px) {
-  .crear-usuario-card {
-    width: 90%;
-    max-width: 350px;
-    padding: 1.2rem;
-    border-radius: 0.8rem;
-  }
-
-  .form {
-    gap: 0.6rem;
+  .user-container {
+    padding-top: 12vh;
   }
 
   input,
   select {
     font-size: 0.9rem;
-    padding: 0.6rem;
-  }
-}
-
-/* Teléfonos muy pequeños */
-@media (max-width: 320px) {
-  .crear-usuario-card {
-    width: 95%;
-    max-width: 300px;
-    padding: 1rem;
-    border-radius: 0.5rem;
-  }
-
-  .form {
-    gap: 0.5rem;
-  }
-
-  input,
-  select {
-    font-size: 0.85rem;
-    padding: 0.5rem;
+    padding: 8px;
   }
 }

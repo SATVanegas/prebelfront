@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px;
+  padding: 5vh;
   flex-direction: column;
   background: var(--background-gradient);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -53,14 +53,14 @@
 }
 
 .nav-container {
-  width: 90%;
+  width: 80%;
   top: 0;
   max-width: 600px;
   margin: 20px auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
   position: fixed;
   padding: 15px;
   z-index: 1000; 
@@ -68,12 +68,11 @@
 
 .roles-card {
   background: rgba(255, 255, 255, 0.95);
-  padding: 2rem;
+  padding: 2vh;
   border-radius: 1.5rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   width: 90%;
-  max-width: 500px; 
-  min-height: auto; 
+  max-width: 500px;
   max-height: 80vh; 
   backdrop-filter: blur(10px);
   transition: box-shadow 0.3s ease;
@@ -175,7 +174,7 @@
   min-height: 50px; 
   width: 100%; 
   flex: 1;
-  line-height: 1.2;
+  max-width: 200px;
 }
 
 .nav-btn:hover {

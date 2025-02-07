@@ -1,50 +1,48 @@
 .weekly-planner-container {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 80px; 
-  min-height: 100vh; 
-  box-sizing: border-box; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 80px; 
+    min-height: 100vh; 
+    box-sizing: border-box;
 }
-
 
 .task-card {
   background: rgba(255, 255, 255, 0.95);
-  padding: 1.5rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  margin: 50px 0; 
-  backdrop-filter: blur(8px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    width: min(90%, 500px);
+    min-height: auto;
+    margin: 50px auto; 
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-
-
-
-
-
 
 .sub-btn {
   background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
   color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
 }
 
 .sub-btn:hover {
-  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
-  transform: scale(1.02);
-  z-index: 1;
-  position: relative;
+  transform: scale(1.05);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .select-container {
   margin-top: 20px;
   display: flex;
-  gap: 20px;
+  gap: 10px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .select-container button {
@@ -59,7 +57,6 @@
 }
 
 .select-container button:hover {
-  background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
   transform: scale(1.05);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -70,30 +67,27 @@
   border-radius: 5px;
   font-size: 14px;
   padding: 10px;
-  width: 48%; 
-  margin-right: 4%;
+  width: 100%;
   box-sizing: border-box;
-}
-
-.form-group input[type="date"]:last-child,
-.form-group input[type="time"]:last-child {
-  margin-right: 0;
 }
 
 h1 {
   color: #fff;
   margin-top: 20px;
+  font-size: 2rem;
+  text-align: center;
 }
 
 h3 {
   margin-top: 20px;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: #153354;
 }
 
 ul {
   list-style-type: none;
   padding-left: 0;
+  width: 100%;
 }
 
 li {
@@ -102,4 +96,22 @@ li {
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .task-card {
+    width: 95%;
+  }
+
+  .select-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .select-container button {
+    width: 100%;
+  }
 }
