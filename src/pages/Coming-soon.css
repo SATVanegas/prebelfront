@@ -9,6 +9,13 @@
   box-sizing: border-box;
 } 
 
+@media (max-width: 480px) {
+  .coming-container {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+}
+
 .coming-card {
     padding: 2rem;
     border-radius: 1.5rem;
@@ -21,6 +28,13 @@
     align-items: center;
     box-sizing: border-box;
     text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    .coming-container {
+      padding: 1rem;
+      border-radius: 1rem;
+    }
   }
 
   .logo {

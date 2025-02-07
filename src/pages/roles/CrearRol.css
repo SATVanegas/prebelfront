@@ -9,6 +9,13 @@
   box-sizing: border-box; 
 }
 
+@media (max-width: 480px) {
+  .crear-rol-container {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+}
+
 .crear-rol-card {
   background: rgba(255, 255, 255, 0.95);
   padding: 1.5rem;

@@ -18,6 +18,13 @@ background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%
   -moz-animation: gradientAnimation 10s ease infinite;
 }
 
+@media (max-width: 480px) {
+  .roles-container {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+}
+
 @keyframes gradientAnimation {
   0% {
     background-position: 0% 50%;
