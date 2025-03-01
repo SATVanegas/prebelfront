@@ -14,9 +14,9 @@ const Home = () => {
   // Definir permisos para cada módulo
   const permisos = {
     roles: ["ADMIN"],
-    programacion: ["ADMIN", "LABORATORY_TECHNICIAN", "STABILITY_TECHNICIAN", "PACKAGING_TECHNICIAN", "COORDINATOR"],
-    matriz: ["ADMIN", "STABILITY_TECHNICIAN", "COORDINATOR"],
-    reportes: ["ADMIN", "STABILITY_TECHNICIAN", "COORDINATOR"]
+    programacion: ["ADMIN", "LAB_TECH", "STAB_TECH", "PACK_TECH", "COORDINATOR"],
+    matriz: ["ADMIN", "STAB_TECH", "COORDINATOR"],
+    reportes: ["ADMIN", "STAB_TECH", "COORDINATOR"]
   };
 
   // Verifica si el usuario tiene permiso para un módulo
