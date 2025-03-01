@@ -11,7 +11,7 @@ import ModificarPermisos from './pages/roles/ModificarPermisos';
 import VisualizarPermisos from './pages/roles/VisualizarPermisos';
 import Matriz from './pages/matriz/matriz';
 import Reportes from './pages/reportes/reportes';
-import Programacion from './pages/programacion/programacion';
+import MenuPlanificador from './pages/programacion/menu';
 import ConsultarReporte from './pages/reportes/ConsultarReporte';
 import AnadirReporte from './pages/reportes/AnadirReporte';
 import EditarReporte from './pages/reportes/EditarReporte';
@@ -47,7 +47,7 @@ function App() {
               <Route path="/visualizar-permisos" element={<ProtectedRoute element={<VisualizarPermisos />} />} />
               <Route path="/matriz" element={<ProtectedRoute element={<Matriz />} />} />
               <Route path="/reportes" element={<ProtectedRoute element={<Reportes />} />} />
-              <Route path="/programacion" element={<ProtectedRoute element={<Programacion />} />} />
+              <Route path="/programacion" element={<ProtectedRoute element={<MenuPlanificador />} />} />
               <Route path="/reportes/consultar" element={<ConsultarReporte />} />
               <Route path="/reportes/anadir" element={<AnadirReporte />} />
               <Route path="/reportes/editar" element={<EditarReporte />} />
