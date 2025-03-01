@@ -20,7 +20,7 @@ const Reportes = () => {
         <h2 className='title'>Reportes</h2>
         <div className="bt-container">
           <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Consultar Reporte</button>
-          <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Añadir Reporte</button>
+          <button className="primary-btn" onClick={() => navigate('/reportes/anadir')}>Añadir Reporte</button>
           <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Editar Reporte</button>
           <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Eliminar Reporte</button>
         </div>

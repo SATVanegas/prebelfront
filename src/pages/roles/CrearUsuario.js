@@ -77,7 +77,7 @@ const CrearUsuario = () => {
   };
 
   return (
-    <div className="roles-container">
+    <div className="user-container">
       <div className="nav-container">
         <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
