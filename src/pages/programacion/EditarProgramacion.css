@@ -1,0 +1,204 @@
+.planner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10vh 5vh;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    width: min(90vw, 500px);
+    margin-bottom: 1rem;
+}
+
+.nav-btn {
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    background-color: #d0d0d0;
+}
+
+.schedule-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 3vh 3vw;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    width: min(90vw, 500px);
+    backdrop-filter: blur(10px);
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.title {
+    color: #1a3d6a;
+    margin-bottom: 2rem;
+}
+
+.form {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+label {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input,
+select,
+textarea {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+select {
+    appearance: none;
+    background-color: white;
+    color: #333;
+    border: 1.5px solid rgba(26, 61, 106, 0.1);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    height: 40px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.date-picker {
+    border: 1.5px solid rgba(26, 61, 106, 0.1);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    padding: 0.8rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.disabled-select {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.form-help {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 3px;
+}
+
+.primary-btn {
+    background-color: #1a3d6a;
+    color: white;
+    padding: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.primary-btn:hover {
+    background-color: #2a5ca0;
+}
+
+.status-message {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 0.5rem;
+    width: 100%;
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 768px) {
+    .schedule-card {
+        width: 95vw;
+        max-width: 90%;
+        padding: 5vw;
+    }
+
+    .nav-container {
+        width: 95vw;
+        max-width: 90%;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}
+
+.week-range-display {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    color: #333;
+}
+
+.delete-btn,
+.edit-btn {
+    background-color: #2a5ca0; 
+    color: #e0e0e0 ;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover,
+.edit-btn:hover {
+    background-color: #d0d0d0;
+}
