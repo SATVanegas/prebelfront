@@ -61,7 +61,7 @@ const InspectionForm = () => {
   };
 
   const handleProductChange = (selectedOption) => {
-    setFormData({ ...formData, stabilitiesMatrixId: selectedOption ? selectedOption.value : "" });
+    setFormData({ ...formData, stabilitiesMatrixId: selectedOption ? selectedOption.stabilitiesMatrixId : "" });
   };
 
   const validateForm = () => {
@@ -124,7 +124,8 @@ const InspectionForm = () => {
 
   const productOptions = filteredProducts.map(product => ({
     value: product.id,
-    label: `${product.brand} - ${product.productDescription}`
+    label: `${product.brand} - ${product.productDescription}`,
+    stabilitiesMatrixId: product.stabilitiesMatrixId
   }));
 
   return (
