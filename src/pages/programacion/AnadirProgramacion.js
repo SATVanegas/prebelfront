@@ -16,8 +16,7 @@ const AnadirProgramacion = () => {
     const [schedules, setSchedules] = useState([]);
     const formRef = useRef(null);
     const navigate = useNavigate();
-
-    const defaultWeeklyCalendarId = 1; 
+    const defaultWeeklyCalendarId = 1;
 
     const roleNameToId = {
         "PACK_TECH": 3,
@@ -37,6 +36,7 @@ const AnadirProgramacion = () => {
                     setRoles(filteredRoles);
                 } else {
                     const errorText = await response.text();
+                    console.error(`Error al obtener roles: ${errorText}`);
                     setMessage(`Error: ${errorText}`);
                     setStatus('error');
                 }
@@ -46,19 +46,34 @@ const AnadirProgramacion = () => {
                 setStatus('error');
             }
         };
+
         fetchRoles();
     }, []);
 
     useEffect(() => {
-        const fetchTechniciansByRole = async (roleName) => {
+        const fetchTechniciansByRoleName = async (roleName) => {
+            if (!roleName) return;
+    
             try {
+                console.log(`Consultando técnicos para el rol: ${roleName}`);
                 const response = await fetch(`http://localhost:8080/api/users/by-role/${roleName}`);
+    
                 if (response.ok) {
                     const data = await response.json();
+                    console.log("Técnicos recibidos:", data);
                     setTechnicians(data);
+    
+                    if (data.length === 0) {
+                        setMessage('No se encontraron técnicos con el rol seleccionado.');
+                        setStatus('warning');
+                    } else {
+                        setMessage('');
+                        setStatus('');
+                    }
                 } else {
                     const errorText = await response.text();
-                    setMessage(`Error: ${errorText}`);
+                    console.error(`Error al obtener técnicos: ${errorText}`);
+                    setMessage('Error: No se pudieron cargar los técnicos.');
                     setStatus('error');
                 }
             } catch (error) {
@@ -67,9 +82,11 @@ const AnadirProgramacion = () => {
                 setStatus('error');
             }
         };
-
+    
         if (assignedRoleId) {
-            fetchTechniciansByRole(assignedRoleId);
+            fetchTechniciansByRoleName(assignedRoleId);
+        } else {
+            setTechnicians([]);
         }
     }, [assignedRoleId]);
 
@@ -80,29 +97,37 @@ const AnadirProgramacion = () => {
         return `${year}-${month}-${day}`;
     };
 
-    useEffect(() => {
-        if (date) {
-            const dayOfWeek = date.getDay();
-            const dayNames = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
-            if (dayOfWeek === 0) {
-                setMessage('El domingo no es un día válido para programar. Por favor selecciona otro día.');
-                setStatus('error');
-            } else {
+    const handleDateChange = (e) => {
+        const newDateStr = e.target.value;
+        const newDate = new Date(newDateStr + 'T00:00:00');
+
+        if (newDate.getDay() === 0) { 
+            setMessage('El domingo no es un día válido para programar. Por favor seleccione otro día.');
+            setStatus('error');
+        } else {
+            setDate(newDate);
+            updateDayOfWeek(newDate);
+            if (message.includes('domingo')) {
                 setMessage('');
                 setStatus('');
-                setDay(dayNames[dayOfWeek]);
             }
         }
-    }, [date]);
-
-    const handleDateChange = (e) => {
-        const newDate = new Date(e.target.value + 'T00:00:00');
-        setDate(newDate);
     };
+
+    const updateDayOfWeek = (date) => {
+        const dayOfWeek = date.getDay();
+        const dayNames = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
+        setDay(dayNames[dayOfWeek]);
+    };
+
+    useEffect(() => {
+        updateDayOfWeek(date);
+    }, []);
 
     useEffect(() => {
         const getSchedulesByRole = () => {
             if (!assignedRoleId) return [];
+
             switch (assignedRoleId) {
                 case "PACK_TECH":
                     return ["7:00 am - 5:00 pm"];
@@ -115,8 +140,9 @@ const AnadirProgramacion = () => {
         };
 
         if (assignedRoleId) {
-            const schedules = getSchedulesByRole();
-            setSchedules(schedules);
+            const availableSchedules = getSchedulesByRole();
+            setSchedules(availableSchedules);
+            setSchedule('');
         } else {
             setSchedules([]);
         }
@@ -127,6 +153,12 @@ const AnadirProgramacion = () => {
 
         if (!technicianId || !assignedRoleId || !schedule) {
             setMessage('Por favor complete todos los campos requeridos');
+            setStatus('error');
+            return;
+        }
+
+        if (date.getDay() === 0) {
+            setMessage('No se puede programar en domingo. Por favor seleccione otro día.');
             setStatus('error');
             return;
         }
@@ -142,13 +174,14 @@ const AnadirProgramacion = () => {
             date: date.toISOString(),
             day,
             technicianId: parseInt(technicianId),
-            assignedRoleId: roleId, 
+            assignedRoleId: roleId,
             schedule,
             info,
-            weeklyCalendarId: defaultWeeklyCalendarId, 
+            weeklyCalendarId: defaultWeeklyCalendarId,
         };
 
         try {
+            console.log("Enviando datos de programación:", technicianScheduleData);
             const response = await fetch('http://localhost:8080/api/weeklyplanner/techniciansschedule', {
                 method: 'POST',
                 headers: {
@@ -163,10 +196,10 @@ const AnadirProgramacion = () => {
                 setSchedule('');
                 setInfo('');
                 setTechnicianId('');
-                setAssignedRoleId('');
             } else {
                 const errorText = await response.text();
-                setMessage(`Error: ${errorText}`);
+                console.error(`Error al crear programación: ${errorText}`);
+                setMessage(`Error al crear la programación: ${errorText}`);
                 setStatus('error');
             }
         } catch (error) {
@@ -186,9 +219,14 @@ const AnadirProgramacion = () => {
                     🏠 Inicio
                 </button>
             </div>
-
             <div className="crear-usuario-card">
                 <h2 className="title">Añadir Programación</h2>
+
+                {message && (
+                    <div className={`status-message ${status}`}>
+                        {message}
+                    </div>
+                )}
 
                 <form ref={formRef} onSubmit={handleSubmit} className="form">
                     <div className="form-group">
@@ -199,8 +237,8 @@ const AnadirProgramacion = () => {
                             onChange={handleDateChange}
                             required
                         />
+                        <small className="form-help">No se permite seleccionar domingo</small>
                     </div>
-
                     <div className="form-group">
                         <label>Día de la semana:</label>
                         <select
@@ -217,7 +255,6 @@ const AnadirProgramacion = () => {
                         </select>
                         <small className="form-help">Se actualiza automáticamente según la fecha seleccionada</small>
                     </div>
-
                     <div className="form-group">
                         <label>Rol Asignado:</label>
                         <select
@@ -233,13 +270,13 @@ const AnadirProgramacion = () => {
                             ))}
                         </select>
                     </div>
-
                     <div className="form-group">
                         <label>Técnico:</label>
                         <select
                             value={technicianId}
                             onChange={(e) => setTechnicianId(e.target.value)}
                             required
+                            disabled={technicians.length === 0}
                         >
                             <option value="">Seleccione un técnico</option>
                             {technicians.map((technician) => (
@@ -248,8 +285,10 @@ const AnadirProgramacion = () => {
                                 </option>
                             ))}
                         </select>
+                        {technicians.length === 0 && assignedRoleId && (
+                            <small className="form-help error">No hay técnicos disponibles para este rol</small>
+                        )}
                     </div>
-
                     <div className="form-group">
                         <label>Horario:</label>
                         <select
@@ -265,7 +304,6 @@ const AnadirProgramacion = () => {
                             ))}
                         </select>
                     </div>
-
                     <div className="form-group">
                         <label>Información adicional:</label>
                         <textarea
@@ -275,15 +313,8 @@ const AnadirProgramacion = () => {
                             rows={4}
                         />
                     </div>
-
                     <button type="submit" className="primary-btn">Crear Programación</button>
                 </form>
-
-                {message && (
-                    <div className={`status-message ${status}`}>
-                        {message}
-                    </div>
-                )}
             </div>
         </div>
     );
