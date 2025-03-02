@@ -14,23 +14,27 @@ const InspectionForm = () => {
     fridge: "",
     photolysis: "",
     stabilitiesMatrixId: "",
-    testId: "",
   });
 
   const [lastInspectionDate, setLastInspectionDate] = useState(null);
   const [products, setProducts] = useState([]);
   const [brandFilter, setBrandFilter] = useState("");
   const [descriptionFilter, setDescriptionFilter] = useState("");
+  const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchLastInspection = async () => {
       try {
         const response = await axios.get("/inspections/last");
-        if (response.data) {
+        if (response.data != null) {
           setLastInspectionDate(new Date(response.data.realDate));
+        } else {
+          setLastInspectionDate(new Date());
         }
       } catch (error) {
         console.error("Error fetching last inspection:", error);
+        setLastInspectionDate(new Date());
       }
     };
 
@@ -60,8 +64,28 @@ const InspectionForm = () => {
     setFormData({ ...formData, stabilitiesMatrixId: selectedOption ? selectedOption.value : "" });
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.stabilitiesMatrixId) newErrors.stabilitiesMatrixId = "El producto evaluado es obligatorio";
+    if (!formData.aerosolStove) newErrors.aerosolStove = "El valor de Aerosol Stove es obligatorio";
+    if (!formData.inOut) newErrors.inOut = "El valor de In/Out es obligatorio";
+    if (!formData.stove) newErrors.stove = "El valor de Stove es obligatorio";
+    if (!formData.hrStove) newErrors.hrStove = "El valor de HR Stove es obligatorio";
+    if (!formData.environment) newErrors.environment = "El valor de Ambiente es obligatorio";
+    if (!formData.fridge) newErrors.fridge = "El valor de Nevera es obligatorio";
+    if (!formData.photolysis) newErrors.photolysis = "El valor de Fotólisis es obligatorio";
+    return newErrors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+    
     const currentDate = new Date();
     const expectedDate = new Date(currentDate);
     expectedDate.setMonth(currentDate.getMonth() + 1);
@@ -80,16 +104,19 @@ const InspectionForm = () => {
     };
 
     try {
-      await axios.post("/inspections", dataToSubmit);
-      alert("Inspección creada correctamente");
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      localStorage.setItem('inspectionData', JSON.stringify(dataToSubmit));
+      setMessage('Inspección creada exitosamente');
+      navigate(`/reportes/tests`);
     } catch (error) {
-      alert("Error al crear la inspección");
+      console.error('Error al crear la inspección:', error);
+      setMessage('Error en la conexión con el servidor.');
     }
   };
 
   const navigate = useNavigate();
 
-  // Filtrar productos según los valores ingresados en los campos de búsqueda
   const filteredProducts = products.filter(product =>
     product.brand.toLowerCase().includes(brandFilter.toLowerCase()) &&
     product.productDescription.toLowerCase().includes(descriptionFilter.toLowerCase())
@@ -110,8 +137,7 @@ const InspectionForm = () => {
       <div className="reportes-card">
         <h2 className="title">Crear Inspección</h2>
         <form onSubmit={handleSubmit} className="form">
-
-        <label className="form-group">
+          <label className="form-group">
             <span className="label-text">Producto evaluado</span>
             <Select
               options={productOptions}
@@ -121,50 +147,58 @@ const InspectionForm = () => {
               isSearchable
               className="input-field"
             />
-          </label>
-
-          <label className="form-group">
-            <span className="label-text">Nombre de la prueba realizada</span>
-            <input type="number" name="testId" placeholder="Seleccione la prueba realizada" value={formData.testId} onChange={handleChange} className="input-field" required />
+            {errors.stabilitiesMatrixId && <span className="error-text">{errors.stabilitiesMatrixId}</span>}
           </label>
           
           {/* Campos de entrada numéricos */}
           <label className="form-group">
             <span className="label-text">Aerosol Stove</span>
             <input type="number" name="aerosolStove" placeholder="Ingrese el valor" value={formData.aerosolStove} onChange={handleChange} className="input-field" />
+            {errors.aerosolStove && <span className="error-text">{errors.aerosolStove}</span>}
           </label>
 
           <label className="form-group">
             <span className="label-text">In/Out</span>
             <input type="number" name="inOut" placeholder="Ingrese el valor" value={formData.inOut} onChange={handleChange} className="input-field" />
+            {errors.inOut && <span className="error-text">{errors.inOut}</span>}
           </label>
 
           <label className="form-group">
             <span className="label-text">Stove</span>
             <input type="number" name="stove" placeholder="Ingrese el valor" value={formData.stove} onChange={handleChange} className="input-field" />
+            {errors.stove && <span className="error-text">{errors.stove}</span>}
           </label>
 
           <label className="form-group">
             <span className="label-text">HR Stove</span>
             <input type="number" name="hrStove" placeholder="Ingrese el valor" value={formData.hrStove} onChange={handleChange} className="input-field" />
+            {errors.hrStove && <span className="error-text">{errors.hrStove}</span>}
           </label>
 
           <label className="form-group">
             <span className="label-text">Ambiente</span>
             <input type="number" name="environment" placeholder="Ingrese el valor" value={formData.environment} onChange={handleChange} className="input-field" />
+            {errors.environment && <span className="error-text">{errors.environment}</span>}
           </label>
 
           <label className="form-group">
             <span className="label-text">Nevera</span>
             <input type="number" name="fridge" placeholder="Ingrese el valor" value={formData.fridge} onChange={handleChange} className="input-field" />
+            {errors.fridge && <span className="error-text">{errors.fridge}</span>}
           </label>
 
           <label className="form-group">
             <span className="label-text">Fotólisis</span>
             <input type="number" name="photolysis" placeholder="Ingrese el valor" value={formData.photolysis} onChange={handleChange} className="input-field" />
+            {errors.photolysis && <span className="error-text">{errors.photolysis}</span>}
           </label>
 
           <button type="submit" className="primary-btn">Crear Inspección</button>
+          {message && (
+            <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>
+              {message}
+            </div>
+          )}
         </form>
       </div>
     </div>

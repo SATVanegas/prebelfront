@@ -25,6 +25,10 @@ import AnadirMatriz from './pages/matriz/AnadirMatriz';
 import EditarMatriz from './pages/matriz/EditarMatriz';
 import EliminarMatriz from './pages/matriz/EliminarMatriz';
 import ComingSoon from './pages/Coming-soon';
+import TestCreation from './pages/reportes/TestCreation';
+import TemperatureTest from './pages/reportes/TemperatureTest';
+import StorageTest from './pages/reportes/StorageTest';
+import ConditionTest from './pages/reportes/ConditionTest';
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
@@ -61,6 +65,10 @@ function App() {
               <Route path="/matriz/editar" element={<EditarMatriz />} />
               <Route path="/matriz/eliminar" element={<EliminarMatriz />} />
               <Route path="/coming-soon" element={<ComingSoon />} />
+              <Route path="/reportes/tests" element={<TestCreation />} />
+              <Route path="/reportes/tests/temperature" element={<TemperatureTest />} />
+              <Route path="/reportes/tests/storage" element={<StorageTest />} />
+              <Route path="/reportes/tests/condition" element={<ConditionTest />} />
             </Routes>
           </header>
         </div>
