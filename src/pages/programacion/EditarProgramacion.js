@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './EditarProgramacion.css'; // Reutiliza los estilos de AnadirProgramacion
+import './EditarProgramacion.css'; 
 
 const EditarProgramacion = () => {
     const [roles, setRoles] = useState([]);
@@ -8,20 +8,20 @@ const EditarProgramacion = () => {
     const [technicians, setTechnicians] = useState([]);
     const [technicianId, setTechnicianId] = useState('');
     const [schedules, setSchedules] = useState([]);
+    const [filteredSchedules, setFilteredSchedules] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(null);
     const [message, setMessage] = useState('');
     const [status, setStatus] = useState('');
-    const [isEditing, setIsEditing] = useState(false);
-    const [editingSchedule, setEditingSchedule] = useState(null);
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const navigate = useNavigate();
 
-    // Mapeo de roles a IDs (debe coincidir con el backend)
     const roleNameToId = {
         "PACK_TECH": 3,
         "LAB_TECH": 5,
         "STAB_TECH": 6,
     };
 
-    // Obtener roles disponibles
     useEffect(() => {
         const fetchRoles = async () => {
             try {
@@ -46,11 +46,9 @@ const EditarProgramacion = () => {
         fetchRoles();
     }, []);
 
-    // Obtener técnicos por rol
     useEffect(() => {
         const fetchTechniciansByRoleName = async (roleName) => {
             if (!roleName) return;
-
             try {
                 const response = await fetch(`http://localhost:8080/api/users/by-role/${roleName}`);
                 if (response.ok) {
@@ -75,7 +73,6 @@ const EditarProgramacion = () => {
                 setStatus('error');
             }
         };
-
         if (assignedRoleId) {
             fetchTechniciansByRoleName(assignedRoleId);
         } else {
@@ -83,16 +80,15 @@ const EditarProgramacion = () => {
         }
     }, [assignedRoleId]);
 
-    // Obtener programaciones del técnico seleccionado
     useEffect(() => {
         const fetchSchedulesByTechnician = async () => {
             if (!technicianId) return;
-
             try {
                 const response = await fetch(`http://localhost:8080/api/weeklyplanner/techniciansschedule/technician/${technicianId}`);
                 if (response.ok) {
                     const data = await response.json();
                     setSchedules(data);
+                    setFilteredSchedules(data); 
                 } else {
                     const errorText = await response.text();
                     console.error(`Error al obtener programaciones: ${errorText}`);
@@ -105,15 +101,25 @@ const EditarProgramacion = () => {
                 setStatus('error');
             }
         };
-
         fetchSchedulesByTechnician();
     }, [technicianId]);
 
-    // Función para eliminar una programación
+    useEffect(() => {
+        if (selectedDate) {
+            const filtered = schedules.filter(schedule => {
+                const scheduleDate = new Date(schedule.date).toISOString().split('T')[0];
+                const selectedDateFormatted = selectedDate.toISOString().split('T')[0];
+                return scheduleDate === selectedDateFormatted;
+            });
+            setFilteredSchedules(filtered);
+        } else {
+            setFilteredSchedules(schedules);
+        }
+    }, [selectedDate, schedules]);
+
     const handleDelete = async (scheduleId) => {
         const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar esta programación?');
         if (!confirmDelete) return;
-
         try {
             const response = await fetch(`http://localhost:8080/api/weeklyplanner/techniciansschedule/${scheduleId}`, {
                 method: 'DELETE',
@@ -121,7 +127,8 @@ const EditarProgramacion = () => {
             if (response.ok) {
                 setMessage('Programación eliminada exitosamente');
                 setStatus('success');
-                setSchedules(schedules.filter(schedule => schedule.id !== scheduleId)); // Actualizar la lista
+                setSchedules(schedules.filter(schedule => schedule.id !== scheduleId)); 
+                setFilteredSchedules(filteredSchedules.filter(schedule => schedule.id !== scheduleId)); 
             } else {
                 const errorText = await response.text();
                 console.error(`Error al eliminar programación: ${errorText}`);
@@ -135,41 +142,52 @@ const EditarProgramacion = () => {
         }
     };
 
-    // Función para editar una programación
-    const handleEdit = (schedule) => {
-        setIsEditing(true);
-        setEditingSchedule(schedule);
+    const getDatesWithSchedules = () => {
+        return schedules.map(schedule => new Date(schedule.date).toISOString().split('T')[0]);
     };
 
-    // Función para guardar los cambios de la edición
-    const handleSaveEdit = async (updatedSchedule) => {
-        try {
-            const response = await fetch(`http://localhost:8080/api/weeklyplanner/techniciansschedule/${updatedSchedule.id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedSchedule),
-            });
-            if (response.ok) {
-                setMessage('Programación actualizada exitosamente');
-                setStatus('success');
-                setIsEditing(false);
-                setEditingSchedule(null);
-                setSchedules(schedules.map(schedule => 
-                    schedule.id === updatedSchedule.id ? updatedSchedule : schedule
-                )); // Actualizar la lista
-            } else {
-                const errorText = await response.text();
-                console.error(`Error al actualizar programación: ${errorText}`);
-                setMessage(`Error: ${errorText}`);
-                setStatus('error');
-            }
-        } catch (error) {
-            console.error('Error al actualizar la programación:', error);
-            setMessage('Error en la conexión con el servidor.');
-            setStatus('error');
+    const renderCalendar = () => {
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+        const datesWithSchedules = getDatesWithSchedules();
+
+        const calendarDays = [];
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            calendarDays.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
         }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
+            const hasSchedule = datesWithSchedules.includes(date);
+            calendarDays.push(
+                <div
+                    key={day}
+                    className={`calendar-day ${hasSchedule ? 'highlighted' : ''} ${selectedDate && date === selectedDate.toISOString().split('T')[0] ? 'selected' : ''}`}
+                    onClick={() => setSelectedDate(new Date(currentYear, currentMonth, day))}
+                >
+                    {day}
+                </div>
+            );
+        }
+
+        return calendarDays;
+    };
+
+    const changeMonth = (offset) => {
+        const newMonth = currentMonth + offset;
+        if (newMonth < 0) {
+            setCurrentMonth(11);
+            setCurrentYear(currentYear - 1);
+        } else if (newMonth > 11) {
+            setCurrentMonth(0);
+            setCurrentYear(currentYear + 1);
+        } else {
+            setCurrentMonth(newMonth);
+        }
+    };
+
+    const changeYear = (offset) => {
+        setCurrentYear(currentYear + offset);
     };
 
     return (
@@ -224,31 +242,53 @@ const EditarProgramacion = () => {
                             <small className="form-help error">No hay técnicos disponibles para este rol</small>
                         )}
                     </div>
-                </div>
-                {schedules.length > 0 && (
-                    <div className="schedules-list">
-                        <h3>Programaciones del Técnico</h3>
-                        {schedules.map((schedule) => (
-                            <div key={schedule.id} className="schedule-item">
-                                <p><strong>Fecha:</strong> {new Date(schedule.date).toLocaleDateString()}</p>
-                                <p><strong>Día:</strong> {schedule.day}</p>
-                                <p><strong>Horario:</strong> {schedule.schedule}</p>
-                                <p><strong>Descripción:</strong> {schedule.info}</p>
-                                <div className="schedule-actions">
-                                    <button className="edit-btn" onClick={() => handleEdit(schedule)}> Editar</button>
-                                    <button className="delete-btn" onClick={() => handleDelete(schedule.id)}> Eliminar</button>
-                                </div>
+                    <div className="form-group">
+                        <label>Calendario:</label>
+                        <div className="calendar">
+                            <div className="calendar-header">
+                                <button onClick={() => changeYear(-1)}>«</button>
+                                <button onClick={() => changeMonth(-1)}>‹</button>
+                                <span>{new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                                <button onClick={() => changeMonth(1)}>›</button>
+                                <button onClick={() => changeYear(1)}>»</button>
                             </div>
-                        ))}
+                            <div className="calendar-grid">
+                                {['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'].map(day => (
+                                    <div key={day} className="calendar-day-header">{day}</div>
+                                ))}
+                                {renderCalendar()}
+                            </div>
+                        </div>
                     </div>
-                )}
-                {isEditing && (
-                    <EditScheduleModal
-                        schedule={editingSchedule}
-                        onSave={handleSaveEdit}
-                        onCancel={() => setIsEditing(false)}
-                        assignedRoleId={assignedRoleId}
-                    />
+                </div>
+                {filteredSchedules.length > 0 && (
+                    <div className="schedules-table">
+                        <h3>Programaciones del Técnico</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Día</th>
+                                    <th>Horario</th>
+                                    <th>Descripción</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredSchedules.map((schedule) => (
+                                    <tr key={schedule.id}>
+                                        <td>{new Date(schedule.date).toLocaleDateString()}</td>
+                                        <td>{schedule.day}</td>
+                                        <td>{schedule.schedule}</td>
+                                        <td>{schedule.info}</td>
+                                        <td>
+                                            <button className="delete-btn" onClick={() => handleDelete(schedule.id)}> Eliminar</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
         </div>
@@ -256,126 +296,3 @@ const EditarProgramacion = () => {
 };
 
 export default EditarProgramacion;
-
-// Componente para editar programación (modal)
-const EditScheduleModal = ({ schedule, onSave, onCancel, assignedRoleId }) => {
-    const [date, setDate] = useState(new Date(schedule.date));
-    const [day, setDay] = useState(schedule.day);
-    const [scheduleTime, setScheduleTime] = useState(schedule.schedule);
-    const [info, setInfo] = useState(schedule.info);
-    const [schedules, setSchedules] = useState([]);
-
-    // Actualizar el día de la semana cuando cambia la fecha
-    const updateDayOfWeek = (date) => {
-        const dayOfWeek = date.getDay();
-        const dayNames = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
-        setDay(dayNames[dayOfWeek]);
-    };
-
-    // Obtener horarios según el rol
-    useEffect(() => {
-        const getSchedulesByRole = () => {
-            if (!assignedRoleId) return [];
-            switch (assignedRoleId) {
-                case "PACK_TECH":
-                    return ["7:00 am - 5:00 pm"];
-                case "LAB_TECH":
-                case "STAB_TECH":
-                    return ["6:00 am - 2:00 pm", "2:00 pm - 10:00 pm"];
-                default:
-                    return [];
-            }
-        };
-        setSchedules(getSchedulesByRole());
-    }, [assignedRoleId]);
-
-    // Formatear la fecha para el input
-    const formatDateForInput = (date) => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    };
-
-    // Manejar cambio de fecha
-    const handleDateChange = (e) => {
-        const newDateStr = e.target.value;
-        const newDate = new Date(newDateStr + 'T00:00:00');
-        if (newDate.getDay() === 0) { 
-            alert('El domingo no es un día válido para programar. Por favor seleccione otro día.');
-        } else {
-            setDate(newDate);
-            updateDayOfWeek(newDate);
-        }
-    };
-
-    // Guardar cambios
-    const handleSave = () => {
-        const updatedSchedule = {
-            ...schedule,
-            date: date.toISOString(),
-            day,
-            schedule: scheduleTime,
-            info,
-        };
-        onSave(updatedSchedule);
-    };
-
-    return (
-        <div className="modal-overlay">
-            <div className="modal">
-                <h3>Editar Programación</h3>
-                <div className="form-group">
-                    <label>Fecha:</label>
-                    <input
-                        type="date"
-                        value={formatDateForInput(date)}
-                        onChange={handleDateChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Día de la semana:</label>
-                    <select
-                        value={day}
-                        onChange={(e) => setDay(e.target.value)}
-                        disabled
-                    >
-                        <option value="LUNES">Lunes</option>
-                        <option value="MARTES">Martes</option>
-                        <option value="MIERCOLES">Miércoles</option>
-                        <option value="JUEVES">Jueves</option>
-                        <option value="VIERNES">Viernes</option>
-                        <option value="SABADO">Sábado</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label>Horario:</label>
-                    <select
-                        value={scheduleTime}
-                        onChange={(e) => setScheduleTime(e.target.value)}
-                        required
-                    >
-                        <option value="">Seleccione un horario</option>
-                        {schedules.map((scheduleOption, index) => (
-                            <option key={index} value={scheduleOption}>
-                                {scheduleOption}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label>Descripción:</label>
-                    <textarea
-                        value={info}
-                        onChange={(e) => setInfo(e.target.value)}
-                    />
-                </div>
-                <div className="modal-actions">
-                    <button onClick={handleSave}>Guardar</button>
-                    <button onClick={onCancel}>Cancelar</button>
-                </div>
-            </div>
-        </div>
-    );
-};
