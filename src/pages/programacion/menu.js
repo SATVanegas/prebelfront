@@ -28,19 +28,7 @@ const MenuPlanificador = () => {
             className="primary-btn" 
             onClick={() => navigate('/programacion/editar')}
           >
-            Editar Programación
-          </button>
-          <button 
-            className="primary-btn" 
-            onClick={() => navigate('/programacion/consultar')}
-          >
             Consultar Programación
-          </button>
-          <button 
-            className="primary-btn" 
-            onClick={() => navigate('/planificador/eliminar-programacion')}
-          >
-            Eliminar Programación
           </button>
         </div>
       </div>
