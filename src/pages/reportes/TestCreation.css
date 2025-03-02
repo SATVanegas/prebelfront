@@ -26,10 +26,11 @@
     text-align: center;
   }
 
-.test-btn {
+
+  .test-btn {
     background: transparent;
-    border: 2px solid #3a8dde;
-    color: #3a8dde;
+    border: 2px solid #FF6B6B; /* Color rojo por defecto */
+    color: #FF6B6B;
     padding: 1rem;
     border-radius: 0.5rem;
     font-size: 1rem;
@@ -43,9 +44,12 @@
     transform: scale(1);
     transition: transform 0.3s ease, background 0.3s ease;
     backface-visibility: hidden;
-    flex-grow: 1;
-    flex-basis: 0;
-}
+  }
+  
+  .test-btn.filled {
+    border-color: #3a8dde; /* Color azul cuando está lleno */
+    color: #3a8dde;
+  }
   
   .test-btn:hover {
     background: #3a8dde;
@@ -55,6 +59,11 @@
     transform: scale(1.02) translateZ(0);
     margin: 4px 0;
     position: static;
+  }
+
+  .test-btn:hover:not(.filled) {
+    background: #FF6B6B;
+    color: white;
   }
   
   .test-btn::before, .test-btn::after {
@@ -86,67 +95,7 @@
     left: 120%;
   }
 
-  .test-btn {
-  background: transparent;
-  border: 2px solid #3a8dde;
-  color: #3a8dde;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  transform-origin: center;
-  margin: 4px 0;
-  transform: scale(1);
-  transition: transform 0.3s ease, background 0.3s ease;
-  backface-visibility: hidden;
-}
-
-.test-btn:hover {
-  background: #3a8dde;
-  color: white;
-  transform: scale(1.02);
-  z-index: 1;
-  transform: scale(1.02) translateZ(0);
-  margin: 4px 0;
-  position: static;
-}
-
-.test-btn::before, .test-btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.3s ease;
-  z-index: -1;
-}
-
-.test-btn:hover::before, .test-btn:hover::after {
-  transform: scale(1.02);
-}
-
-.test-btn::after {
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: rgba(255, 255, 255, 0.1);
-  transform: rotate(45deg);
-  transition: all 0.5s ease;
-}
-
-.test-btn:hover::after {
-  left: 120%;
-}
-
-.btn-container {
+  .btn-container {
     display: flex;
-    justify-content: space-between; 
-    flex-wrap: wrap;
-    gap: 1rem;
+    flex-direction: column;
   }

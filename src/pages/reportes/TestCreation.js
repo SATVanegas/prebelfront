@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from "axios";
 import './TestCreation.css';
+
+const toCamelCase = (str) => {
+    return str.toLowerCase().replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
+  };
 
 const TestCreation = () => {
   const [testData, setTestData] = useState(null);
@@ -20,18 +24,40 @@ const TestCreation = () => {
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const storedData = localStorage.getItem('inspectionData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       setTestData(parsedData);
-      setFormData({
-        ...formData,
+      setFormData((prevFormData) => ({
+        ...prevFormData,
         ...parsedData
-      });
+      }));
     }
   }, []);
+
+  useEffect(() => {
+    if (location.state?.conditionId && location.state?.type) {
+      const { conditionId, type } = location.state;
+      const camelCaseType = toCamelCase(type);
+
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [`${camelCaseType}Id`]: conditionId, // ✅ Guardar el ID en el formulario
+      }));
+
+      setTestData((prevTestData) => {
+        const updatedTestData = {
+          ...prevTestData,
+          [`${camelCaseType}Id`]: conditionId
+        };
+        localStorage.setItem('inspectionData', JSON.stringify(updatedTestData));
+        return updatedTestData;
+      });
+    }
+  }, [location.state]);
 
   const handleChange = (e) => {
     const updatedFormData = { ...formData, [e.target.name]: e.target.value };
@@ -75,12 +101,33 @@ const TestCreation = () => {
     };
   
     try {
-      const response = await axios.post("localhost:8080/api/test", dataToSubmit);
+      const response = await axios.post("http://localhost:8080/api/test", dataToSubmit);
+      const testId = response.data; // Obtener el ID del test devuelto por la respuesta
       alert("Test creado correctamente");
-      navigate(`/reportes/tests/condition`); // ✅ Ahora solo redirige si el test se crea bien
+  
+      // Crear la inspección con los datos guardados y el ID del test
+      const inspectionData = {
+        ...testData,
+        testId,
+        realDate: new Date().toISOString().split('T')[0],
+        expectedDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
+        responseTime: Math.ceil((new Date() - new Date(testData.realDate)) / (1000 * 60 * 60 * 24))
+      };
+  
+      try {
+        await axios.post("http://localhost:8080/inspections", inspectionData);
+        alert("Inspección creada exitosamente");
+        navigate(`/reportes/anadir`, { state: { ...testData, testId } });
+      } catch (error) {
+        alert("Error al crear la inspección");
+      }
     } catch (error) {
       alert("Error al crear el test");
     }
+  };
+
+  const handleConditionTest = (type) => {
+    navigate(`/reportes/tests/condition`, { state: { type } });
   };
 
   if (!testData) {
@@ -100,57 +147,47 @@ const TestCreation = () => {
           <p><strong>Producto evaluado:</strong> {testData.stabilitiesMatrixId}</p>
           
           <label className="form-group">
-            <span className="label-text">Color</span>
-            <input type="number" name="colorId" placeholder="Ingrese el valor" value={formData.colorId} onChange={handleChange} className="input-field" />
-            {errors.colorId && <span className="error-text">{errors.colorId}</span>}
+            <button type="button" className={`test-btn ${formData.colorId ? 'filled' : ''}`} onClick={() => handleConditionTest('COLOR')}>Prueba de color</button>
           </label>
 
           <label className="form-group">
-            <span className="label-text">Olor</span>
-            <input type="number" name="odorId" placeholder="Ingrese el valor" value={formData.odorId} onChange={handleChange} className="input-field" />
-            {errors.odorId && <span className="error-text">{errors.odorId}</span>}
+            <button type="button" className={`test-btn ${formData.odorId ? 'filled' : ''}`} onClick={() => handleConditionTest('ODOR')}>Prueba de olor</button>
           </label>
 
           <label className="form-group">
-            <span className="label-text">Apariencia</span>
-            <input type="number" name="appearanceId" placeholder="Ingrese el valor" value={formData.appearanceId} onChange={handleChange} className="input-field" />
-            {errors.appearanceId && <span className="error-text">{errors.appearanceId}</span>}
+            <button type="button" className={`test-btn ${formData.appearanceId ? 'filled' : ''}`} onClick={() => handleConditionTest('APPEARANCE')}>Prueba de apariencia</button>
           </label>
 
           <label className="form-group">
-            <span className="label-text">pH</span>
-            <input type="number" name="phId" placeholder="Ingrese el valor" value={formData.phId} onChange={handleChange} className="input-field" />
-            {errors.phId && <span className="error-text">{errors.phId}</span>}
+            <button type="button" className={`test-btn ${formData.phId ? 'filled' : ''}`} onClick={() => handleConditionTest('PH')}>Prueba de pH</button>
           </label>
 
           <label className="form-group">
-            <span className="label-text">Viscosidad</span>
-            <input type="number" name="viscosityId" placeholder="Ingrese el valor" value={formData.viscosityId} onChange={handleChange} className="input-field" />
-            {errors.viscosityId && <span className="error-text">{errors.viscosityId}</span>}
+            <button type="button" className={`test-btn ${formData.viscosityId ? 'filled' : ''}`} onClick={() => handleConditionTest('VISCOSITY')}>Prueba de viscosidad</button>
           </label>
 
           <label className="form-group">
-            <span className="label-text">Gravedad específica</span>
-            <input type="number" name="specificGravityId" placeholder="Ingrese el valor" value={formData.specificGravityId} onChange={handleChange} className="input-field" />
-            {errors.specificGravityId && <span className="error-text">{errors.specificGravityId}</span>}
+            <button type="button" className={`test-btn ${formData.specificGravityId ? 'filled' : ''}`} onClick={() => handleConditionTest('SPECIFIC_GRAVITY')}>Prueba de gravedad específica</button>
           </label>
 
           <label className="form-group">
-            <span className="label-text">Recuento total de bacterias</span>
-            <input type="number" name="totalBacteriaCountId" placeholder="Ingrese el valor" value={formData.totalBacteriaCountId} onChange={handleChange} className="input-field" />
-            {errors.totalBacteriaCountId && <span className="error-text">{errors.totalBacteriaCountId}</span>}
+            <button type="button" className={`test-btn ${formData.totalBacteriaCountId ? 'filled' : ''}`} onClick={() => handleConditionTest('TOTAL_BACTERIA_COUNT')}>Prueba de recuento total de bacterias</button>
           </label>
 
           <label className="form-group">
-            <span className="label-text">Recuento de hongos y levaduras</span>
-            <input type="number" name="fungiYeastCountId" placeholder="Ingrese el valor" value={formData.fungiYeastCountId} onChange={handleChange} className="input-field" />
-            {errors.fungiYeastCountId && <span className="error-text">{errors.fungiYeastCountId}</span>}
+            <button type="button" className={`test-btn ${formData.fungiYeastCountId ? 'filled' : ''}`} onClick={() => handleConditionTest('FUNGI_YEAST_COUNT')}>Prueba de recuento de hongos y levaduras</button>
           </label>
 
           <label className="form-group">
-            <span className="label-text">Patógenos</span>
-            <input type="number" name="pathogensId" placeholder="Ingrese el valor" value={formData.pathogensId} onChange={handleChange} className="input-field" />
-            {errors.pathogensId && <span className="error-text">{errors.pathogensId}</span>}
+            <button type="button" className={`test-btn ${formData.pathogensId ? 'filled' : ''}`} onClick={() => handleConditionTest('PATHOGENS')}>Prueba de patógenos</button>
+          </label>
+
+          <label className="form-group">
+          <button type="button" className={`test-btn ${testData.temperatureId ? 'filled' : ''}`} onClick={() => navigate(`/reportes/tests/temperature`)}>Temperatura</button>
+          </label>
+
+          <label className="form-group">
+          <button type="button" className={`test-btn ${testData.storageId ? 'filled' : ''}`} onClick={() => navigate(`/reportes/tests/storage`)}>Almacenamiento</button>
           </label>
 
           <label className="form-group">
@@ -162,11 +199,7 @@ const TestCreation = () => {
             <span className="label-text">Conclusión</span>
             <textarea name="conclusion" placeholder="Ingrese la conclusión" value={formData.conclusion} onChange={handleChange} className="input-field" />
           </label>
-          <div className="btn-container">
-            <button type="button" className="test-btn" onClick={() => navigate(`/reportes/tests/temperature`)}>Temperatura</button>
-            <button type="button" className="test-btn" onClick={() => navigate(`/reportes/tests/storage`)}>Almacenamiento</button>
-          </div>
-          <button type="submit" className="primary-btn">Continuar</button>
+          <button type="submit" className="primary-btn">Guardar</button>
         </form>
       </div>
     </div>
