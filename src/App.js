@@ -69,6 +69,7 @@ function App() {
               <Route path="/reportes/tests/temperature" element={<TemperatureTest />} />
               <Route path="/reportes/tests/storage" element={<StorageTest />} />
               <Route path="/reportes/tests/condition" element={<ConditionTest />} />
+              <Route path="/reportes/consultar" element={<ConsultarReporte />} />
             </Routes>
           </header>
         </div>
