@@ -26,13 +26,13 @@ const MenuPlanificador = () => {
           </button>
           <button 
             className="primary-btn" 
-            onClick={() => navigate('/planificador/editar-programacion')}
+            onClick={() => navigate('/programacion/editar')}
           >
             Editar Programación
           </button>
           <button 
             className="primary-btn" 
-            onClick={() => navigate('/planificador/consultar-programacion')}
+            onClick={() => navigate('/programacion/consultar')}
           >
             Consultar Programación
           </button>
