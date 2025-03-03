@@ -35,7 +35,7 @@ const Home = () => {
             <button className="primary-btn" onClick={() => navigate('/programacion')}>Programación Semanal</button>
           )}
           {tieneAcceso("matriz") && (
-            <button className="primary-btn" onClick={() => navigate('/matriz')}>Matriz de Estabilidades</button>
+            <button className="primary-btn" onClick={() => navigate('/matriz/consultar')}>Inspecciones próximas</button>
           )}
           {tieneAcceso("reportes") && (
             <button className="primary-btn" onClick={() => navigate('/reportes')}>Reportes</button>
