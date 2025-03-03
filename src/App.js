@@ -25,6 +25,7 @@ import EliminarMatriz from './pages/matriz/EliminarMatriz';
 import ComingSoon from './pages/Coming-soon';
 import TestCreation from './pages/reportes/TestCreation';
 import ImprimirReportes from './pages/reportes/ImprimirReportes';
+import EnviarReporte from "./pages/reportes/EnviarReporte";
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
@@ -62,6 +63,7 @@ function App() {
               <Route path="/reportes/tests" element={<TestCreation />} />
               <Route path="/reportes/consultar" element={<ConsultarReporte />} />
               <Route path="/reportes/imprimir" element={<ImprimirReportes />} />
+              <Route path="/reportes/enviar" element={<EnviarReporte />} />
             </Routes>
           </header>
         </div>

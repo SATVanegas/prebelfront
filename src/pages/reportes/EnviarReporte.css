@@ -1,0 +1,39 @@
+.enviar-reporte {
+    width: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .enviar-reporte h2 {
+    margin-bottom: 10px;
+  }
+  
+  .enviar-reporte input {
+    width: 90%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .enviar-reporte button {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .enviar-reporte button:hover {
+    background-color: #218838;
+  }
+  
+  .enviar-reporte p {
+    margin-top: 10px;
+    color: #333;
+  }
+  
