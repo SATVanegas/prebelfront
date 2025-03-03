@@ -21,8 +21,7 @@ const Reportes = () => {
         <div className="bt-container">
           <button className="primary-btn" onClick={() => navigate('/reportes/consultar')}>Consultar Reporte</button>
           <button className="primary-btn" onClick={() => navigate('/reportes/anadir')}>Añadir Reporte</button>
-          <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Editar Reporte</button>
-          <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Eliminar Reporte</button>
+          <button className="primary-btn" onClick={() => navigate('/reportes/imprimir')}>Imprimir Reporte</button>
         </div>
       </div>
     </div>

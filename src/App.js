@@ -29,6 +29,7 @@ import TestCreation from './pages/reportes/TestCreation';
 import TemperatureTest from './pages/reportes/TemperatureTest';
 import StorageTest from './pages/reportes/StorageTest';
 import ConditionTest from './pages/reportes/ConditionTest';
+import ImprimirReportes from './pages/reportes/ImprimirReportes';
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
@@ -70,6 +71,7 @@ function App() {
               <Route path="/reportes/tests/storage" element={<StorageTest />} />
               <Route path="/reportes/tests/condition" element={<ConditionTest />} />
               <Route path="/reportes/consultar" element={<ConsultarReporte />} />
+              <Route path="/reportes/imprimir" element={<ImprimirReportes />} />
             </Routes>
           </header>
         </div>

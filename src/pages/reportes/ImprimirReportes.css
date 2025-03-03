@@ -1,0 +1,417 @@
+.reportes-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5vh;
+    flex-direction: column;
+    background: var(--background-gradient);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: rgb(26,61,106);
+    background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%, rgba(255,255,255,1) 100%);
+    background-size: 300% 300%;
+    animation: gradientAnimation 10s ease infinite;
+    width: 100vw;
+    min-height: 100vh; 
+    transform: translateZ(0); 
+    will-change: background-position; 
+    -webkit-animation: gradientAnimation 10s ease infinite;
+    -moz-animation: gradientAnimation 10s ease infinite;
+    padding-top: 50px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.reportes-container::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    animation: flicker 10s infinite;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.05; }
+}
+
+.reportes-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 3vh 3vw;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    width: min(90vw, 800px);
+    min-height: fit-content; 
+    max-height: none; 
+    backdrop-filter: blur(10px);
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    margin: 60px auto 30px; 
+}
+
+.reportes-card:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+    color: #153354;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.status-message {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.status-message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.form-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.form-group label {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+    text-align: left;
+}
+
+select {
+    border: 1.5px solid rgba(26, 61, 106, 0.1);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    appearance: none;
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231a3d6a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:hover, select:focus {
+    border-color: #1a3d6a;
+    outline: none;
+}
+
+select:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    max-height: none; 
+    padding: 1rem;
+    width: 100%;
+    overflow-y: visible; 
+    flex-grow: 1;
+}
+
+.report-btn {
+    width: 100%;
+    padding: 1.2vh;
+    border: none;
+    border-radius: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    transform-origin: center;
+    margin: 4px 0;
+    transform: scale(1);
+    transition: transform 0.3s ease, background 0.3s ease;
+    backface-visibility: hidden;
+}
+
+.report-btn:hover:not(:disabled) {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.report-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.report-btn.generate {
+    background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
+    color: white;
+}
+
+.report-btn.generate:hover:not(:disabled) {
+    background: linear-gradient(135deg, #102a46 0%, #3a8dde 100%);
+}
+
+.report-btn.view {
+    background-color: #28a745;
+    color: white;
+}
+
+.report-btn.view:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.report-btn.demo {
+    background-color: #6c757d;
+    color: white;
+}
+
+.report-btn.demo:hover:not(:disabled) {
+    background-color: #5a6268;
+}
+
+.pdf-viewer-container {
+    width: 100%;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+}
+
+.pdf-viewer-container h3 {
+    color: #153354;
+    margin-bottom: 1rem;
+}
+
+.pdf-viewer {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #dee2e6;
+    border-radius: 0.3rem;
+    overflow: hidden;
+    background-color: white;
+}
+
+.pdf-viewer iframe {
+    border: none;
+}
+
+.close-btn {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.close-btn:hover {
+    background-color: #c82333;
+}
+
+.info-section {
+    margin: 2rem 0; 
+    text-align: left;
+    width: 100%;
+    padding: 1.5rem;
+    background-color: #e9f0f8;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.info-section h3 {
+    color: #153354;
+    margin-bottom: 1rem;
+}
+
+.info-section ul {
+    padding-left: 1.5rem;
+    margin: 0;
+}
+
+.info-section li {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.error-details {
+    margin-top: 10px;
+    font-size: 0.8em;
+    color: #555;
+    background-color: #f8f8f8;
+    border-left: 3px solid #e74c3c;
+    padding: 8px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.info-title {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
+.info-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-card {
+    display: flex;
+    background-color: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.info-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3498db;
+}
+
+.info-text h4 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.info-text p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+    .reportes-card {
+        max-width: 800px;
+        padding: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .reportes-card {
+        width: 95vw;
+        padding: 1.5rem;
+        max-height: none; 
+    }
+    
+    .buttons-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .report-btn {
+        width: 100%;
+        font-size: 1.1rem;
+        padding: 0.9rem;
+    }
+    
+    .pdf-viewer {
+        height: 400px;
+    }
+    
+    .info-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-card {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .reportes-container {
+        padding: 1rem;
+        border-radius: 1rem;
+    }
+    
+    .reportes-card {
+        width: 90%;
+        max-width: 350px;
+        padding: 1.2rem;
+        margin: 40px auto 20px; 
+}
+    
+    .buttons-container {
+        gap: 0.5rem;
+    }
+    
+    .report-btn {
+        font-size: 1.1rem;
+        padding: 0.9rem;
+    }
+    
+    .pdf-viewer {
+        height: 300px;
+    }
+}
