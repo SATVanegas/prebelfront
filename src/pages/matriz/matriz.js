@@ -15,7 +15,7 @@ const Matriz = () => {
       <div className="matriz-card">
         <h2 className='title'>Matriz de estabilidad</h2>
         <div className="bt-container">
-          <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Consultar matriz</button>
+          <button className="primary-btn" onClick={() => navigate('/matriz/consultar')}>Consultar matriz</button>
           <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Crear matriz</button>
           <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Editar matriz</button>
           <button className="primary-btn" onClick={() => navigate('/coming-soon')}>Eliminar matriz</button>
