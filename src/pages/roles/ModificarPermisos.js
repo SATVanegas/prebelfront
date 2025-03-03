@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiCheckSquare, FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import './ModificarPermisos.css';
+import Select from "react-select";
 
 const ModificarPermisos = () => {
   const [roles, setRoles] = useState([]);
@@ -12,6 +13,17 @@ const ModificarPermisos = () => {
   const [expandedModule, setExpandedModule] = useState('');
   const [message, setMessage] = useState('');
   const [modulesToRemove, setModulesToRemove] = useState([]);
+
+
+  const roleOptions = roles.map((role) => ({
+    value: role,
+    label: role,
+  }));
+  
+  const moduleOptions = modules.map((module) => ({
+    value: module,
+    label: module,
+  }));
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -174,36 +186,84 @@ const ModificarPermisos = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Rol:</label>
-            <select
-              value={selectedRoleName}
-              onChange={(e) => setSelectedRoleName(e.target.value)}
-              required
-            >
-              <option value="">Seleccione un rol</option>
-              {roles.map((role, index) => (
-                <option key={index} value={role}>
-                  {role}
-                </option>
-              ))}
-            </select>
-          </div>
+            <Select
+    options={roleOptions}
+    value={roleOptions.find(option => option.value === selectedRoleName)}
+    onChange={(option) => setSelectedRoleName(option ? option.value : '')}
+    placeholder="Seleccione un rol"
+    isSearchable
+    className="select-container"
+    classNamePrefix="react-select"
+    styles={{
+      control: (base) => ({
+        ...base,
+        minHeight: '40px',
+        boxShadow: 'none',
+      }),
+      valueContainer: (base) => ({
+        ...base,
+        padding: '0 8px',
+      }),
+      input: (base) => ({
+        ...base,
+        margin: 0,
+        padding: 0,
+      }),
+      option: (base, state) => ({
+        ...base,
+        backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+        '&:hover': {
+          backgroundColor: '#BDDCF5',
+        }
+      }),
+      singleValue: (base) => ({
+        ...base,
+        color: '#3a8dde',
+      })
+    }}
+  />
+</div>
 
           <div className="module-selector">
       <div className="selector-header">
         <h3 className="section-title">Módulos del Rol</h3>
         <div className="selector-controls">
-          <select
-            value={selectedModule}
-            onChange={(e) => setSelectedModule(e.target.value)}
-            className="module-dropdown"
-          >
-            <option value="">Selecciona un módulo</option>
-            {modules.map((module, index) => (
-              <option key={index} value={module}>
-                {module}
-              </option>
-            ))}
-          </select>
+        <Select
+    options={moduleOptions}
+    value={moduleOptions.find(option => option.value === selectedModule)}
+    onChange={(option) => setSelectedModule(option ? option.value : '')}
+    placeholder="Selecciona un módulo"
+    isSearchable
+    className="select-container"
+    classNamePrefix="react-select"
+    styles={{
+      control: (base) => ({
+        ...base,
+        minHeight: '40px',
+        boxShadow: 'none',
+      }),
+      valueContainer: (base) => ({
+        ...base,
+        padding: '0 8px',
+      }),
+      input: (base) => ({
+        ...base,
+        margin: 0,
+        padding: 0,
+      }),
+      option: (base, state) => ({
+        ...base,
+        backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+        '&:hover': {
+          backgroundColor: '#BDDCF5',
+        }
+      }),
+      singleValue: (base) => ({
+        ...base,
+        color: '#3a8dde',
+      })
+    }}
+  />
           <button
             type="button"
             onClick={addModule}

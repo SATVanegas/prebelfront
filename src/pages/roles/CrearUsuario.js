@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CrearUsuario.css';
+import Select from 'react-select';
 
 const CrearUsuario = () => {
   const [name, setName] = useState('');
@@ -14,6 +15,12 @@ const CrearUsuario = () => {
   const formRef = useRef(null);
   const navigate = useNavigate();
 
+
+  const roleOptions = roles.map((role) => ({
+    value: role,
+    label: role,
+  }));
+  
   useEffect(() => {
     const form = formRef.current;
     if (form) {
@@ -131,16 +138,44 @@ const CrearUsuario = () => {
             />
           </div>
           <div className="form-group">
-            <label>Rol:</label>
-            <select value={roleName} onChange={(e) => setRoleName(e.target.value)} required>
-              <option value="">Seleccione un rol</option>
-              {roles.map((role, index) => (
-                <option key={index} value={role}>
-                  {role}
-                </option>
-              ))}
-            </select>
-          </div>
+  <label>Rol:</label>
+  <Select
+    options={roleOptions}
+    value={roleOptions.find(option => option.value === roleName)}
+    onChange={(option) => setRoleName(option ? option.value : '')}
+    placeholder="Seleccione un rol"
+    isSearchable
+    className="select-container"
+    classNamePrefix="react-select"
+    styles={{
+      control: (base) => ({
+        ...base,
+        minHeight: '40px',
+        boxShadow: 'none',
+      }),
+      valueContainer: (base) => ({
+        ...base,
+        padding: '0 8px',
+      }),
+      input: (base) => ({
+        ...base,
+        margin: 0,
+        padding: 0,
+      }),
+      option: (base, state) => ({
+        ...base,
+        backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+        '&:hover': {
+          backgroundColor: '#BDDCF5',
+        }
+      }),
+      singleValue: (base) => ({
+        ...base,
+        color: '#3a8dde',
+      })
+    }}
+  />
+</div>
           <button type="submit" className="primary-btn">Crear Usuario</button>
         </form>
         {message && (
