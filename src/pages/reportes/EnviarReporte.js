@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
 
 const EnviarReporte = () => {
     const [productos, setProductos] = useState([]);
@@ -10,6 +11,11 @@ const EnviarReporte = () => {
     const [loading, setLoading] = useState(false);
     
     const navigate = useNavigate();
+
+    const productOptions = productos.map(producto => ({
+        value: producto.id,
+        label: `${producto.productDescription} - ${producto.brand}`
+      }));
 
     useEffect(() => {
         const fetchProductos = async () => {
@@ -76,21 +82,45 @@ const EnviarReporte = () => {
                 {message && <div className={`status-message ${status}`}>{message}</div>}
 
                 <div className="form-container">
-                    <div className="form-group">
-                        <label htmlFor="producto">Seleccionar Producto:</label>
-                        <select 
-                            id="producto" 
-                            value={productoSeleccionado} 
-                            onChange={(e) => setProductoSeleccionado(e.target.value)}
-                            disabled={loading}
-                        >
-                            <option value="">-- Seleccione un producto --</option>
-                            {productos.map(producto => (
-                                <option key={producto.id} value={producto.id}>
-                                    {producto.productDescription} - {producto.brand}
-                                </option>
-                            ))}
-                        </select>
+                <div className="form-group">
+                    <label>Seleccionar Producto:</label>
+                    <Select
+                        options={productOptions}
+                        value={productOptions.find(option => option.value === productoSeleccionado)}
+                        onChange={(option) => setProductoSeleccionado(option ? option.value : '')}
+                        placeholder="Seleccione un producto"
+                        isSearchable
+                        isDisabled={loading}
+                        className="select-container"
+                        classNamePrefix="react-select"
+                        styles={{
+                        control: (base) => ({
+                            ...base,
+                            minHeight: '40px',
+                            boxShadow: 'none',
+                        }),
+                        valueContainer: (base) => ({
+                            ...base,
+                            padding: '0 8px',
+                        }),
+                        input: (base) => ({
+                            ...base,
+                            margin: 0,
+                            padding: 0,
+                        }),
+                        option: (base, state) => ({
+                            ...base,
+                            backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                            '&:hover': {
+                            backgroundColor: '#BDDCF5',
+                            }
+                        }),
+                        singleValue: (base) => ({
+                            ...base,
+                            color: '#3a8dde',
+                        })
+                        }}
+                    />
                     </div>
 
                     <div className="form-group">
@@ -106,7 +136,7 @@ const EnviarReporte = () => {
                     </div>
 
                     <button 
-                        className="report-btn send" 
+                        className="primary-btn send" 
                         onClick={handleEnviarReporte} 
                         disabled={loading || !productoSeleccionado || !email}
                     >

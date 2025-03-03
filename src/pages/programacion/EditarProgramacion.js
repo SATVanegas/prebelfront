@@ -200,7 +200,7 @@ const EditarProgramacion = () => {
                     🏠 Inicio
                 </button>
             </div>
-            <div className="crear-usuario-card">
+            <div className="planner-card">
                 <h2 className="title">Buscar Programación</h2>
                 {message && (
                     <div className={`status-message ${status}`}>
@@ -264,7 +264,7 @@ const EditarProgramacion = () => {
                 {filteredSchedules.length > 0 && (
                     <div className="schedules-table">
                         <h3>Programaciones del Técnico</h3>
-                        <table>
+                        <table className='schedules'>
                             <thead>
                                 <tr>
                                     <th>Fecha</th>
