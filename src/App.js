@@ -14,8 +14,6 @@ import Reportes from './pages/reportes/reportes';
 import MenuPlanificador from './pages/programacion/menu';
 import ConsultarReporte from './pages/reportes/ConsultarReporte';
 import AnadirReporte from './pages/reportes/AnadirReporte';
-import EditarReporte from './pages/reportes/EditarReporte';
-import EliminarReporte from './pages/reportes/EliminarReporte';
 import ConsultarProgramacion from './pages/programacion/ConsultarProgramacion';
 import AnadirProgramacion from './pages/programacion/AnadirProgramacion';
 import EditarProgramacion from './pages/programacion/EditarProgramacion';
@@ -55,8 +53,6 @@ function App() {
               <Route path="/programacion" element={<ProtectedRoute element={<MenuPlanificador />} />} />
               <Route path="/reportes/consultar" element={<ConsultarReporte />} />
               <Route path="/reportes/anadir" element={<AnadirReporte />} />
-              <Route path="/reportes/editar" element={<EditarReporte />} />
-              <Route path="/reportes/eliminar" element={<EliminarReporte />} />
               <Route path="/programacion/consultar" element={<ConsultarProgramacion />} />
               <Route path="/programacion/anadir" element={<AnadirProgramacion />} />
               <Route path="/programacion/editar" element={<EditarProgramacion />} />

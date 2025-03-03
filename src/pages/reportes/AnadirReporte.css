@@ -26,3 +26,48 @@
     overflow-y: auto; 
   }
   
+  /* Estilos para react-select */
+.input-field {
+  width: 100%;
+}
+
+/* Sobrescribir estilos por defecto de react-select */
+.css-13cymwt-control {
+  border: 1.5px solid rgba(26, 61, 106, 0.1) !important;
+  border-radius: 0.5rem !important;
+  font-size: 1rem !important;
+  min-height: 40px !important;
+  box-sizing: border-box !important;
+}
+
+/* Estilo cuando el select está enfocado */
+.css-t3ipsp-control {
+  border: 1.5px solid rgba(26, 61, 106, 0.1) !important;
+  border-radius: 0.5rem !important;
+  box-shadow: none !important;
+  min-height: 40px !important;
+}
+
+/* Contenedor del select */
+.select-container {
+  width: 100%;
+}
+
+/* Ocultar flechas en campos numéricos para Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Ocultar flechas en campos numéricos para Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.error-text {
+  color: #ff6b6b;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  display: block;
+}

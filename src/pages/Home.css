@@ -8,6 +8,7 @@
   height: 100vh;
   box-sizing: border-box;
   overflow-y: auto; 
+  position: relative;
 }
 
 
@@ -88,7 +89,9 @@
   transform: scale(1);
   transition: transform 0.3s ease, background 0.3s ease;
   backface-visibility: hidden;
+  z-index: 1; /* Añadido para manejar el z-index correctamente */
 }
+
 
 .primary-btn {
   background: linear-gradient(135deg, #153354 0%, #3a8dde 100%);
@@ -98,10 +101,7 @@
 .primary-btn:hover {
   background: linear-gradient(135deg, #102a46 0%, #3a8dde 100%);
   transform: scale(1.02);
-  z-index: 1;
-  transform: scale(1.02) translateZ(0);
-  margin: 4px 0;
-  position: static;
+  z-index: 2; /* Asegura que el botón hover esté por encima de los demás */
 }
 
 .logout-btn {
@@ -114,11 +114,7 @@
   background: #FF6B6B;
   color: white;
   transform: scale(1.02);
-  z-index: 1;
-  z-index: 1;
-  transform: scale(1.02) translateZ(0);
-  margin: 4px 0;
-  position: static;
+  z-index: 2; /* Asegura que el botón hover esté por encima de los demás */
 }
 
 .primary-btn::before, .logout-btn::before {

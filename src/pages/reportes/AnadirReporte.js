@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Select from "react-select";
 import './AnadirReporte.css';
+import ConfirmationModal from "./ConfirmationModal";
 
 const InspectionForm = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +24,8 @@ const InspectionForm = () => {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     const fetchLastInspection = async () => {
@@ -62,19 +65,23 @@ const InspectionForm = () => {
   };
 
   const handleProductChange = (selectedOption) => {
-    setFormData({ ...formData, stabilitiesMatrixId: selectedOption ? selectedOption.stabilitiesMatrixId : "" });
+    setFormData({ 
+      ...formData, 
+      stabilitiesMatrixId: selectedOption ? selectedOption.value : "" 
+    });
+    localStorage.setItem('selectedProductName', selectedOption ? selectedOption.label : "");
   };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.stabilitiesMatrixId) newErrors.stabilitiesMatrixId = "El producto evaluado es obligatorio";
-    if (!formData.aerosolStove) newErrors.aerosolStove = "El valor de Aerosol Stove es obligatorio";
-    if (!formData.inOut) newErrors.inOut = "El valor de In/Out es obligatorio";
-    if (!formData.stove) newErrors.stove = "El valor de Stove es obligatorio";
-    if (!formData.hrStove) newErrors.hrStove = "El valor de HR Stove es obligatorio";
-    if (!formData.environment) newErrors.environment = "El valor de Ambiente es obligatorio";
-    if (!formData.fridge) newErrors.fridge = "El valor de Nevera es obligatorio";
-    if (!formData.photolysis) newErrors.photolysis = "El valor de Fotólisis es obligatorio";
+    if (!formData.stabilitiesMatrixId) newErrors.stabilitiesMatrixId = "⚠️ El producto evaluado es obligatorio";
+    if (!formData.aerosolStove) newErrors.aerosolStove = "⚠️ El valor de Estufa de Aerosol es obligatorio";
+    if (!formData.inOut) newErrors.inOut = "⚠️ El valor de Entrada/Salida es obligatorio";
+    if (!formData.stove) newErrors.stove = "⚠️ El valor de Estufa es obligatorio";
+    if (!formData.hrStove) newErrors.hrStove = "⚠️ El valor de Estufa HR es obligatorio";
+    if (!formData.environment) newErrors.environment = "⚠️ El valor de Ambiente es obligatorio";
+    if (!formData.fridge) newErrors.fridge = "⚠️ El valor de Nevera es obligatorio";
+    if (!formData.photolysis) newErrors.photolysis = "⚠️ El valor de Fotólisis es obligatorio";
     return newErrors;
   };
 
@@ -87,6 +94,13 @@ const InspectionForm = () => {
     }
     setErrors({});
     
+    // Encuentra el producto seleccionado para mostrar su nombre en el modal
+    const product = productOptions.find(option => option.value === formData.stabilitiesMatrixId);
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirm = async () => {
     const currentDate = new Date();
     const expectedDate = new Date(currentDate);
     expectedDate.setMonth(currentDate.getMonth() + 1);
@@ -105,7 +119,6 @@ const InspectionForm = () => {
     };
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       localStorage.setItem('inspectionData', JSON.stringify(dataToSubmit));
       setMessage('Inspección creada exitosamente');
@@ -114,6 +127,7 @@ const InspectionForm = () => {
       console.error('Error al crear la inspección:', error);
       setMessage('Error en la conexión con el servidor.');
     }
+    setIsModalOpen(false);
   };
 
   const filteredProducts = products.filter(product =>
@@ -122,10 +136,39 @@ const InspectionForm = () => {
   );
 
   const productOptions = filteredProducts.map(product => ({
-    value: product.id,
+    value: product.id,                                      // Este es el valor que debemos usar
     label: `${product.brand} - ${product.productDescription}`,
     stabilitiesMatrixId: product.stabilitiesMatrixId
   }));
+
+  const handleKeyDown = (e) => {
+    // Prevenir el comportamiento por defecto de las flechas arriba/abajo
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+    }
+  
+    // Si es flecha abajo o enter, mover al siguiente input
+    if (e.key === 'ArrowDown' || e.key === 'Enter') {
+      const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+      const currentIndex = inputs.indexOf(e.target);
+      const nextInput = inputs[currentIndex + 1];
+      if (nextInput) {
+        nextInput.focus();
+      } else if (e.key === 'Enter' && currentIndex === inputs.length - 1) {
+        handleSubmit(e);
+      }
+    }
+  
+    // Si es flecha arriba, mover al input anterior
+    if (e.key === 'ArrowUp') {
+      const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+      const currentIndex = inputs.indexOf(e.target);
+      const prevInput = inputs[currentIndex - 1];
+      if (prevInput) {
+        prevInput.focus();
+      }
+    }
+  };
 
   return (
     <div className="reportes-container">
@@ -135,7 +178,7 @@ const InspectionForm = () => {
       </div>
 
       <div className="reportes-card">
-        <h2 className="title">Crear Inspección</h2>
+        <h2 className="title">Crear Reporte</h2>
         <form onSubmit={handleSubmit} className="form">
           <label className="form-group">
             <span className="label-text">Producto evaluado</span>
@@ -145,55 +188,139 @@ const InspectionForm = () => {
               onChange={handleProductChange}
               placeholder="Seleccione el producto evaluado"
               isSearchable
-              className="input-field"
+              className="select-container"
+              classNamePrefix="react-select"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  minHeight: '40px',
+                  boxShadow: 'none',
+                }),
+                valueContainer: (base) => ({
+                  ...base,
+                  padding: '0 8px',
+                }),
+                input: (base) => ({
+                  ...base,
+                  margin: 0,
+                  padding: 0,
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                  '&:hover': {
+                    backgroundColor: '#BDDCF5',
+                  }
+                }),
+                singleValue: (base) => ({
+                  ...base,
+                  color: '#3a8dde',  // Color del texto cuando está seleccionado
+                })
+              }}
             />
             {errors.stabilitiesMatrixId && <span className="error-text">{errors.stabilitiesMatrixId}</span>}
           </label>
           
           {/* Campos de entrada numéricos */}
           <label className="form-group">
-            <span className="label-text">Aerosol Stove</span>
-            <input type="number" name="aerosolStove" placeholder="Ingrese el valor" value={formData.aerosolStove} onChange={handleChange} className="input-field" />
+            <span className="label-text">Estufa de Aerosol</span>
+            <input 
+              type="number" 
+              name="aerosolStove" 
+              placeholder="Ingrese el número de la Estufa de Aerosol en que se encuentra el producto" 
+              value={formData.aerosolStove} 
+              onChange={handleChange} 
+              onKeyDown={handleKeyDown}
+              className="input-field" 
+            />
             {errors.aerosolStove && <span className="error-text">{errors.aerosolStove}</span>}
           </label>
 
           <label className="form-group">
-            <span className="label-text">In/Out</span>
-            <input type="number" name="inOut" placeholder="Ingrese el valor" value={formData.inOut} onChange={handleChange} className="input-field" />
+            <span className="label-text">Entrada/Salida</span>
+            <input 
+              type="number" 
+              name="inOut" 
+              placeholder="Ingrese el número de Entrada/Salida del producto" 
+              value={formData.inOut} 
+              onChange={handleChange} 
+              onKeyDown={handleKeyDown}
+              className="input-field" 
+            />
             {errors.inOut && <span className="error-text">{errors.inOut}</span>}
           </label>
 
           <label className="form-group">
-            <span className="label-text">Stove</span>
-            <input type="number" name="stove" placeholder="Ingrese el valor" value={formData.stove} onChange={handleChange} className="input-field" />
+            <span className="label-text">Estufa</span>
+            <input 
+              type="number" 
+              name="stove" 
+              placeholder="Ingrese el número de la Estufa en que se encuentra el producto" 
+              value={formData.stove} 
+              onChange={handleChange} 
+              onKeyDown={handleKeyDown}
+              className="input-field" 
+            />
             {errors.stove && <span className="error-text">{errors.stove}</span>}
           </label>
 
           <label className="form-group">
-            <span className="label-text">HR Stove</span>
-            <input type="number" name="hrStove" placeholder="Ingrese el valor" value={formData.hrStove} onChange={handleChange} className="input-field" />
+            <span className="label-text">Estufa HR</span>
+            <input 
+              type="number" 
+              name="hrStove" 
+              placeholder="Ingrese el número de la Estufa HR en que se encuentra el producto" 
+              value={formData.hrStove} 
+              onChange={handleChange} 
+              onKeyDown={handleKeyDown}
+              className="input-field" 
+            />
             {errors.hrStove && <span className="error-text">{errors.hrStove}</span>}
           </label>
 
           <label className="form-group">
             <span className="label-text">Ambiente</span>
-            <input type="number" name="environment" placeholder="Ingrese el valor" value={formData.environment} onChange={handleChange} className="input-field" />
+            <input 
+              type="number" 
+              name="environment" 
+              placeholder="Ingrese el número del Ambiente en que se encuentra el producto" 
+              value={formData.environment} 
+              onChange={handleChange} 
+              onKeyDown={handleKeyDown}
+              className="input-field" 
+            />
             {errors.environment && <span className="error-text">{errors.environment}</span>}
           </label>
 
           <label className="form-group">
             <span className="label-text">Nevera</span>
-            <input type="number" name="fridge" placeholder="Ingrese el valor" value={formData.fridge} onChange={handleChange} className="input-field" />
+            <input 
+              type="number" 
+              name="fridge" 
+              placeholder="Ingrese el número de la Nevera en que se encuentra el producto" 
+              value={formData.fridge} 
+              onChange={handleChange} 
+              onKeyDown={handleKeyDown}
+              className="input-field" 
+            />
             {errors.fridge && <span className="error-text">{errors.fridge}</span>}
           </label>
 
           <label className="form-group">
             <span className="label-text">Fotólisis</span>
-            <input type="number" name="photolysis" placeholder="Ingrese el valor" value={formData.photolysis} onChange={handleChange} className="input-field" />
+            <input 
+              type="number" 
+              name="photolysis" 
+              placeholder="Ingrese el estado de Fotólisis en que se encuentra el producto" 
+              value={formData.photolysis} 
+              onChange={handleChange} 
+              onKeyDown={handleKeyDown}
+              className="input-field" 
+            />
             {errors.photolysis && <span className="error-text">{errors.photolysis}</span>}
           </label>
 
-          <button type="submit" className="primary-btn">Crear Inspección</button>
+          <button type="submit" className="primary-btn">Crear Reporte</button>
           {message && (
             <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>
               {message}
@@ -201,6 +328,15 @@ const InspectionForm = () => {
           )}
         </form>
       </div>
+      <ConfirmationModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirm}
+        data={{
+          productName: selectedProduct?.label || '',
+          ...formData
+        }}
+      />
     </div>
   );
 };

@@ -8,47 +8,179 @@ const toCamelCase = (str) => {
 };
 
 const TestCreation = () => {
-  const [testData, setTestData] = useState(null);
-  const [inspectionData, setInspectionData] = useState(null);
   const [formData, setFormData] = useState({
-    colorId: "",
-    odorId: "",
-    appearanceId: "",
-    phId: "",
-    viscosityId: "",
-    specificGravityId: "",
-    totalBacteriaCountId: "",
-    fungiYeastCountId: "",
-    pathogensId: "",
-    observations: "",
-    conclusion: ""
+    unit: '',
+    time: '',
+    equipment: '',
+    method: '',
+    specification: '',
+    initialResultsDevelopmentLaboratory: '',
+    initialResultsStabilityLaboratory: '',
+    maxTemperature: '',
+    minTemperature: '',
+    equipmentCode: '',
+    description: '',
+    // IDs para los tests
+    colorId: null,
+    odorId: null,
+    appearanceId: null,
+    phId: null,
+    viscosityId: null,
+    specificGravityId: null,
+    totalBacteriaCountId: null,
+    fungiYeastCountId: null,
+    pathogensId: null,
+    // Campos adicionales
+    observations: '',
+    conclusion: ''
   });
+  const [testData, setTestData] = useState(null);
+  const [testsData, setTestsData] = useState({
+    temperature: null,
+    storage: null,
+    conditions: {}
+  });
+  const [inspectionData, setInspectionData] = useState(null);
+
+  
   const [errors, setErrors] = useState({});
+  const [selectedTest, setSelectedTest] = useState(null); // Estado para el test seleccionado
   const navigate = useNavigate();
   const location = useLocation();
+  const [showConclusionModal, setShowConclusionModal] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [testToConfirm, setTestToConfirm] = useState(null);
+
 
   useEffect(() => {
     const storedData = localStorage.getItem('inspectionData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
+      console.log('Datos recibidos de AnadirReporte:', parsedData);
       setInspectionData(parsedData);
-      setTestData(parsedData); // Asegúrate de inicializar testData aquí
+      setTestData(parsedData);
       setFormData((prevFormData) => ({
         ...prevFormData,
         ...parsedData
       }));
+    } else {
+      console.log('No se encontraron datos en localStorage');
     }
   }, []);
+
+  const areAllTestsCompleted = () => {
+    return (
+      formData.colorId &&
+      formData.odorId &&
+      formData.appearanceId &&
+      formData.phId &&
+      formData.viscosityId &&
+      formData.specificGravityId &&
+      formData.totalBacteriaCountId &&
+      formData.fungiYeastCountId &&
+      formData.pathogensId &&
+      testData.temperatureId &&
+      testData.storageId
+    );
+  };
+
+  const getRemainingTests = () => {
+    const tests = {
+      'Color': formData.colorId,
+      'Olor': formData.odorId,
+      'Apariencia': formData.appearanceId,
+      'pH': formData.phId,
+      'Viscosidad': formData.viscosityId,
+      'Gravedad específica': formData.specificGravityId,
+      'Recuento total de bacterias': formData.totalBacteriaCountId,
+      'Recuento de hongos y levaduras': formData.fungiYeastCountId,
+      'Patógenos': formData.pathogensId,
+      'Temperatura': testData?.temperatureId,
+      'Almacenamiento': testData?.storageId
+    };
+  
+    const remainingTests = Object.entries(tests)
+      .filter(([_, value]) => !value)
+      .map(([name]) => name);
+  
+    return {
+      completed: Object.values(tests).filter(Boolean).length,
+      total: Object.keys(tests).length,
+      remaining: remainingTests
+    };
+  };
+
+  const getFieldLabel = (key) => {
+    const fieldLabels = {
+      unit: "Unidad",
+      time: "Tiempo (semanas)",
+      equipment: "Equipo",
+      maxTemperature: "Temperatura Máxima",
+      minTemperature: "Temperatura Mínima",
+      equipmentCode: "Código del Equipo",
+      description: "Descripción",
+      method: "Método",
+      specification: "Especificación",
+      initialResultsDevelopmentLaboratory: "Resultados Iniciales (Laboratorio de Desarrollo)",
+      initialResultsStabilityLaboratory: "Resultados Iniciales (Laboratorio de Estabilidad)",
+      stabilitiesMatrixId: "ID de Matriz de Estabilidad"
+    };
+    return fieldLabels[key] || key;
+  };
+
+  const TestConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }) => {
+    if (!isOpen) return null;
+  
+    // Filtrar stabilitiesMatrixId del objeto data si quieres ocultarlo
+    const displayData = Object.entries(data).filter(([key]) => key !== 'stabilitiesMatrixId');
+  
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h2>Confirma los datos ingresados</h2>
+          <p className="modal-warning">
+            ⚠️ Revisa la información ingresada antes de continuar ⚠️
+          </p>
+          <div className="modal-data">
+            <h3>{getTitle(type)}</h3>
+            {displayData.map(([key, value]) => (
+              <div className="data-row" key={key}>
+                <strong>{getFieldLabel(key)}:</strong>
+                <span>{value}</span>
+              </div>
+            ))}
+          </div>
+          <div className="modal-buttons">
+            <button className="modal-btn cancel" onClick={onClose}>
+              Cancelar
+            </button>
+            <button className="modal-btn confirm" onClick={onConfirm}>
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     if (location.state?.conditionId && location.state?.type) {
       const { conditionId, type } = location.state;
       const camelCaseType = toCamelCase(type);
 
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [`${camelCaseType}Id`]: conditionId,
-      }));
+      setFormData((prevFormData) => {
+        const updatedFormData = {
+          ...prevFormData,
+          [`${camelCaseType}Id`]: conditionId,
+        };
+        
+        // Verifica si todos los tests están completos después de actualizar
+        if (areAllTestsCompleted()) {
+          setShowConclusionModal(true);
+        }
+        
+        return updatedFormData;
+      });
 
       setTestData((prevTestData) => {
         const updatedTestData = {
@@ -83,67 +215,422 @@ const TestCreation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    setErrors({});
-  
-    if (!testData.temperatureId || !testData.storageId) {
-      alert("Debe crear las pruebas de temperatura y almacenamiento antes de crear el test principal.");
-      return;
-    }
-  
-    const dataToSubmit = {
-      ...formData,
-      productId: testData.stabilitiesMatrixId,
-      temperatureId: testData.temperatureId,
-      storageId: testData.storageId,
-    };
-  
     try {
-      const response = await axios.post("http://localhost:8080/api/test", dataToSubmit);
-      const testId = response.data; // Obtener el ID del test devuelto por la respuesta
-      alert("Test creado correctamente");
-  
-      // Crear la inspección con los datos guardados y el ID del test
-      const inspectionDataToSubmit = {
-        testId,
-        aerosolStove: inspectionData.aerosolStove || "",
-        inOut: inspectionData.inOut || "",
-        stove: inspectionData.stove || "",
-        hrStove: inspectionData.hrStove || "",
-        environment: inspectionData.environment || "",
-        fridge: inspectionData.fridge || "",
-        photolysis: inspectionData.photolysis || "",
-        stabilitiesMatrixId: inspectionData.stabilitiesMatrixId || "",
-        realDate: new Date().toISOString().split('T')[0],
-        expectedDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
-        responseTime: Math.ceil((new Date() - new Date(inspectionData.realDate)) / (1000 * 60 * 60 * 24))
+      // Obtener el stabilitiesMatrixId correcto del producto
+      const productResponse = await axios.get(`http://localhost:8080/api/products/dto/${testData.stabilitiesMatrixId}`);
+      const correctMatrixId = productResponse.data.stabilitiesMatrixId;
+
+      // 1. Crear los tests individuales
+      const temperatureResponse = await axios.post(
+        "http://localhost:8080/api/test/temperature", 
+        testsData.temperature
+      );
+      const storageResponse = await axios.post(
+        "http://localhost:8080/api/test/storage", 
+        testsData.storage
+      );
+
+      // 2. Crear los condition tests
+      const conditionPromises = Object.entries(testsData.conditions).map(
+        ([type, data]) => axios.post(
+          "http://localhost:8080/api/test/conditions",
+          { ...data, type }
+        )
+      );
+      const conditionResponses = await Promise.all(conditionPromises);
+
+      // 3. Crear el test principal con todos los IDs
+      // 3. Crear el test principal con todos los IDs
+const finalTestData = {
+  productId: testData.stabilitiesMatrixId,
+  temperatureId: temperatureResponse.data,
+  storageId: storageResponse.data,
+  observations: formData.observations,
+  conclusion: formData.conclusion
+};
+
+// Verificar que los IDs se agreguen correctamente
+console.log('Test Data Final:', finalTestData);
+
+const testResponse = await axios.post(
+  "http://localhost:8080/api/test", 
+  finalTestData
+);
+
+      // 4. Crear la inspección
+      const inspectionData = {
+        testId: testResponse.data,
+        realDate: testData.realDate,
+        expectedDate: testData.expectedDate,
+        responseTime: testData.responseTime,
+        aerosolStove: testData.aerosolStove,
+        environment: testData.environment,
+        fridge: testData.fridge,
+        hrStove: testData.hrStove,
+        inOut: testData.inOut,
+        photolysis: testData.photolysis,
+        stove: testData.stove,
+        stabilitiesMatrixId: correctMatrixId 
       };
 
-      console.log("Datos enviados para crear la inspección:", inspectionDataToSubmit);
-  
-      try {
-        await axios.post("http://localhost:8080/inspections", inspectionDataToSubmit);
-        alert("Inspección creada exitosamente");
-        navigate(`/reportes/anadir`, { state: { ...testData, testId } });
-      } catch (error) {
-        alert("Error al crear la inspección");
-      }
+      await axios.post("http://localhost:8080/inspections", inspectionData);
+      
+      alert("Test e inspección creados exitosamente");
+      navigate('/reportes/anadir');
     } catch (error) {
-      alert("Error al crear el test");
+      alert("Error al crear los tests: " + error.message);
     }
   };
 
   const handleConditionTest = (type) => {
-    navigate(`/reportes/tests/condition`, { state: { type } });
+    setSelectedTest(type); // Actualiza el test seleccionado
+  };
+
+  const getTitle = (type) => {
+    switch (type) {
+      case 'COLOR':
+        return 'Prueba de color';
+      case 'ODOR':
+        return 'Prueba de olor';
+      case 'APPEARANCE':
+        return 'Prueba de apariencia';
+      case 'PH':
+        return 'Prueba de pH';
+      case 'VISCOSITY':
+        return 'Prueba de viscosidad';
+      case 'SPECIFIC_GRAVITY':
+        return 'Prueba de gravedad específica';
+      case 'TOTAL_BACTERIA_COUNT':
+        return 'Prueba de recuento total de bacterias';
+      case 'FUNGI_YEAST_COUNT':
+        return 'Prueba de recuento de hongos y levaduras';
+      case 'PATHOGENS':
+        return 'Prueba de patógenos';
+      default:
+        return 'Prueba';
+    }
+  };
+
+  const handleConfirmTest = async () => {
+    try {
+      if (!testToConfirm?.data || !testToConfirm?.type) {
+        throw new Error('Datos de test inválidos');
+      }
+
+      const { data, type } = testToConfirm;
+      let endpoint;
+  
+      switch (type) {
+        case 'TEMPERATURE':
+          endpoint = "http://localhost:8080/api/test/temperature";
+          break;
+        case 'STORAGE':
+          endpoint = "http://localhost:8080/api/test/storage";
+          break;
+        default:
+          endpoint = "http://localhost:8080/api/test/conditions";
+          data.type = type;
+          break;
+      }
+
+      const response = await axios.post(endpoint, data);
+      const resultId = response.data;
+      
+      const updatedData = type === 'TEMPERATURE' ? 
+        { temperatureId: resultId } : 
+        type === 'STORAGE' ? 
+          { storageId: resultId } : 
+          { [`${toCamelCase(type)}Id`]: resultId };
+
+      if (type === 'TEMPERATURE' || type === 'STORAGE') {
+        setTestData(prev => {
+          const updated = { ...prev, ...updatedData };
+          localStorage.setItem('inspectionData', JSON.stringify(updated));
+          return updated;
+        });
+      } else {
+        setFormData(prev => {
+          const updated = { ...prev, ...updatedData };
+          localStorage.setItem('inspectionData', JSON.stringify({ ...testData, ...updated }));
+          return updated;
+        });
+      }
+      
+      if (areAllTestsCompleted()) {
+        setShowConclusionModal(true);
+      }
+
+      setSelectedTest(null);
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || error.message || 'Error desconocido';
+      alert(`Error al crear ${getTitle(testToConfirm?.type || 'test')}: ${errorMessage}`);
+      console.error(error);
+    } finally {
+      setIsConfirmationModalOpen(false);
+      setTestToConfirm(null);
+    }
+  };
+
+  const renderSelectedTest = () => {
+    const validateSpecificForm = (type, data) => {
+      const newErrors = {};
+      
+      switch(type) {
+        case 'TEMPERATURE':
+          if (!data.unit) newErrors.unit = "⚠️ La unidad es obligatoria";
+          if (!data.time) newErrors.time = "⚠️ El tiempo es obligatorio";
+          if (!data.equipment) newErrors.equipment = "⚠️ El equipo es obligatorio";
+          break;
+        
+        case 'STORAGE':
+          if (!data.maxTemperature) newErrors.maxTemperature = "⚠️ La temperatura máxima es obligatoria";
+          if (!data.minTemperature) newErrors.minTemperature = "⚠️ La temperatura mínima es obligatoria";
+          if (Number(data.maxTemperature) <= Number(data.minTemperature)) {
+            newErrors.maxTemperature = "⚠️ La temperatura máxima debe ser mayor que la mínima";
+          }
+          if (!data.equipmentCode) newErrors.equipmentCode = "⚠️ El código del equipo es obligatorio";
+          break;
+        
+        default:
+          if (!data.unit) newErrors.unit = "⚠️ La unidad es obligatoria";
+          if (!data.time) newErrors.time = "⚠️ El tiempo es obligatorio";
+          if (!data.equipment) newErrors.equipment = "⚠️ El equipo es obligatorio";
+          if (!data.method) newErrors.method = "⚠️ El método es obligatorio";
+      }
+    
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+    const handleSpecificSubmit = async (e, type) => {
+      e.preventDefault();
+      let data = {};
+    
+      switch (type) {
+        case 'TEMPERATURE':
+          data = {
+            unit: formData.unit,
+            time: formData.time,
+            equipment: formData.equipment,
+            stabilitiesMatrixId: testData.stabilitiesMatrixId
+          };
+          break;
+        
+        case 'STORAGE':
+          data = {
+            maxTemperature: formData.maxTemperature,
+            minTemperature: formData.minTemperature,
+            equipmentCode: formData.equipmentCode,
+            description: formData.description,
+            stabilitiesMatrixId: testData.stabilitiesMatrixId
+          };
+          break;
+        
+        default:
+          data = {
+            unit: formData.unit,
+            time: formData.time,
+            equipment: formData.equipment,
+            method: formData.method,
+            specification: formData.specification,
+            initialResultsDevelopmentLaboratory: formData.initialResultsDevelopmentLaboratory,
+            initialResultsStabilityLaboratory: formData.initialResultsStabilityLaboratory,
+            stabilitiesMatrixId: testData.stabilitiesMatrixId
+          };
+          break;
+      }
+  
+      if (!validateSpecificForm(type, data)) {
+    return;
+  }
+
+  setErrors({});
+      setTestToConfirm({ data, type });
+      setIsConfirmationModalOpen(true);
+    
+      setTestsData(prev => {
+        const updated = { ...prev };
+        if (type === 'TEMPERATURE') {
+          updated.temperature = data;
+        } else if (type === 'STORAGE') {
+          updated.storage = data;
+        } else {
+          updated.conditions[type] = data;
+        }
+        return updated;
+      });
+  
+      // Actualizamos el estado visual
+      setFormData(prev => ({
+        ...prev,
+        [`${toCamelCase(type)}Id`]: 'pending' // Marcador visual de que está completo pero pendiente de guardar
+      }));
+  
+      setSelectedTest(null);
+  
+      // Si todos los tests están completos, mostramos el modal de conclusión
+      if (areAllTestsCompleted()) {
+        setShowConclusionModal(true);
+      }
+    };
+  
+    switch (selectedTest) {
+      case 'TEMPERATURE':
+        return (
+          <div className="crear-usuario-card">
+            <h2 className="title">Prueba de Temperatura</h2>
+            <form onSubmit={(e) => handleSpecificSubmit(e, 'TEMPERATURE')} className="form">
+              <label className="form-group">
+                <span className="label-text">Unidad</span>
+                <input type="text" name="unit" placeholder="Ingrese la unidad" value={formData.unit} onChange={handleChange} className="input-field" required />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Tiempo (semanas)</span>
+                <input type="number" name="time" placeholder="Ingrese el tiempo en semanas" value={formData.time} onChange={handleChange} className="input-field" required />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Equipo</span>
+                <input type="text" name="equipment" placeholder="Ingrese el equipo" value={formData.equipment} onChange={handleChange} className="input-field" required />
+              </label>
+              <button type="submit" className="primary-btn">Crear Prueba de Temperatura</button>
+            </form>
+          </div>
+        );
+      case 'STORAGE':
+        return (
+          <div className="crear-usuario-card">
+            <h2 className="title">Prueba de Almacenamiento</h2>
+            <form onSubmit={(e) => handleSpecificSubmit(e, 'STORAGE')} className="form">
+              <label className="form-group">
+                <span className="label-text">Temperatura Máxima</span>
+                <input type="number" name="maxTemperature" placeholder="Ingrese la temperatura máxima" value={formData.maxTemperature} onChange={handleChange} className="input-field" />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Temperatura Mínima</span>
+                <input type="number" name="minTemperature" placeholder="Ingrese la temperatura mínima" value={formData.minTemperature} onChange={handleChange} className="input-field" />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Código del Equipo</span>
+                <input type="text" name="equipmentCode" placeholder="Ingrese el código del equipo" value={formData.equipmentCode} onChange={handleChange} className="input-field" />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Descripción</span>
+                <textarea name="description" placeholder="Ingrese la descripción" value={formData.description} onChange={handleChange} className="input-field" />
+              </label>
+              <button type="submit" className="primary-btn">Crear Prueba de Almacenamiento</button>
+            </form>
+          </div>
+        );
+      case 'CONDITION':
+      case 'COLOR':
+      case 'ODOR':
+      case 'APPEARANCE':
+      case 'PH':
+      case 'VISCOSITY':
+      case 'SPECIFIC_GRAVITY':
+      case 'TOTAL_BACTERIA_COUNT':
+      case 'FUNGI_YEAST_COUNT':
+      case 'PATHOGENS':
+        return (
+          <div className="test-card">
+            <h2 className="title">{getTitle(selectedTest)}</h2>
+            <form onSubmit={(e) => handleSpecificSubmit(e, selectedTest)} className="form">
+              <label className="form-group">
+                <span className="label-text">Unidad</span>
+                <input type="text" name="unit" placeholder="Ingrese la unidad" value={formData.unit} onChange={handleChange} className="input-field" required />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Tiempo (semanas)</span>
+                <input type="number" name="time" placeholder="Ingrese el tiempo en semanas" value={formData.time} onChange={handleChange} className="input-field" required />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Equipo</span>
+                <input type="number" name="equipment" placeholder="Ingrese el equipo" value={formData.equipment} onChange={handleChange} className="input-field" required />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Método</span>
+                <input type="text" name="method" placeholder="Ingrese el método" value={formData.method} onChange={handleChange} className="input-field" required />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Especificación</span>
+                <textarea name="specification" placeholder="Ingrese la especificación" value={formData.specification} onChange={handleChange} className="input-field" />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Resultados Iniciales (Laboratorio de Desarrollo)</span>
+                <textarea name="initialResultsDevelopmentLaboratory" placeholder="Ingrese los resultados iniciales" value={formData.initialResultsDevelopmentLaboratory} onChange={handleChange} className="input-field" />
+              </label>
+              <label className="form-group">
+                <span className="label-text">Resultados Iniciales (Laboratorio de Estabilidad)</span>
+                <textarea name="initialResultsStabilityLaboratory" placeholder="Ingrese los resultados iniciales" value={formData.initialResultsStabilityLaboratory} onChange={handleChange} className="input-field" />
+              </label>
+              <button type="submit" className="primary-btn">Guardar prueba</button>
+            </form>
+          </div>
+        );
+      default:
+        return null;
+    }
   };
 
   if (!testData) {
     return <div>Loading...</div>;
   }
+
+  const productName = localStorage.getItem('selectedProductName') || 'Producto';
+
+
+  const ConclusionModal = () => {
+    if (!showConclusionModal) return null;
+
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h2>Finalizar Test</h2>
+          <form onSubmit={handleSubmit}>
+            <label className="form-group">
+              <span className="label-text">Observaciones</span>
+              <textarea
+                name="observations"
+                placeholder="Ingrese las observaciones"
+                value={formData.observations}
+                onChange={handleChange}
+                className="input-field"
+              />
+            </label>
+            <label className="form-group">
+              <span className="label-text">Conclusión</span>
+              <textarea
+                name="conclusion"
+                placeholder="Ingrese la conclusión"
+                value={formData.conclusion}
+                onChange={handleChange}
+                className="input-field"
+              />
+            </label>
+            <div className="modal-buttons">
+              <button type="submit" className="primary-btn">
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
+  const TestProgress = () => {
+    const { completed, total } = getRemainingTests();
+    
+    return (
+      <div className="test-progress">
+        <p>
+          {completed === total ? 
+            '✅ Todas las pruebas han sido completadas' : 
+            `📋 Pruebas completadas: ${completed}/${total}`
+          }
+        </p>
+      </div>
+    );
+  };
 
   return (
     <div className="test-container">
@@ -151,67 +638,63 @@ const TestCreation = () => {
         <button className="nav-btn" onClick={() => navigate(-1)}>🔙 Atrás</button>
         <button className="nav-btn" onClick={() => navigate('/')}>🏠 Inicio</button>
       </div>
-
-      <div className="test-card">
-        <h2 className="title">Crear Test</h2>
-        <form onSubmit={handleSubmit} className="form">
-          <p><strong>Producto evaluado:</strong> {testData.stabilitiesMatrixId}</p>
-          
-          <label className="form-group">
-            <button type="button" className={`test-btn ${formData.colorId ? 'filled' : ''}`} onClick={() => handleConditionTest('COLOR')}>Prueba de color</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${formData.odorId ? 'filled' : ''}`} onClick={() => handleConditionTest('ODOR')}>Prueba de olor</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${formData.appearanceId ? 'filled' : ''}`} onClick={() => handleConditionTest('APPEARANCE')}>Prueba de apariencia</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${formData.phId ? 'filled' : ''}`} onClick={() => handleConditionTest('PH')}>Prueba de pH</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${formData.viscosityId ? 'filled' : ''}`} onClick={() => handleConditionTest('VISCOSITY')}>Prueba de viscosidad</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${formData.specificGravityId ? 'filled' : ''}`} onClick={() => handleConditionTest('SPECIFIC_GRAVITY')}>Prueba de gravedad específica</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${formData.totalBacteriaCountId ? 'filled' : ''}`} onClick={() => handleConditionTest('TOTAL_BACTERIA_COUNT')}>Prueba de recuento total de bacterias</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${formData.fungiYeastCountId ? 'filled' : ''}`} onClick={() => handleConditionTest('FUNGI_YEAST_COUNT')}>Prueba de recuento de hongos y levaduras</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${formData.pathogensId ? 'filled' : ''}`} onClick={() => handleConditionTest('PATHOGENS')}>Prueba de patógenos</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${testData.temperatureId ? 'filled' : ''}`} onClick={() => navigate(`/reportes/tests/temperature`)}>Temperatura</button>
-          </label>
-
-          <label className="form-group">
-            <button type="button" className={`test-btn ${testData.storageId ? 'filled' : ''}`} onClick={() => navigate(`/reportes/tests/storage`)}>Almacenamiento</button>
-          </label>
-
-          <label className="form-group">
-            <span className="label-text">Observaciones</span>
-            <textarea name="observations" placeholder="Ingrese las observaciones" value={formData.observations} onChange={handleChange} className="input-field" />
-          </label>
-
-          <label className="form-group">
-            <span className="label-text">Conclusión</span>
-            <textarea name="conclusion" placeholder="Ingrese la conclusión" value={formData.conclusion} onChange={handleChange} className="input-field" />
-          </label>
-          <button type="submit" className="primary-btn">Guardar</button>
-        </form>
+      <div className="test-content">
+        <div className="test-list">
+          <div className="test-card">
+            <h2 className="title">Pruebas para: {productName}</h2>
+            <TestProgress />
+            <form onSubmit={handleSubmit} className="form">
+              <div className="test-buttons-container">
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.colorId ? 'filled' : ''}`} onClick={() => handleConditionTest('COLOR')}>Color</button>
+                </label>
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.odorId ? 'filled' : ''}`} onClick={() => handleConditionTest('ODOR')}>Olor</button>
+                </label>
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.phId ? 'filled' : ''}`} onClick={() => handleConditionTest('PH')}>pH</button>
+                </label>
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.pathogensId ? 'filled' : ''}`} onClick={() => handleConditionTest('PATHOGENS')}>Patógenos</button>
+                </label>
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.viscosityId ? 'filled' : ''}`} onClick={() => handleConditionTest('VISCOSITY')}>Viscosidad</button>
+                </label>
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.appearanceId ? 'filled' : ''}`} onClick={() => handleConditionTest('APPEARANCE')}>Apariencia</button>
+                </label>
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.temperatureId ? 'filled' : ''}`} onClick={() => handleConditionTest('TEMPERATURE')}>Temperatura</button>
+                </label>
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.storageId ? 'filled' : ''}`} onClick={() => handleConditionTest('STORAGE')}>Almacenamiento</button>
+                </label>
+              </div>
+              <div className="test-buttons-container">
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.specificGravityId ? 'filled' : ''}`} onClick={() => handleConditionTest('SPECIFIC_GRAVITY')}>Gravedad específica</button>
+                </label>
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.totalBacteriaCountId ? 'filled' : ''}`} onClick={() => handleConditionTest('TOTAL_BACTERIA_COUNT')}>Recuento total de bacterias</button>
+                </label>
+                <label className="form-group">
+                  <button type="button" className={`test-btn ${formData.fungiYeastCountId ? 'filled' : ''}`} onClick={() => handleConditionTest('FUNGI_YEAST_COUNT')}>Recuento de hongos y levaduras</button>
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="test-details">
+          {renderSelectedTest()}
+        </div>
+        <TestConfirmationModal 
+      isOpen={isConfirmationModalOpen}
+      onClose={() => setIsConfirmationModalOpen(false)}
+      onConfirm={handleConfirmTest}
+      data={testToConfirm?.data || {}}
+      type={testToConfirm?.type || ''}
+    />
+        <ConclusionModal />
       </div>
     </div>
   );
