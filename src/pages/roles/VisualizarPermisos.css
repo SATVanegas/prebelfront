@@ -65,9 +65,10 @@ html, body {
     }
   
     .visualizar-permisos-card {
-      padding: 1rem;
-      border-radius: 1rem;
+      overflow: visible !important;
+      position: relative;
     }
+    
   }
 
   h2 {
@@ -139,4 +140,10 @@ html, body {
     color: rgba(26,61,106,1);
     text-align: right;
   }
+
+  .css-1nmdiq5-menu {
+    z-index: 9999 !important;
+    position: absolute !important;
+  }
+  
   
