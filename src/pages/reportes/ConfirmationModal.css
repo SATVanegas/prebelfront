@@ -70,6 +70,13 @@
   color: #ff6b6b;
 }
 
+.modal-btn.cancel:hover {
+  background: #FF6B6B;
+  color: white;
+  transform: scale(1.02);
+  z-index: 2; /* Asegura que el botón hover esté por encima de los demás */
+}
+
 .modal-btn.confirm {
   background: #3a8dde;
   color: white;

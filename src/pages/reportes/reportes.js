@@ -6,7 +6,7 @@ const Reportes = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="reportes-container">
+    <div className="reportes-home-container">
       <div className="nav-container">
         <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
@@ -16,7 +16,7 @@ const Reportes = () => {
         </button>
       </div>
 
-      <div className="reportes-card">
+      <div className="reportes-home-card">
         <h2 className='title'>Reportes</h2>
         <div className="bt-container">
             <button className="primary-btn" onClick={() => navigate('/reportes/consultar')}>Consultar Reporte</button>

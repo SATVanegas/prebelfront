@@ -135,32 +135,41 @@ const TestCreation = () => {
   };
 
   const handleKeyDown = (e) => {
-    // Prevenir el comportamiento por defecto de las flechas arriba/abajo
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       e.preventDefault();
     }
   
-    // Si es flecha abajo o enter, mover al siguiente input
     if (e.key === 'ArrowDown' || e.key === 'Enter') {
-      const inputs = Array.from(document.querySelectorAll('input[type="text"], input[type="number"], textarea'));
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Obtener todos los inputs y textareas dentro del formulario actual
+      const form = e.target.closest('form');
+      const inputs = Array.from(form.querySelectorAll('input[type="text"], input[type="number"], textarea'));
       const currentIndex = inputs.indexOf(e.target);
       const nextInput = inputs[currentIndex + 1];
-  
+      
       if (nextInput) {
         nextInput.focus();
       } else if (e.key === 'Enter') {
-        // Si es el último input y presiona enter, enviar el formulario
+        // Si es el último campo, submit del formulario
         const form = e.target.closest('form');
         if (form) {
           const submitButton = form.querySelector('button[type="submit"]');
-          if (submitButton) submitButton.click();
+          if (submitButton) {
+            e.preventDefault();
+            e.stopPropagation();
+            submitButton.click();
+            return false;
+          }
         }
       }
     }
   
-    // Si es flecha arriba, mover al input anterior
     if (e.key === 'ArrowUp') {
-      const inputs = Array.from(document.querySelectorAll('input[type="text"], input[type="number"], textarea'));
+      e.preventDefault();
+      const form = e.target.closest('form');
+      const inputs = Array.from(form.querySelectorAll('input[type="text"], input[type="number"], textarea'));
       const currentIndex = inputs.indexOf(e.target);
       const prevInput = inputs[currentIndex - 1];
       if (prevInput) {
@@ -170,6 +179,26 @@ const TestCreation = () => {
   };
 
   const TestConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }) => {
+    useEffect(() => {
+      if (!isOpen) return;
+      
+      const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.target.matches('input, textarea')) {
+          e.preventDefault();
+          e.stopPropagation();
+          setTimeout(() => onConfirm(), 100);
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+          onClose();
+        }
+      };
+    
+      window.addEventListener('keydown', handleKeyPress);
+      return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [isOpen, onConfirm, onClose]);
+  
     if (!isOpen) return null;
   
     // Filtrar stabilitiesMatrixId del objeto data si quieres ocultarlo
@@ -195,7 +224,7 @@ const TestCreation = () => {
             <button className="modal-btn cancel" onClick={onClose}>
               Cancelar
             </button>
-            <button className="modal-btn confirm" onClick={onConfirm}>
+            <button className="modal-btn confirm" onClick={onConfirm} autoFocus>
               Confirmar
             </button>
           </div>
@@ -319,12 +348,20 @@ const TestCreation = () => {
         };
         await axios.post("http://localhost:8080/api/test/conditions", conditionData);
       }
-  
-      alert("Test e inspección creados exitosamente");
-      navigate('/reportes/anadir');
+      navigate('/reportes/anadir', { 
+        state: { 
+          message: `Reporte de ${productName} guardado exitosamente`,
+          status: 'success'
+        } 
+      });
     } catch (error) {
       console.error('Error completo:', error);
-      alert("Error al crear los tests: " + error.message);
+      navigate('/reportes/anadir', {
+        state: {
+          message: `Error al crear los tests: ${error.message}`,
+          status: 'error'
+        }
+      });
     }
   };
 
@@ -549,6 +586,7 @@ const TestCreation = () => {
               placeholder="Ingrese la temperatura máxima" 
               value={formData.maxTemperature} 
               onChange={handleChange} 
+              onKeyDown={handleKeyDown}
               className="input-field" 
             />
             {errors.maxTemperature && <span className="error-text">{errors.maxTemperature}</span>}
@@ -654,12 +692,32 @@ const TestCreation = () => {
 
 
   const ConclusionModal = () => {
+    useEffect(() => {
+      if (!showConclusionModal) return;
+      
+      const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.target.tagName.toLowerCase().match(/input|textarea/)) {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSubmit(e);
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          e.stopPropagation();
+          setShowConclusionModal(false);
+        }
+      };
+  
+      window.addEventListener('keydown', handleKeyPress);
+      return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [showConclusionModal]);
+  
     if (!showConclusionModal) return null;
 
     return (
       <div className="modal-overlay">
         <div className="modal-content">
-          <h2>Finalizar Test</h2>
+          <h2>Finalizar Registro de Pruebas</h2>
           <form onSubmit={handleSubmit}>
             <label className="form-group">
               <span className="label-text">Observaciones</span>
@@ -669,7 +727,7 @@ const TestCreation = () => {
                 value={formData.observations}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
-                  className="input-field"
+                className="input-field"
               />
             </label>
             <label className="form-group">
@@ -684,7 +742,10 @@ const TestCreation = () => {
               />
             </label>
             <div className="modal-buttons">
-              <button type="submit" className="primary-btn">
+              <button className="modal-btn cancel" onClick={() => setShowConclusionModal(false)}>
+                Cancelar
+              </button>
+              <button type="submit" className="modal-btn confirm" autoFocus>
                 Guardar
               </button>
             </div>

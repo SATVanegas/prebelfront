@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // Add useLocation
 import axios from "axios";
 import Select from "react-select";
 import './AnadirReporte.css';
@@ -26,6 +26,18 @@ const InspectionForm = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [status, setStatus] = useState("");
+  const location = useLocation();
+
+  useEffect(() => {
+    // Maneja el mensaje cuando se recibe a través de la navegación
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setStatus(location.state.status);
+      // Limpia el estado de la ubicación después de mostrar el mensaje
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   useEffect(() => {
     const fetchLastInspection = async () => {
@@ -142,25 +154,29 @@ const InspectionForm = () => {
   }));
 
   const handleKeyDown = (e) => {
-    // Prevenir el comportamiento por defecto de las flechas arriba/abajo
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       e.preventDefault();
     }
   
-    // Si es flecha abajo o enter, mover al siguiente input
     if (e.key === 'ArrowDown' || e.key === 'Enter') {
+      e.preventDefault(); // Prevenir la propagación
+      e.stopPropagation(); // Asegurar que no se propague
+      
       const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
       const currentIndex = inputs.indexOf(e.target);
       const nextInput = inputs[currentIndex + 1];
+      
       if (nextInput) {
         nextInput.focus();
       } else if (e.key === 'Enter' && currentIndex === inputs.length - 1) {
+        // Si es el último campo, llamar a handleSubmit manualmente
         handleSubmit(e);
+        return false; // Evitar cualquier propagación adicional
       }
     }
   
-    // Si es flecha arriba, mover al input anterior
     if (e.key === 'ArrowUp') {
+      e.preventDefault();
       const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
       const currentIndex = inputs.indexOf(e.target);
       const prevInput = inputs[currentIndex - 1];
@@ -171,13 +187,18 @@ const InspectionForm = () => {
   };
 
   return (
-    <div className="reportes-container">
+    <div className="anadir-reportes-container">
       <div className="nav-container">
         <button className="nav-btn" onClick={() => navigate(-1)}>🔙 Atrás</button>
         <button className="nav-btn" onClick={() => navigate('/')}>🏠 Inicio</button>
       </div>
 
-      <div className="reportes-card">
+      <div className="anadir-reportes-card">
+      {message && (
+          <div className={`status-message-reporte ${status}`}>
+            {message}
+          </div>
+        )}
         <h2 className="title">Crear Reporte</h2>
         <form onSubmit={handleSubmit} className="form">
           <label className="form-group">
@@ -321,11 +342,6 @@ const InspectionForm = () => {
           </label>
 
           <button type="submit" className="primary-btn">Crear Reporte</button>
-          {message && (
-            <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>
-              {message}
-            </div>
-          )}
         </form>
       </div>
       <ConfirmationModal 

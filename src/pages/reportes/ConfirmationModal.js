@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './ConfirmationModal.css';
 
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, data }) => {
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (!isOpen) return;
+      
+      if (e.key === 'Enter') {
+        e.preventDefault(); // Prevenir propagación
+        e.stopPropagation(); // Asegurar que no se propague
+        onConfirm();
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [isOpen, onConfirm, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -49,7 +69,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, data }) => {
           <button className="modal-btn cancel" onClick={onClose}>
             Cancelar
           </button>
-          <button className="modal-btn confirm" onClick={onConfirm}>
+          <button className="modal-btn confirm" onClick={onConfirm} autoFocus>
             Confirmar
           </button>
         </div>
