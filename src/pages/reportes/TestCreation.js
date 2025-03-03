@@ -5,10 +5,11 @@ import './TestCreation.css';
 
 const toCamelCase = (str) => {
     return str.toLowerCase().replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
-  };
+};
 
 const TestCreation = () => {
   const [testData, setTestData] = useState(null);
+  const [inspectionData, setInspectionData] = useState(null);
   const [formData, setFormData] = useState({
     colorId: "",
     odorId: "",
@@ -30,7 +31,8 @@ const TestCreation = () => {
     const storedData = localStorage.getItem('inspectionData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
-      setTestData(parsedData);
+      setInspectionData(parsedData);
+      setTestData(parsedData); // Asegúrate de inicializar testData aquí
       setFormData((prevFormData) => ({
         ...prevFormData,
         ...parsedData
@@ -45,7 +47,7 @@ const TestCreation = () => {
 
       setFormData((prevFormData) => ({
         ...prevFormData,
-        [`${camelCaseType}Id`]: conditionId, // ✅ Guardar el ID en el formulario
+        [`${camelCaseType}Id`]: conditionId,
       }));
 
       setTestData((prevTestData) => {
@@ -106,16 +108,25 @@ const TestCreation = () => {
       alert("Test creado correctamente");
   
       // Crear la inspección con los datos guardados y el ID del test
-      const inspectionData = {
-        ...testData,
+      const inspectionDataToSubmit = {
         testId,
+        aerosolStove: inspectionData.aerosolStove || "",
+        inOut: inspectionData.inOut || "",
+        stove: inspectionData.stove || "",
+        hrStove: inspectionData.hrStove || "",
+        environment: inspectionData.environment || "",
+        fridge: inspectionData.fridge || "",
+        photolysis: inspectionData.photolysis || "",
+        stabilitiesMatrixId: inspectionData.stabilitiesMatrixId || "",
         realDate: new Date().toISOString().split('T')[0],
         expectedDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
-        responseTime: Math.ceil((new Date() - new Date(testData.realDate)) / (1000 * 60 * 60 * 24))
+        responseTime: Math.ceil((new Date() - new Date(inspectionData.realDate)) / (1000 * 60 * 60 * 24))
       };
+
+      console.log("Datos enviados para crear la inspección:", inspectionDataToSubmit);
   
       try {
-        await axios.post("http://localhost:8080/inspections", inspectionData);
+        await axios.post("http://localhost:8080/inspections", inspectionDataToSubmit);
         alert("Inspección creada exitosamente");
         navigate(`/reportes/anadir`, { state: { ...testData, testId } });
       } catch (error) {
@@ -183,11 +194,11 @@ const TestCreation = () => {
           </label>
 
           <label className="form-group">
-          <button type="button" className={`test-btn ${testData.temperatureId ? 'filled' : ''}`} onClick={() => navigate(`/reportes/tests/temperature`)}>Temperatura</button>
+            <button type="button" className={`test-btn ${testData.temperatureId ? 'filled' : ''}`} onClick={() => navigate(`/reportes/tests/temperature`)}>Temperatura</button>
           </label>
 
           <label className="form-group">
-          <button type="button" className={`test-btn ${testData.storageId ? 'filled' : ''}`} onClick={() => navigate(`/reportes/tests/storage`)}>Almacenamiento</button>
+            <button type="button" className={`test-btn ${testData.storageId ? 'filled' : ''}`} onClick={() => navigate(`/reportes/tests/storage`)}>Almacenamiento</button>
           </label>
 
           <label className="form-group">

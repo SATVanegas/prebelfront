@@ -22,6 +22,7 @@ const InspectionForm = () => {
   const [descriptionFilter, setDescriptionFilter] = useState("");
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLastInspection = async () => {
@@ -108,14 +109,12 @@ const InspectionForm = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       localStorage.setItem('inspectionData', JSON.stringify(dataToSubmit));
       setMessage('Inspección creada exitosamente');
-      navigate(`/reportes/tests`);
+      navigate('/reportes/tests', { state: { ...dataToSubmit } });
     } catch (error) {
       console.error('Error al crear la inspección:', error);
       setMessage('Error en la conexión con el servidor.');
     }
   };
-
-  const navigate = useNavigate();
 
   const filteredProducts = products.filter(product =>
     product.brand.toLowerCase().includes(brandFilter.toLowerCase()) &&
