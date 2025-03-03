@@ -257,6 +257,12 @@ const TestCreation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+
+      // 0. Obtener el stabilitiesMatrixId correcto del producto
+    const productResponse = await axios.get(`http://localhost:8080/api/products/dto/${testData.stabilitiesMatrixId}`);
+    const correctMatrixId = productResponse.data.stabilitiesMatrixId;
+
+
       // 1. Crear temperatura y almacenamiento
       const temperatureResponse = await axios.post(
         "http://localhost:8080/api/test/temperature", 
@@ -296,7 +302,7 @@ const TestCreation = () => {
         environment: Number(testData.environment),
         fridge: Number(testData.fridge),
         photolysis: Number(testData.photolysis),
-        stabilitiesMatrixId: Number(testData.stabilitiesMatrixId),
+        stabilitiesMatrixId: Number(correctMatrixId),
         testId: Number(testResponse.data)
       };
   
