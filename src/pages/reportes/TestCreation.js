@@ -69,7 +69,7 @@ const TestCreation = () => {
   }, []);
 
   const areAllTestsCompleted = () => {
-    return (
+    const allCompleted = (
       formData.colorId &&
       formData.odorId &&
       formData.appearanceId &&
@@ -79,9 +79,15 @@ const TestCreation = () => {
       formData.totalBacteriaCountId &&
       formData.fungiYeastCountId &&
       formData.pathogensId &&
-      testData.temperatureId &&
-      testData.storageId
+      formData.temperatureId && // Cambiado de testData a formData
+      formData.storageId       // Cambiado de testData a formData
     );
+  
+    if (allCompleted && !showConclusionModal) {
+      setShowConclusionModal(true);
+    }
+  
+    return allCompleted;
   };
 
   const getRemainingTests = () => {
@@ -95,8 +101,8 @@ const TestCreation = () => {
       'Recuento total de bacterias': formData.totalBacteriaCountId,
       'Recuento de hongos y levaduras': formData.fungiYeastCountId,
       'Patógenos': formData.pathogensId,
-      'Temperatura': testData?.temperatureId,
-      'Almacenamiento': testData?.storageId
+      'Temperatura': formData.temperatureId, // Cambiado de testData a formData
+      'Almacenamiento': formData.storageId  // Cambiado de testData a formData
     };
   
     const remainingTests = Object.entries(tests)
@@ -126,6 +132,41 @@ const TestCreation = () => {
       stabilitiesMatrixId: "ID de Matriz de Estabilidad"
     };
     return fieldLabels[key] || key;
+  };
+
+  const handleKeyDown = (e) => {
+    // Prevenir el comportamiento por defecto de las flechas arriba/abajo
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+    }
+  
+    // Si es flecha abajo o enter, mover al siguiente input
+    if (e.key === 'ArrowDown' || e.key === 'Enter') {
+      const inputs = Array.from(document.querySelectorAll('input[type="text"], input[type="number"], textarea'));
+      const currentIndex = inputs.indexOf(e.target);
+      const nextInput = inputs[currentIndex + 1];
+  
+      if (nextInput) {
+        nextInput.focus();
+      } else if (e.key === 'Enter') {
+        // Si es el último input y presiona enter, enviar el formulario
+        const form = e.target.closest('form');
+        if (form) {
+          const submitButton = form.querySelector('button[type="submit"]');
+          if (submitButton) submitButton.click();
+        }
+      }
+    }
+  
+    // Si es flecha arriba, mover al input anterior
+    if (e.key === 'ArrowUp') {
+      const inputs = Array.from(document.querySelectorAll('input[type="text"], input[type="number"], textarea'));
+      const currentIndex = inputs.indexOf(e.target);
+      const prevInput = inputs[currentIndex - 1];
+      if (prevInput) {
+        prevInput.focus();
+      }
+    }
   };
 
   const TestConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }) => {
@@ -216,68 +257,67 @@ const TestCreation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Obtener el stabilitiesMatrixId correcto del producto
-      const productResponse = await axios.get(`http://localhost:8080/api/products/dto/${testData.stabilitiesMatrixId}`);
-      const correctMatrixId = productResponse.data.stabilitiesMatrixId;
-
-      // 1. Crear los tests individuales
+      // 1. Crear temperatura y almacenamiento
       const temperatureResponse = await axios.post(
         "http://localhost:8080/api/test/temperature", 
         testsData.temperature
       );
+      
       const storageResponse = await axios.post(
         "http://localhost:8080/api/test/storage", 
         testsData.storage
       );
-
-      // 2. Crear los condition tests
-      const conditionPromises = Object.entries(testsData.conditions).map(
-        ([type, data]) => axios.post(
-          "http://localhost:8080/api/test/conditions",
-          { ...data, type }
-        )
-      );
-      const conditionResponses = await Promise.all(conditionPromises);
-
-      // 3. Crear el test principal con todos los IDs
-      // 3. Crear el test principal con todos los IDs
-const finalTestData = {
-  productId: testData.stabilitiesMatrixId,
-  temperatureId: temperatureResponse.data,
-  storageId: storageResponse.data,
-  observations: formData.observations,
-  conclusion: formData.conclusion
-};
-
-// Verificar que los IDs se agreguen correctamente
-console.log('Test Data Final:', finalTestData);
-
-const testResponse = await axios.post(
-  "http://localhost:8080/api/test", 
-  finalTestData
-);
-
-      // 4. Crear la inspección
-      const inspectionData = {
-        testId: testResponse.data,
-        realDate: testData.realDate,
-        expectedDate: testData.expectedDate,
-        responseTime: testData.responseTime,
-        aerosolStove: testData.aerosolStove,
-        environment: testData.environment,
-        fridge: testData.fridge,
-        hrStove: testData.hrStove,
-        inOut: testData.inOut,
-        photolysis: testData.photolysis,
-        stove: testData.stove,
-        stabilitiesMatrixId: correctMatrixId 
+  
+      // 2. Crear el test principal (formato específico requerido)
+      const testDTO = {
+        productId: Number(testData.stabilitiesMatrixId),
+        temperatureId: Number(temperatureResponse.data),
+        storageId: Number(storageResponse.data),
+        observations: formData.observations || "",
+        conclusion: formData.conclusion || ""
       };
-
-      await axios.post("http://localhost:8080/inspections", inspectionData);
-      
+  
+      console.log('Test DTO a enviar:', testDTO); // Para debugging
+  
+      const testResponse = await axios.post(
+        "http://localhost:8080/api/test", 
+        testDTO
+      );
+  
+      // 3. Crear la inspección (formato específico requerido)
+      const inspectionDTO = {
+        expectedDate: testData.expectedDate,
+        realDate: testData.realDate,
+        responseTime: Number(testData.responseTime),
+        aerosolStove: Number(testData.aerosolStove),
+        inOut: Number(testData.inOut),
+        stove: Number(testData.stove),
+        hrStove: Number(testData.hrStove),
+        environment: Number(testData.environment),
+        fridge: Number(testData.fridge),
+        photolysis: Number(testData.photolysis),
+        stabilitiesMatrixId: Number(testData.stabilitiesMatrixId),
+        testId: Number(testResponse.data)
+      };
+  
+      console.log('Inspection DTO a enviar:', inspectionDTO); // Para debugging
+  
+      await axios.post("http://localhost:8080/inspections", inspectionDTO);
+  
+      // 4. Crear las condiciones
+      for (const [type, data] of Object.entries(testsData.conditions)) {
+        const conditionData = {
+          ...data,
+          type,
+          testId: Number(testResponse.data)
+        };
+        await axios.post("http://localhost:8080/api/test/conditions", conditionData);
+      }
+  
       alert("Test e inspección creados exitosamente");
       navigate('/reportes/anadir');
     } catch (error) {
+      console.error('Error completo:', error);
       alert("Error al crear los tests: " + error.message);
     }
   };
@@ -316,54 +356,46 @@ const testResponse = await axios.post(
       if (!testToConfirm?.data || !testToConfirm?.type) {
         throw new Error('Datos de test inválidos');
       }
-
+    
       const { data, type } = testToConfirm;
-      let endpoint;
-  
-      switch (type) {
-        case 'TEMPERATURE':
-          endpoint = "http://localhost:8080/api/test/temperature";
-          break;
-        case 'STORAGE':
-          endpoint = "http://localhost:8080/api/test/storage";
-          break;
-        default:
-          endpoint = "http://localhost:8080/api/test/conditions";
-          data.type = type;
-          break;
-      }
-
-      const response = await axios.post(endpoint, data);
-      const resultId = response.data;
       
-      const updatedData = type === 'TEMPERATURE' ? 
-        { temperatureId: resultId } : 
-        type === 'STORAGE' ? 
-          { storageId: resultId } : 
-          { [`${toCamelCase(type)}Id`]: resultId };
-
+      // Solo almacenar los datos en el estado
       if (type === 'TEMPERATURE' || type === 'STORAGE') {
-        setTestData(prev => {
-          const updated = { ...prev, ...updatedData };
-          localStorage.setItem('inspectionData', JSON.stringify(updated));
-          return updated;
-        });
+        setTestsData(prev => ({
+          ...prev,
+          [type.toLowerCase()]: data
+        }));
+        
+        // Actualizar el estado visual
+        setFormData(prev => ({
+          ...prev,
+          [`${toCamelCase(type)}Id`]: 'pending'
+        }));
       } else {
-        setFormData(prev => {
-          const updated = { ...prev, ...updatedData };
-          localStorage.setItem('inspectionData', JSON.stringify({ ...testData, ...updated }));
-          return updated;
-        });
+        setTestsData(prev => ({
+          ...prev,
+          conditions: {
+            ...prev.conditions,
+            [type]: data
+          }
+        }));
+        
+        // Actualizar el estado visual
+        setFormData(prev => ({
+          ...prev,
+          [`${toCamelCase(type)}Id`]: 'pending'
+        }));
       }
-      
+  
+      // Si todos los tests están completos, mostrar modal de conclusión
       if (areAllTestsCompleted()) {
         setShowConclusionModal(true);
       }
-
+  
       setSelectedTest(null);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'Error desconocido';
-      alert(`Error al crear ${getTitle(testToConfirm?.type || 'test')}: ${errorMessage}`);
+      alert(`Error al procesar ${getTitle(testToConfirm?.type || 'test')}: ${errorMessage}`);
       console.error(error);
     } finally {
       setIsConfirmationModalOpen(false);
@@ -439,11 +471,11 @@ const testResponse = await axios.post(
           break;
       }
   
-      if (!validateSpecificForm(type, data)) {
+      const isValid = validateSpecificForm(type, data);
+  if (!isValid) {
+    // Si hay errores, retornar temprano sin mostrar el modal de confirmación
     return;
   }
-
-  setErrors({});
       setTestToConfirm({ data, type });
       setIsConfirmationModalOpen(true);
     
@@ -475,51 +507,64 @@ const testResponse = await axios.post(
   
     switch (selectedTest) {
       case 'TEMPERATURE':
-        return (
-          <div className="crear-usuario-card">
-            <h2 className="title">Prueba de Temperatura</h2>
-            <form onSubmit={(e) => handleSpecificSubmit(e, 'TEMPERATURE')} className="form">
-              <label className="form-group">
-                <span className="label-text">Unidad</span>
-                <input type="text" name="unit" placeholder="Ingrese la unidad" value={formData.unit} onChange={handleChange} className="input-field" required />
-              </label>
-              <label className="form-group">
-                <span className="label-text">Tiempo (semanas)</span>
-                <input type="number" name="time" placeholder="Ingrese el tiempo en semanas" value={formData.time} onChange={handleChange} className="input-field" required />
-              </label>
-              <label className="form-group">
-                <span className="label-text">Equipo</span>
-                <input type="text" name="equipment" placeholder="Ingrese el equipo" value={formData.equipment} onChange={handleChange} className="input-field" required />
-              </label>
-              <button type="submit" className="primary-btn">Crear Prueba de Temperatura</button>
-            </form>
-          </div>
-        );
-      case 'STORAGE':
-        return (
-          <div className="crear-usuario-card">
-            <h2 className="title">Prueba de Almacenamiento</h2>
-            <form onSubmit={(e) => handleSpecificSubmit(e, 'STORAGE')} className="form">
-              <label className="form-group">
-                <span className="label-text">Temperatura Máxima</span>
-                <input type="number" name="maxTemperature" placeholder="Ingrese la temperatura máxima" value={formData.maxTemperature} onChange={handleChange} className="input-field" />
-              </label>
-              <label className="form-group">
-                <span className="label-text">Temperatura Mínima</span>
-                <input type="number" name="minTemperature" placeholder="Ingrese la temperatura mínima" value={formData.minTemperature} onChange={handleChange} className="input-field" />
-              </label>
-              <label className="form-group">
-                <span className="label-text">Código del Equipo</span>
-                <input type="text" name="equipmentCode" placeholder="Ingrese el código del equipo" value={formData.equipmentCode} onChange={handleChange} className="input-field" />
-              </label>
-              <label className="form-group">
-                <span className="label-text">Descripción</span>
-                <textarea name="description" placeholder="Ingrese la descripción" value={formData.description} onChange={handleChange} className="input-field" />
-              </label>
-              <button type="submit" className="primary-btn">Crear Prueba de Almacenamiento</button>
-            </form>
-          </div>
-        );
+  return (
+    <div className="test-card">
+      <h2 className="title">Prueba de Temperatura</h2>
+      <form onSubmit={(e) => handleSpecificSubmit(e, 'TEMPERATURE')} className="form">
+        <label className="form-group">
+          <span className="label-text">Unidad</span>
+          <input type="text" name="unit" placeholder="Ingrese la unidad" value={formData.unit} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
+          {errors.unit && <span className="error-text">{errors.unit}</span>}
+        </label>
+        <label className="form-group">
+          <span className="label-text">Tiempo (semanas)</span>
+          <input type="number" name="time" placeholder="Ingrese el tiempo en semanas" value={formData.time} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
+          {errors.time && <span className="error-text">{errors.time}</span>}
+        </label>
+        <label className="form-group">
+          <span className="label-text">Equipo</span>
+          <input type="text" name="equipment" placeholder="Ingrese el equipo" value={formData.equipment} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
+          {errors.equipment && <span className="error-text">{errors.equipment}</span>}
+        </label>
+        <button type="submit" className="primary-btn">Crear Prueba de Temperatura</button>
+      </form>
+    </div>
+  );
+  case 'STORAGE':
+    return (
+      <div className="test-card">
+        <h2 className="title">Prueba de Almacenamiento</h2>
+        <form onSubmit={(e) => handleSpecificSubmit(e, 'STORAGE')} className="form">
+          <label className="form-group">
+            <span className="label-text">Temperatura Máxima</span>
+            <input 
+              type="number" 
+              name="maxTemperature" 
+              placeholder="Ingrese la temperatura máxima" 
+              value={formData.maxTemperature} 
+              onChange={handleChange} 
+              className="input-field" 
+            />
+            {errors.maxTemperature && <span className="error-text">{errors.maxTemperature}</span>}
+          </label>
+          <label className="form-group">
+            <span className="label-text">Temperatura Mínima</span>
+            <input type="number" name="minTemperature" placeholder="Ingrese la temperatura mínima" value={formData.minTemperature} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
+            {errors.minTemperature && <span className="error-text">{errors.minTemperature}</span>}
+          </label>
+          <label className="form-group">
+            <span className="label-text">Código del Equipo</span>
+            <input type="text" name="equipmentCode" placeholder="Ingrese el código del equipo" value={formData.equipmentCode} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
+            {errors.equipmentCode && <span className="error-text">{errors.equipmentCode}</span>}
+          </label>
+          <label className="form-group">
+            <span className="label-text">Descripción</span>
+            <textarea name="description" placeholder="Ingrese la descripción" value={formData.description} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
+          </label>
+          <button type="submit" className="primary-btn">Crear Prueba de Almacenamiento</button>
+        </form>
+      </div>
+    );
       case 'CONDITION':
       case 'COLOR':
       case 'ODOR':
@@ -534,33 +579,57 @@ const testResponse = await axios.post(
           <div className="test-card">
             <h2 className="title">{getTitle(selectedTest)}</h2>
             <form onSubmit={(e) => handleSpecificSubmit(e, selectedTest)} className="form">
-              <label className="form-group">
-                <span className="label-text">Unidad</span>
-                <input type="text" name="unit" placeholder="Ingrese la unidad" value={formData.unit} onChange={handleChange} className="input-field" required />
-              </label>
-              <label className="form-group">
-                <span className="label-text">Tiempo (semanas)</span>
-                <input type="number" name="time" placeholder="Ingrese el tiempo en semanas" value={formData.time} onChange={handleChange} className="input-field" required />
-              </label>
-              <label className="form-group">
-                <span className="label-text">Equipo</span>
-                <input type="number" name="equipment" placeholder="Ingrese el equipo" value={formData.equipment} onChange={handleChange} className="input-field" required />
-              </label>
-              <label className="form-group">
-                <span className="label-text">Método</span>
-                <input type="text" name="method" placeholder="Ingrese el método" value={formData.method} onChange={handleChange} className="input-field" required />
-              </label>
+            <div className="form-row">
+  <label className="form-group">
+    <span className="label-text">Unidad</span>
+    <input 
+      type="text" 
+      name="unit" 
+      placeholder="Ingrese la unidad" 
+      value={formData.unit} 
+      onChange={handleChange}
+      onKeyDown={handleKeyDown} 
+      className="input-field" 
+    />
+    {errors.unit && <span className="error-text">{errors.unit}</span>}
+  </label>
+  <label className="form-group">
+    <span className="label-text">Tiempo (semanas)</span>
+    <input 
+      type="number" 
+      name="time" 
+      placeholder="Ingrese el tiempo" 
+      value={formData.time} 
+      onChange={handleChange}
+      onKeyDown={handleKeyDown} 
+      className="input-field" 
+    />
+    {errors.time && <span className="error-text">{errors.time}</span>}
+  </label>
+</div>
+<div className="form-row">
+  <label className="form-group">
+    <span className="label-text">Equipo</span>
+    <input type="text" name="equipment" placeholder="Ingrese el equipo" value={formData.equipment} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field"/>
+    {errors.equipment && <span className="error-text">{errors.equipment}</span>}
+  </label>
+  <label className="form-group">
+    <span className="label-text">Método</span>
+    <input type="text" name="method" placeholder="Ingrese el método" value={formData.method} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
+    {errors.method && <span className="error-text">{errors.method}</span>}
+  </label>
+</div>
               <label className="form-group">
                 <span className="label-text">Especificación</span>
-                <textarea name="specification" placeholder="Ingrese la especificación" value={formData.specification} onChange={handleChange} className="input-field" />
+                <textarea name="specification" placeholder="Ingrese la especificación" value={formData.specification} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
               </label>
               <label className="form-group">
                 <span className="label-text">Resultados Iniciales (Laboratorio de Desarrollo)</span>
-                <textarea name="initialResultsDevelopmentLaboratory" placeholder="Ingrese los resultados iniciales" value={formData.initialResultsDevelopmentLaboratory} onChange={handleChange} className="input-field" />
+                <textarea name="initialResultsDevelopmentLaboratory" placeholder="Ingrese los resultados iniciales" value={formData.initialResultsDevelopmentLaboratory} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
               </label>
               <label className="form-group">
                 <span className="label-text">Resultados Iniciales (Laboratorio de Estabilidad)</span>
-                <textarea name="initialResultsStabilityLaboratory" placeholder="Ingrese los resultados iniciales" value={formData.initialResultsStabilityLaboratory} onChange={handleChange} className="input-field" />
+                <textarea name="initialResultsStabilityLaboratory" placeholder="Ingrese los resultados iniciales" value={formData.initialResultsStabilityLaboratory} onChange={handleChange} onKeyDown={handleKeyDown} className="input-field" />
               </label>
               <button type="submit" className="primary-btn">Guardar prueba</button>
             </form>
@@ -593,7 +662,8 @@ const testResponse = await axios.post(
                 placeholder="Ingrese las observaciones"
                 value={formData.observations}
                 onChange={handleChange}
-                className="input-field"
+                onKeyDown={handleKeyDown}
+                  className="input-field"
               />
             </label>
             <label className="form-group">
@@ -603,6 +673,7 @@ const testResponse = await axios.post(
                 placeholder="Ingrese la conclusión"
                 value={formData.conclusion}
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 className="input-field"
               />
             </label>
@@ -621,14 +692,12 @@ const testResponse = await axios.post(
     const { completed, total } = getRemainingTests();
     
     return (
-      <div className="test-progress">
         <p>
           {completed === total ? 
             '✅ Todas las pruebas han sido completadas' : 
             `📋 Pruebas completadas: ${completed}/${total}`
           }
         </p>
-      </div>
     );
   };
 

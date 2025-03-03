@@ -11,12 +11,12 @@
   }
   
   .test-card {
-    margin-top: 5rem;
+    margin-top: 1rem;
     background: rgba(255, 255, 255, 0.95);
-    padding: 3vh 3vw;
+    padding: 2vh 2vw;
     border-radius: 1.5rem;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-    width: min(90vw, 500px);
+    width: 100%;
     backdrop-filter: blur(10px);
     transition: box-shadow 0.3s ease;
     display: flex;
@@ -40,7 +40,6 @@
     position: relative;
     overflow: hidden;
     transform-origin: center;
-    margin: 4px 0;
     transform: scale(1);
     transition: transform 0.3s ease, background 0.3s ease;
     backface-visibility: hidden;
@@ -57,7 +56,6 @@
     transform: scale(1.02);
     z-index: 1;
     transform: scale(1.02) translateZ(0);
-    margin: 4px 0;
     position: static;
   }
 
@@ -102,28 +100,91 @@
   
   .test-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem; /* Espacio entre los cards */
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
   }
   
   .test-list {
-    flex: 1;
-    margin-right: 20px;
+    flex: 0 1 auto; /* Permite que el contenedor se ajuste al contenido */
+    max-width: 500px; /* Ancho máximo del primer card */
   }
   
   .test-details {
-    flex: 2;
+    flex: 0 1 auto; /* Permite que el contenedor se ajuste al contenido */
+    max-width: 500px; /* Ancho máximo del segundo card */
   }
 
   .test-buttons-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    margin-bottom: 10px;
   }
+
+  /* Contenedor para agrupar campos en fila */
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+/* Ajuste para los campos dentro de la fila */
+.form-row .form-group {
+  flex: 1;
+  margin: 0;
+}
+
+/* Asegurar que los inputs y labels se alineen correctamente */
+.form-row .form-group .input-field {
+  width: 100%;
+}
+
+.form-row .form-group .label-text {
+  text-align: left;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Estilo base para inputs y textareas */
+.input-field {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1.5px solid rgba(26, 61, 106, 0.1);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* Ajustes específicos para textareas */
+textarea.input-field {
+  min-height: 1rem; /* Altura inicial para una línea */
+  resize: vertical; /* Permite redimensionar verticalmente */
+  overflow-y: hidden; /* Oculta la barra de desplazamiento inicial */
+  line-height: 1.2; /* Espaciado de línea consistente */
+}
+
+/* Ajuste automático de altura mientras se escribe */
+textarea.input-field:focus {
+  height: auto; /* Permite crecer al escribir */
+  overflow-y: auto; /* Muestra la barra de desplazamiento cuando es necesario */
+}
+
   
   .test-buttons-container .form-group {
-    flex: 1 1 calc(50% - 10px); /* Ajusta el tamaño de los botones para que ocupen el 50% del ancho menos el espacio del gap */
+    flex: 1 1 calc(50% - 5px); /* Ajusta el tamaño de los botones para que ocupen el 50% del ancho menos el espacio del gap */
     display: flex;
     justify-content: center;
+    margin: 0;
+  }
+
+  .test-buttons-container:last-child .form-group {
+    flex: 1 1 100%; /* Hace que cada botón ocupe el 100% del ancho */
   }
   
   .test-buttons-container .form-group button {
@@ -204,18 +265,7 @@
     transform: translateY(-2px);
   }
 
-  .test-progress {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .test-progress h3 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-  }
+
   
   .remaining-tests {
     margin-top: 10px;
@@ -230,3 +280,51 @@
     color: #6c757d;
     margin: 5px 0;
   }
+
+  @media (max-width: 1024px) {
+    .test-content {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .test-list, 
+    .test-details {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+
+  /* Estilo unificado para placeholders */
+input::placeholder,
+textarea::placeholder {
+  color: #4D4E4E;
+  font-size: 0.9rem;
+  font-family: inherit;
+  opacity: 0.7;
+}
+
+/* Soporte para diferentes navegadores */
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #4D4E4E;
+  font-size: 0.9rem;
+  font-family: inherit;
+  opacity: 0.7;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: #4D4E4E;
+  font-size: 0.9rem;
+  font-family: inherit;
+  opacity: 0.7;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #4D4E4E;
+  font-size: 0.9rem;
+  font-family: inherit;
+  opacity: 0.7;
+}
+
