@@ -88,6 +88,7 @@ const VisualizarPermisos = () => {
               placeholder="Escribe para buscar..."
               isSearchable
             />
+
           </div>
           <button type="submit" className="primary-btn">Obtener Permisos</button>
         </form>
