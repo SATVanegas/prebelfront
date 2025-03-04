@@ -1,30 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {FiCheckSquare, FiPlus, FiEdit } from 'react-icons/fi';
+import { FiCheckSquare, FiPlus, FiEdit } from 'react-icons/fi';
 import './CrearRol.css';
-import Select from 'react-select';
-
 
 const CrearRol = () => {
   const [roleName, setRoleName] = useState('');
-  const [modules, setModules] = useState([]); 
+  const [modules, setModules] = useState([]);
   const [selectedModules, setSelectedModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState('');
   const [expandedModule, setExpandedModule] = useState('');
   const [message, setMessage] = useState('');
 
-
-  const moduleOptions = modules.map((module) => ({
-    value: module,
-    label: module,
-  }));
-
   useEffect(() => {
     const fetchModules = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/modules'); 
+        const response = await fetch('http://localhost:8080/api/modules');
         if (response.ok) {
-          const data = await response.json(); 
+          const data = await response.json();
           setModules(data);
         } else {
           console.error('Error al obtener los módulos');
@@ -38,21 +30,22 @@ const CrearRol = () => {
   }, []);
 
   const addModule = () => {
-    if (selectedModule && !selectedModules.some(mod => mod.moduleName === selectedModule)) {
+    if (selectedModule && !selectedModules.some((mod) => mod.moduleName === selectedModule)) {
       setSelectedModules([...selectedModules, { moduleName: selectedModule, permissions: [] }]);
     }
     setExpandedModule(selectedModule);
+    setSelectedModule(''); // Reiniciar el select después de añadir un módulo
   };
 
   const togglePermission = (moduleName, permission) => {
-    setSelectedModules(prevModules =>
-      prevModules.map(mod =>
+    setSelectedModules((prevModules) =>
+      prevModules.map((mod) =>
         mod.moduleName === moduleName
           ? {
               ...mod,
               permissions: mod.permissions.includes(permission)
-                ? mod.permissions.filter(p => p !== permission) 
-                : [...mod.permissions, permission] 
+                ? mod.permissions.filter((p) => p !== permission)
+                : [...mod.permissions, permission],
             }
           : mod
       )
@@ -63,13 +56,13 @@ const CrearRol = () => {
     e.preventDefault();
 
     if (selectedModules.length === 0) {
-      alert("Debes añadir al menos un módulo con permisos.");
+      alert('Debes añadir al menos un módulo con permisos.');
       return;
     }
 
     const roleRequest = {
       roleName,
-      modules: selectedModules
+      modules: selectedModules,
     };
 
     try {
@@ -83,6 +76,7 @@ const CrearRol = () => {
         setMessage('Rol creado exitosamente');
         setRoleName('');
         setSelectedModules([]);
+        setSelectedModule(''); // Reiniciar el select después de enviar el formulario
       } else {
         const errorText = await response.text();
         setMessage(`Error: ${errorText}`);
@@ -94,7 +88,7 @@ const CrearRol = () => {
   };
 
   const handleExpandModule = (moduleName) => {
-    setExpandedModule(expandedModule === moduleName ? '' : moduleName); 
+    setExpandedModule(expandedModule === moduleName ? '' : moduleName);
   };
 
   const navigate = useNavigate();
@@ -105,14 +99,14 @@ const CrearRol = () => {
         <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
         </button>
-        <button className="nav-btn" onClick={() => navigate('/')}> 
+        <button className="nav-btn" onClick={() => navigate('/')}>
           🏠 Inicio
         </button>
       </div>
 
       <div className="crear-rol-card">
         <h1 className="title">Crear Nuevo Rol</h1>
-        
+
         <form onSubmit={handleSubmit} className="role-form">
           <div className="input-group">
             <label className="input-label">Nombre del Rol</label>
@@ -130,52 +124,28 @@ const CrearRol = () => {
             <div className="selector-header">
               <h3 className="section-title">Seleccionar Módulos</h3>
               <div className="selector-controls">
-  <Select
-    options={moduleOptions}
-    value={moduleOptions.find(option => option.value === selectedModule)}
-    onChange={(option) => setSelectedModule(option ? option.value : '')}
-    placeholder="Selecciona un módulo"
-    isSearchable
-    className="select-container"
-    classNamePrefix="react-select"
-    styles={{
-      control: (base) => ({
-        ...base,
-        minHeight: '40px',
-        boxShadow: 'none',
-      }),
-      valueContainer: (base) => ({
-        ...base,
-        padding: '0 8px',
-      }),
-      input: (base) => ({
-        ...base,
-        margin: 0,
-        padding: 0,
-      }),
-      option: (base, state) => ({
-        ...base,
-        backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
-        '&:hover': {
-          backgroundColor: '#BDDCF5',
-        }
-      }),
-      singleValue: (base) => ({
-        ...base,
-        color: '#3a8dde',
-      })
-    }}
-  />
-  <button
-    type="button"
-    onClick={addModule}
-    className="add-module-btn"
-    disabled={!selectedModule}
-  >
-    <FiPlus className="btn-icon" />
-    Añadir Módulo
-  </button>
-</div>
+                <select
+                  value={selectedModule}
+                  onChange={(e) => setSelectedModule(e.target.value)}
+                  className="module-dropdown"
+                >
+                  <option value="">Selecciona un módulo</option>
+                  {modules.map((module, index) => (
+                    <option key={index} value={module}>
+                      {module}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={addModule}
+                  className="add-module-btn"
+                  disabled={!selectedModule}
+                >
+                  <FiPlus className="btn-icon" />
+                  Añadir Módulo
+                </button>
+              </div>
             </div>
 
             {selectedModules.length > 0 && (
@@ -225,8 +195,10 @@ const CrearRol = () => {
         </form>
 
         {message && (
-          <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>
-            {message}
+          <div className="message-container">
+            <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>
+              {message}
+            </div>
           </div>
         )}
       </div>

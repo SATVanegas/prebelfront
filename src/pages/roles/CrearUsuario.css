@@ -7,7 +7,6 @@
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
-  overflow-y: auto;
 }
 
 .crear-usuario-card {
@@ -38,6 +37,7 @@
   max-width: 100%;
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem;
 }
 
 label {
@@ -82,20 +82,38 @@ select {
   transition: all 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  .crear-usuario-card {
-    width: 95vw;
-    max-width: 90%;
-    padding: 5vw;
-  }
+.primary-btn {
+  background: #3a8dde;
+  color: white;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
 
-  .user-container {
-    padding-top: 12vh;
-  }
+.primary-btn:hover {
+  background: #2b6cb0;
+}
 
-  input,
-  select {
-    font-size: 0.9rem;
-    padding: 8px;
-  }
+.status-message {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.status-message.success {
+  background: #e6fffa;
+  color: #2b6cb0;
+  border: 2px solid #81e6d9;
+}
+
+.status-message.error {
+  background: #fff5f5;
+  color: #c53030;
+  border: 2px solid #fc8181;
 }

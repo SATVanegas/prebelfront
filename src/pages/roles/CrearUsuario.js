@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './CrearUsuario.css';
 import Select from 'react-select';
+import './CrearUsuario.css';
 
 const CrearUsuario = () => {
   const [name, setName] = useState('');
@@ -15,25 +15,32 @@ const CrearUsuario = () => {
   const formRef = useRef(null);
   const navigate = useNavigate();
 
-
   const roleOptions = roles.map((role) => ({
     value: role,
     label: role,
   }));
-  
+
   useEffect(() => {
     const form = formRef.current;
     if (form) {
-      form.addEventListener('invalid', (e) => {
-        e.target.setCustomValidity('');
-        if (!e.target.validity.valid) {
-          e.target.setCustomValidity('Por favor rellene este campo');
-        }
-      }, true);
-      
-      form.addEventListener('input', (e) => {
-        e.target.setCustomValidity('');
-      }, true);
+      form.addEventListener(
+        'invalid',
+        (e) => {
+          e.target.setCustomValidity('');
+          if (!e.target.validity.valid) {
+            e.target.setCustomValidity('Por favor rellene este campo');
+          }
+        },
+        true
+      );
+
+      form.addEventListener(
+        'input',
+        (e) => {
+          e.target.setCustomValidity('');
+        },
+        true
+      );
     }
   }, []);
 
@@ -46,11 +53,11 @@ const CrearUsuario = () => {
           setRoles(data);
         } else {
           const errorText = await response.text();
-        setMessage(`Error: ${errorText}`);
+          setMessage(`Error: ${errorText}`);
         }
       } catch (error) {
-        console.error('Error al crear el rol:', error);
-      setMessage('Error en la conexión con el servidor.');
+        console.error('Error al obtener los roles:', error);
+        setMessage('Error en la conexión con el servidor.');
       }
     };
 
@@ -73,6 +80,11 @@ const CrearUsuario = () => {
 
       if (response.ok) {
         setMessage('Usuario creado exitosamente');
+        setName('');
+        setEmail('');
+        setPassword('');
+        setNumber('');
+        setRoleName(null);
       } else {
         const errorText = await response.text();
         setMessage(`Error: ${errorText}`);
@@ -89,13 +101,13 @@ const CrearUsuario = () => {
         <button className="nav-btn" onClick={() => navigate(-1)}>
           🔙 Atrás
         </button>
-        <button className="nav-btn" onClick={() => navigate('/')}> 
+        <button className="nav-btn" onClick={() => navigate('/')}>
           🏠 Inicio
         </button>
       </div>
-      
+
       <div className="crear-usuario-card">
-        <h2 className='title'>Crear Usuario</h2>
+        <h2 className="title">Crear Usuario</h2>
         <form ref={formRef} onSubmit={handleSubmit} className="form">
           <div className="form-group">
             <label>Nombre:</label>
@@ -138,50 +150,25 @@ const CrearUsuario = () => {
             />
           </div>
           <div className="form-group">
-  <label>Rol:</label>
-  <Select
-    options={roleOptions}
-    value={roleOptions.find(option => option.value === roleName)}
-    onChange={(option) => setRoleName(option ? option.value : '')}
-    placeholder="Seleccione un rol"
-    isSearchable
-    className="select-container"
-    classNamePrefix="react-select"
-    styles={{
-      control: (base) => ({
-        ...base,
-        minHeight: '40px',
-        boxShadow: 'none',
-      }),
-      valueContainer: (base) => ({
-        ...base,
-        padding: '0 8px',
-      }),
-      input: (base) => ({
-        ...base,
-        margin: 0,
-        padding: 0,
-      }),
-      option: (base, state) => ({
-        ...base,
-        backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
-        '&:hover': {
-          backgroundColor: '#BDDCF5',
-        }
-      }),
-      singleValue: (base) => ({
-        ...base,
-        color: '#3a8dde',
-      })
-    }}
-  />
-</div>
-          <button type="submit" className="primary-btn">Crear Usuario</button>
+            <label>Rol:</label>
+            <Select
+              options={roleOptions}
+              value={roleOptions.find((option) => option.value === roleName) || null}
+              onChange={(option) => setRoleName(option ? option.value : '')}
+              placeholder="Seleccione un rol"
+              isSearchable
+              className="select-container"
+              classNamePrefix="react-select"
+            />
+          </div>
+          <button type="submit" className="primary-btn">
+            Crear Usuario
+          </button>
         </form>
         {message && (
           <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>
             {message}
-            </div>
+          </div>
         )}
       </div>
     </div>

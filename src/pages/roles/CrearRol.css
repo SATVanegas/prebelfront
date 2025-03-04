@@ -4,16 +4,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 80px; 
-  min-height: 100vh; 
-  box-sizing: border-box; 
-}
-
-@media (max-width: 480px) {
-  .crear-rol-container {
-    padding: 1rem;
-    border-radius: 1rem;
-  }
+  padding-top: 80px;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .crear-rol-card {
@@ -22,9 +15,9 @@
   border-radius: 1.5rem;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
   width: 100%;
-  margin: 50px 0; 
+  max-width: 800px;
+  margin: 50px 0;
   backdrop-filter: blur(8px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .title {
@@ -33,27 +26,12 @@
   margin-bottom: 1rem;
   font-weight: 700;
   text-align: center;
-  position: relative;
-  padding-bottom: 0.5rem;
-}
-
-.title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: #3a8dde;
-  border-radius: 2px;
 }
 
 .role-form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  min-height: min-content;
 }
 
 .input-group {
@@ -66,7 +44,6 @@
   font-size: 0.95rem;
   font-weight: 600;
   color: #4a5568;
-  margin-left: 0.5rem;
 }
 
 .text-input {
@@ -74,12 +51,11 @@
   border: 2px solid #e2e8f0;
   border-radius: 0.75rem;
   font-size: 1rem;
-  transition: all 0.3s ease;
   background: #f8fafc;
+  transition: all 0.3s ease;
 }
 
 .text-input:focus {
-  outline: none;
   border-color: #3a8dde;
   box-shadow: 0 0 0 3px rgba(58, 141, 222, 0.15);
   background: white;
@@ -103,33 +79,16 @@
   color: #2c3e50;
   font-size: 1.3rem;
   font-weight: 600;
-  margin: 0;
 }
 
 .selector-controls {
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.module-dropdown {
-  flex: 1;
-  padding: 0.7rem 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 0.75rem;
-  font-size: 0.95rem;
-  background: white;
-  min-width: 200px;
-  transition: all 0.3s ease;
-}
-
-.module-dropdown:focus {
-  border-color: #3a8dde;
-  box-shadow: 0 0 0 3px rgba(58, 141, 222, 0.15);
+  align-items: center;
 }
 
 .add-module-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
   background: #3a8dde;
@@ -139,18 +98,15 @@
   border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-weight: 500;
 }
 
 .add-module-btn:hover {
   background: #2b6cb0;
-  transform: translateY(-1px);
 }
 
 .add-module-btn:disabled {
   background: #cbd5e0;
   cursor: not-allowed;
-  transform: none;
 }
 
 .selected-modules {
@@ -184,7 +140,6 @@
   color: #2c3e50;
   font-size: 1.1rem;
   font-weight: 600;
-  margin: 0;
 }
 
 .edit-btn {
@@ -210,7 +165,7 @@
 }
 
 .permission-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
   background: #f8fafc;
@@ -226,7 +181,6 @@
 
 .permission-btn:hover {
   background: #f1f5f9;
-  transform: translateY(-1px);
 }
 
 .permission-btn.active {
@@ -240,7 +194,6 @@
   font-size: 0.9rem;
   padding: 0.5rem 0;
   cursor: pointer;
-  transition: color 0.3s ease;
 }
 
 .permissions-collapsed:hover {
@@ -248,7 +201,7 @@
 }
 
 .form-actions {
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
   display: flex;
   justify-content: flex-end;
 }
@@ -262,23 +215,19 @@
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
-  width: 100%;
-  max-width: 200px;
 }
 
 .submit-btn:hover {
   background: #2b6cb0;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(58, 141, 222, 0.25);
+}
+
+.message-container {
+  margin-top: 1.5rem;
 }
 
 .status-message {
-  margin-top: 1.5rem;
   padding: 1rem;
   border-radius: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
   font-size: 0.95rem;
   font-weight: 500;
 }
@@ -295,42 +244,18 @@
   border: 2px solid #fc8181;
 }
 
-@media (max-width: 768px) {
-  .crear-rol-card {
-    padding: 1.5rem;
-    max-height: 85vh;
-  }
-  
-  .title {
-    font-size: 1.8rem;
-  }
-  
-  .selector-controls {
-    flex-direction: column;
-  }
-  
-  .module-dropdown {
-    width: 100%;
-    min-width: auto;
-  }
-  
-  .add-module-btn {
-    width: 100%;
-    justify-content: center;
-  }
+.module-dropdown {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  background: white;
+  min-width: 200px;
+  transition: all 0.3s ease;
 }
 
-@media (max-width: 480px) {
-  .crear-rol-card {
-    padding: 1rem;
-    border-radius: 1rem;
-  }
-  
-  .title {
-    font-size: 1.5rem;
-  }
-  
-  .text-input {
-    padding: 0.7rem 1rem;
-  }
+.module-dropdown:focus {
+  border-color: #3a8dde;
+  box-shadow: 0 0 0 3px rgba(58, 141, 222, 0.15);
 }
