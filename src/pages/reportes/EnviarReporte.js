@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
+import "./EnviarReporte.css";
 
 const EnviarReporte = () => {
     const [productos, setProductos] = useState([]);
@@ -70,13 +71,13 @@ const EnviarReporte = () => {
     };
 
     return (
-        <div className="reportes-container">
+        <div className="enviar-reportes-container">
             <div className="nav-container">
                 <button className="nav-btn" onClick={() => navigate(-1)}>🔙 Atrás</button>
                 <button className="nav-btn" onClick={() => navigate('/')}>🏠 Inicio</button>
             </div>
 
-            <div className="reportes-card">
+            <div className="enviar-reportes-card">
                 <h2 className="title">Enviar Reporte por Correo</h2>
 
                 {message && <div className={`status-message ${status}`}>{message}</div>}

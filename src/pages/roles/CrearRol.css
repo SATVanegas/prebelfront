@@ -7,6 +7,17 @@
   padding-top: 80px;
   min-height: 100vh;
   box-sizing: border-box;
+  padding-top: 80px; 
+  min-height: 100vh; 
+  box-sizing: border-box; 
+  min-width: 58vh;
+}
+
+@media (max-width: 480px) {
+  .crear-rol-container {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
 }
 
 .crear-rol-card {

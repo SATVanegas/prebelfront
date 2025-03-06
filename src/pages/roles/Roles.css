@@ -2,21 +2,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5vh;
+  padding: 10vh 5vh;
   flex-direction: column;
-  background: var(--background-gradient);
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: rgb(26,61,106);
-  background: radial-gradient(circle, rgba(26,61,106,1) 0%, rgba(58,141,222,1) 50%, rgba(255,255,255,1) 100%);
-  background-size: 300% 300%;
-  animation: gradientAnimation 10s ease infinite;
-  width: 100vw;
-  height: 100vh;
-  transform: translateZ(0); 
-  will-change: background-position; 
-  -webkit-animation: gradientAnimation 10s ease infinite;
-  -moz-animation: gradientAnimation 10s ease infinite;
-  padding-top: 50px; 
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 @media (max-width: 480px) {
@@ -67,13 +58,12 @@
 }
 
 .roles-card {
+  margin-top: 5rem;
   background: rgba(255, 255, 255, 0.95);
-  padding: 2vh;
+  padding: 3vh 3vw;
   border-radius: 1.5rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  width: 90%;
-  max-width: 500px;
-  max-height: 80vh; 
+  width: min(90vw, 500px);
   backdrop-filter: blur(10px);
   transition: box-shadow 0.3s ease;
   display: flex;
@@ -81,8 +71,8 @@
   align-items: center;
   box-sizing: border-box;
   text-align: center;
-  margin-top: 60px; 
 }
+
 
 .roles-card:hover {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);

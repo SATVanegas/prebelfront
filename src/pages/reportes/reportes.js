@@ -18,8 +18,7 @@ const Reportes = () => {
 
       <div className="reportes-home-card">
         <h2 className='title'>Reportes</h2>
-        <div className="bt-container">
-            <button className="primary-btn" onClick={() => navigate('/reportes/consultar')}>Consultar Reporte</button>
+        <div className="button-container">
             <button className="primary-btn" onClick={() => navigate('/reportes/anadir')}>Añadir Reporte</button>
             <button className="primary-btn" onClick={() => navigate('/reportes/imprimir')}>Imprimir Reporte</button>
             <button className="primary-btn" onClick={() => navigate('/reportes/enviar')}>Enviar Reporte</button>

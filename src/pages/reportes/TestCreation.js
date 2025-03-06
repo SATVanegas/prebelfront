@@ -7,6 +7,58 @@ const toCamelCase = (str) => {
     return str.toLowerCase().replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
 };
 
+const ConclusionModal = ({ showModal, onClose, onSubmit, formData, onFormChange }) => {
+  if (!showModal) return null;
+
+  return (
+    <div className="modal-overlay" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2>Finalizar Registro de Pruebas</h2>
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit(e);
+        }}>
+          <label className="form-group">
+            <span className="label-text">Observaciones</span>
+            <textarea
+              name="observations"
+              placeholder="Ingrese las observaciones"
+              value={formData.observations || ''}
+              onChange={onFormChange}
+              className="input-field"
+            />
+          </label>
+          <label className="form-group">
+            <span className="label-text">Conclusión</span>
+            <textarea
+              name="conclusion"
+              placeholder="Ingrese la conclusión"
+              value={formData.conclusion || ''}
+              onChange={onFormChange}
+              className="input-field"
+            />
+          </label>
+          <div className="modal-buttons">
+            <button 
+              type="button" 
+              className="modal-btn cancel" 
+              onClick={onClose}
+            >
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              className="modal-btn confirm"
+            >
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const TestCreation = () => {
   const [formData, setFormData] = useState({
     unit: '',
@@ -135,15 +187,18 @@ const TestCreation = () => {
   };
 
   const handleKeyDown = (e) => {
+    if (showConclusionModal || isConfirmationModalOpen) {
+      return;
+    }
+  
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       e.preventDefault();
     }
-  
+    
     if (e.key === 'ArrowDown' || e.key === 'Enter') {
       e.preventDefault();
       e.stopPropagation();
       
-      // Obtener todos los inputs y textareas dentro del formulario actual
       const form = e.target.closest('form');
       const inputs = Array.from(form.querySelectorAll('input[type="text"], input[type="number"], textarea'));
       const currentIndex = inputs.indexOf(e.target);
@@ -152,16 +207,9 @@ const TestCreation = () => {
       if (nextInput) {
         nextInput.focus();
       } else if (e.key === 'Enter') {
-        // Si es el último campo, submit del formulario
-        const form = e.target.closest('form');
-        if (form) {
-          const submitButton = form.querySelector('button[type="submit"]');
-          if (submitButton) {
-            e.preventDefault();
-            e.stopPropagation();
-            submitButton.click();
-            return false;
-          }
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) {
+          submitButton.click();
         }
       }
     }
@@ -183,6 +231,10 @@ const TestCreation = () => {
       if (!isOpen) return;
       
       const handleKeyPress = (e) => {
+        if (showConclusionModal) {
+          return;
+        }
+
         if (e.key === 'Enter' && !e.target.matches('input, textarea')) {
           e.preventDefault();
           e.stopPropagation();
@@ -366,7 +418,45 @@ const TestCreation = () => {
   };
 
   const handleConditionTest = (type) => {
-    setSelectedTest(type); // Actualiza el test seleccionado
+    // Si la prueba ya tiene datos (está en testsData), mostrarlos
+    if (type === 'TEMPERATURE' && testsData.temperature) {
+      setFormData(prev => ({
+        ...prev,
+        ...testsData.temperature
+      }));
+    } else if (type === 'STORAGE' && testsData.storage) {
+      setFormData(prev => ({
+        ...prev,
+        ...testsData.storage
+      }));
+    } else if (testsData.conditions[type]) {
+      setFormData(prev => ({
+        ...prev,
+        ...testsData.conditions[type]
+      }));
+    } else {
+      // Si la prueba no tiene datos, limpiar los campos
+      setFormData(prev => ({
+        ...prev,
+        unit: '',
+        time: '',
+        equipment: '',
+        method: '',
+        specification: '',
+        initialResultsDevelopmentLaboratory: '',
+        initialResultsStabilityLaboratory: '',
+        maxTemperature: '',
+        minTemperature: '',
+        equipmentCode: '',
+        description: ''
+      }));
+  }
+    
+  // Limpiar errores
+  setErrors({});
+    
+  // Actualizar el test seleccionado
+  setSelectedTest(type);
   };
 
   const getTitle = (type) => {
@@ -444,6 +534,11 @@ const TestCreation = () => {
       setIsConfirmationModalOpen(false);
       setTestToConfirm(null);
     }
+  };
+
+  const handleCancelTest = () => {
+    setIsConfirmationModalOpen(false);
+    setTestToConfirm(null);
   };
 
   const renderSelectedTest = () => {
@@ -539,8 +634,6 @@ const TestCreation = () => {
         ...prev,
         [`${toCamelCase(type)}Id`]: 'pending' // Marcador visual de que está completo pero pendiente de guardar
       }));
-  
-      setSelectedTest(null);
   
       // Si todos los tests están completos, mostramos el modal de conclusión
       if (areAllTestsCompleted()) {
@@ -690,71 +783,6 @@ const TestCreation = () => {
 
   const productName = localStorage.getItem('selectedProductName') || 'Producto';
 
-
-  const ConclusionModal = () => {
-    useEffect(() => {
-      if (!showConclusionModal) return;
-      
-      const handleKeyPress = (e) => {
-        if (e.key === 'Enter' && !e.target.tagName.toLowerCase().match(/input|textarea/)) {
-          e.preventDefault();
-          e.stopPropagation();
-          handleSubmit(e);
-        }
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          e.stopPropagation();
-          setShowConclusionModal(false);
-        }
-      };
-  
-      window.addEventListener('keydown', handleKeyPress);
-      return () => window.removeEventListener('keydown', handleKeyPress);
-    }, [showConclusionModal]);
-  
-    if (!showConclusionModal) return null;
-
-    return (
-      <div className="modal-overlay">
-        <div className="modal-content">
-          <h2>Finalizar Registro de Pruebas</h2>
-          <form onSubmit={handleSubmit}>
-            <label className="form-group">
-              <span className="label-text">Observaciones</span>
-              <textarea
-                name="observations"
-                placeholder="Ingrese las observaciones"
-                value={formData.observations}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                className="input-field"
-              />
-            </label>
-            <label className="form-group">
-              <span className="label-text">Conclusión</span>
-              <textarea
-                name="conclusion"
-                placeholder="Ingrese la conclusión"
-                value={formData.conclusion}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                className="input-field"
-              />
-            </label>
-            <div className="modal-buttons">
-              <button className="modal-btn cancel" onClick={() => setShowConclusionModal(false)}>
-                Cancelar
-              </button>
-              <button type="submit" className="modal-btn confirm" autoFocus>
-                Guardar
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
-
   const TestProgress = () => {
     const { completed, total } = getRemainingTests();
     
@@ -824,13 +852,25 @@ const TestCreation = () => {
           {renderSelectedTest()}
         </div>
         <TestConfirmationModal 
-      isOpen={isConfirmationModalOpen}
-      onClose={() => setIsConfirmationModalOpen(false)}
-      onConfirm={handleConfirmTest}
-      data={testToConfirm?.data || {}}
-      type={testToConfirm?.type || ''}
-    />
-        <ConclusionModal />
+          isOpen={isConfirmationModalOpen}
+          onClose={handleCancelTest}
+          onConfirm={handleConfirmTest}
+          data={testToConfirm?.data || {}}
+          type={testToConfirm?.type || ''}
+        />
+        <ConclusionModal 
+          showModal={showConclusionModal}
+          onClose={() => setShowConclusionModal(false)}
+          onSubmit={handleSubmit}
+          formData={formData}
+          onFormChange={(e) => {
+            const { name, value } = e.target;
+            setFormData(prev => ({
+              ...prev,
+              [name]: value
+            }));
+          }}
+        />
       </div>
     </div>
   );

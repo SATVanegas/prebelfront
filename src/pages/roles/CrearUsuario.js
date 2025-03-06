@@ -164,6 +164,47 @@ const CrearUsuario = () => {
           <button type="submit" className="primary-btn">
             Crear Usuario
           </button>
+  <label>Rol:</label>
+  <Select
+    options={roleOptions}
+    value={roleOptions.find(option => option.value === roleName)}
+    onChange={(option) => setRoleName(option ? option.value : '')}
+    placeholder="Seleccione un rol"
+    isSearchable
+    className="select-container"
+    classNamePrefix="react-select"
+    styles={{
+      control: (base) => ({
+        ...base,
+        minHeight: '40px',
+        boxShadow: 'none',
+      }),
+      valueContainer: (base) => ({
+        ...base,
+        padding: '0 8px',
+      }),
+      input: (base) => ({
+        ...base,
+        margin: 0,
+        padding: 0,
+      }),
+      option: (base, state) => ({
+        ...base,
+        backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+        '&:hover': {
+          backgroundColor: '#BDDCF5',
+        }
+      }),
+      singleValue: (base) => ({
+        ...base,
+        color: '#3a8dde',
+      })
+    }}
+  />
+</div>
+        <div className='button-container'>
+          <button type="submit" className="primary-btn">Crear Usuario</button>
+        </div>
         </form>
         {message && (
           <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>

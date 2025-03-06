@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AnadirProgramacion.css';
+import Select from 'react-select';
+
 
 const AnadirProgramacion = () => {
     const [date, setDate] = useState(new Date());
@@ -210,7 +212,7 @@ const AnadirProgramacion = () => {
     };
 
     return (
-        <div className="planner-container">
+        <div className="create-schedule-container">
             <div className="nav-container">
                 <button className="nav-btn" onClick={() => navigate(-1)}>
                     🔙 Atrás
@@ -219,7 +221,7 @@ const AnadirProgramacion = () => {
                     🏠 Inicio
                 </button>
             </div>
-            <div className="crear-usuario-card">
+            <div className="create-schedule-card">
                 <h2 className="title">Añadir Programación</h2>
 
                 {message && (
@@ -257,56 +259,146 @@ const AnadirProgramacion = () => {
                     </div>
                     <div className="form-group">
                         <label>Rol Asignado:</label>
-                        <select
-                            value={assignedRoleId}
-                            onChange={(e) => setAssignedRoleId(e.target.value)}
-                            required
-                        >
-                            <option value="">Seleccione un rol</option>
-                            {roles.map((roleName, index) => (
-                                <option key={index} value={roleName}>
-                                    {roleName}
-                                </option>
-                            ))}
-                        </select>
+                        <Select
+                            options={roles.map(roleName => ({
+                                value: roleName,
+                                label: roleName
+                            }))}
+                            value={roles.map(roleName => ({
+                                value: roleName,
+                                label: roleName
+                            })).find(option => option.value === assignedRoleId)}
+                            onChange={(option) => setAssignedRoleId(option ? option.value : '')}
+                            placeholder="Seleccione un rol"
+                            isSearchable
+                            className="select-container"
+                            classNamePrefix="react-select"
+                            styles={{
+                                control: (base) => ({
+                                    ...base,
+                                    minHeight: '40px',
+                                    boxShadow: 'none',
+                                }),
+                                valueContainer: (base) => ({
+                                    ...base,
+                                    padding: '0 8px',
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    margin: 0,
+                                    padding: 0,
+                                }),
+                                option: (base, state) => ({
+                                    ...base,
+                                    backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                                    '&:hover': {
+                                        backgroundColor: '#BDDCF5',
+                                    }
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: '#3a8dde',
+                                })
+                            }}
+                        />
                     </div>
                     <div className="form-group">
                         <label>Técnico:</label>
-                        <select
-                            value={technicianId}
-                            onChange={(e) => setTechnicianId(e.target.value)}
-                            required
-                            disabled={technicians.length === 0}
-                        >
-                            <option value="">Seleccione un técnico</option>
-                            {technicians.map((technician) => (
-                                <option key={technician.id} value={technician.id}>
-                                    {technician.name}
-                                </option>
-                            ))}
-                        </select>
+                        <Select
+                            options={technicians.map(tech => ({
+                                value: tech.id,
+                                label: tech.name
+                            }))}
+                            value={technicians.map(tech => ({
+                                value: tech.id,
+                                label: tech.name
+                            })).find(option => option.value === technicianId)}
+                            onChange={(option) => setTechnicianId(option ? option.value : '')}
+                            placeholder="Seleccione un técnico"
+                            isSearchable
+                            isDisabled={technicians.length === 0}
+                            className="select-container"
+                            classNamePrefix="react-select"
+                            styles={{
+                                control: (base) => ({
+                                    ...base,
+                                    minHeight: '40px',
+                                    boxShadow: 'none',
+                                }),
+                                valueContainer: (base) => ({
+                                    ...base,
+                                    padding: '0 8px',
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    margin: 0,
+                                    padding: 0,
+                                }),
+                                option: (base, state) => ({
+                                    ...base,
+                                    backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                                    '&:hover': {
+                                        backgroundColor: '#BDDCF5',
+                                    }
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: '#3a8dde',
+                                })
+                            }}
+                        />
                         {technicians.length === 0 && assignedRoleId && (
                             <small className="form-help error">No hay técnicos disponibles para este rol</small>
                         )}
                     </div>
                     <div className="form-group">
                         <label>Horario:</label>
-                        <select
-                            value={schedule}
-                            onChange={(e) => setSchedule(e.target.value)}
-                            required
-                        >
-                            <option value="">Seleccione un horario</option>
-                            {schedules.map((scheduleOption, index) => (
-                                <option key={index} value={scheduleOption}>
-                                    {scheduleOption}
-                                </option>
-                            ))}
-                        </select>
+                        <Select
+                            options={schedules.map(scheduleOption => ({
+                                value: scheduleOption,
+                                label: scheduleOption
+                            }))}
+                            value={schedules.map(scheduleOption => ({
+                                value: scheduleOption,
+                                label: scheduleOption
+                            })).find(option => option.value === schedule)}
+                            onChange={(option) => setSchedule(option ? option.value : '')}
+                            placeholder="Seleccione un horario"
+                            isSearchable
+                            className="select-container"
+                            classNamePrefix="react-select"
+                            styles={{
+                                control: (base) => ({
+                                    ...base,
+                                    minHeight: '40px',
+                                    boxShadow: 'none',
+                                }),
+                                valueContainer: (base) => ({
+                                    ...base,
+                                    padding: '0 8px',
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    margin: 0,
+                                    padding: 0,
+                                }),
+                                option: (base, state) => ({
+                                    ...base,
+                                    backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                                    '&:hover': {
+                                        backgroundColor: '#BDDCF5',
+                                    }
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: '#3a8dde',
+                                })
+                            }}
+                        />
                     </div>
                     <div className="form-group">
                         <label>Información adicional:</label>
-                        <textarea
+                        <textarea className="input-field"
                             value={info}
                             onChange={(e) => setInfo(e.target.value)}
                             placeholder="Ingrese información adicional sobre la programación"

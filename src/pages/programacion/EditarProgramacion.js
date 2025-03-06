@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EditarProgramacion.css'; 
+import Select from 'react-select';
 
 const EditarProgramacion = () => {
     const [roles, setRoles] = useState([]);
@@ -208,40 +209,100 @@ const EditarProgramacion = () => {
                     </div>
                 )}
                 <div className="form">
-                    <div className="form-group">
-                        <label>Rol Asignado:</label>
-                        <select
-                            value={assignedRoleId}
-                            onChange={(e) => setAssignedRoleId(e.target.value)}
-                            required
-                        >
-                            <option value="">Seleccione un rol</option>
-                            {roles.map((roleName, index) => (
-                                <option key={index} value={roleName}>
-                                    {roleName}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label>Técnico:</label>
-                        <select
-                            value={technicianId}
-                            onChange={(e) => setTechnicianId(e.target.value)}
-                            required
-                            disabled={technicians.length === 0}
-                        >
-                            <option value="">Seleccione un técnico</option>
-                            {technicians.map((technician) => (
-                                <option key={technician.id} value={technician.id}>
-                                    {technician.name}
-                                </option>
-                            ))}
-                        </select>
-                        {technicians.length === 0 && assignedRoleId && (
-                            <small className="form-help error">No hay técnicos disponibles para este rol</small>
-                        )}
-                    </div>
+                <div className="form-group">
+                    <label>Rol Asignado:</label>
+                    <Select
+                        options={roles.map(roleName => ({
+                            value: roleName,
+                            label: roleName
+                        }))}
+                        value={roles.map(roleName => ({
+                            value: roleName,
+                            label: roleName
+                        })).find(option => option.value === assignedRoleId)}
+                        onChange={(option) => setAssignedRoleId(option ? option.value : '')}
+                        placeholder="Seleccione un rol"
+                        isSearchable
+                        className="select-container"
+                        classNamePrefix="react-select"
+                        styles={{
+                            control: (base) => ({
+                                ...base,
+                                minHeight: '40px',
+                                boxShadow: 'none',
+                            }),
+                            valueContainer: (base) => ({
+                                ...base,
+                                padding: '0 8px',
+                            }),
+                            input: (base) => ({
+                                ...base,
+                                margin: 0,
+                                padding: 0,
+                            }),
+                            option: (base, state) => ({
+                                ...base,
+                                backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                                '&:hover': {
+                                    backgroundColor: '#BDDCF5',
+                                }
+                            }),
+                            singleValue: (base) => ({
+                                ...base,
+                                color: '#3a8dde',
+                            })
+                        }}
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Técnico:</label>
+                    <Select
+                        options={technicians.map(tech => ({
+                            value: tech.id,
+                            label: tech.name
+                        }))}
+                        value={technicians.map(tech => ({
+                            value: tech.id,
+                            label: tech.name
+                        })).find(option => option.value === technicianId)}
+                        onChange={(option) => setTechnicianId(option ? option.value : '')}
+                        placeholder="Seleccione un técnico"
+                        isSearchable
+                        isDisabled={technicians.length === 0}
+                        className="select-container"
+                        classNamePrefix="react-select"
+                        styles={{
+                            control: (base) => ({
+                                ...base,
+                                minHeight: '40px',
+                                boxShadow: 'none',
+                            }),
+                            valueContainer: (base) => ({
+                                ...base,
+                                padding: '0 8px',
+                            }),
+                            input: (base) => ({
+                                ...base,
+                                margin: 0,
+                                padding: 0,
+                            }),
+                            option: (base, state) => ({
+                                ...base,
+                                backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                                '&:hover': {
+                                    backgroundColor: '#BDDCF5',
+                                }
+                            }),
+                            singleValue: (base) => ({
+                                ...base,
+                                color: '#3a8dde',
+                            })
+                        }}
+                    />
+                    {technicians.length === 0 && assignedRoleId && (
+                        <small className="form-help error">No hay técnicos disponibles para este rol</small>
+                    )}
+                </div>
                     <div className="form-group">
                         <label>Calendario:</label>
                         <div className="calendar">

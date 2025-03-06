@@ -163,7 +163,7 @@
 
 /* Ajustes específicos para textareas */
 textarea.input-field {
-  min-height: 1rem; /* Altura inicial para una línea */
+  min-height: 0.5rem; /* Altura inicial para una línea */
   resize: vertical; /* Permite redimensionar verticalmente */
   overflow-y: hidden; /* Oculta la barra de desplazamiento inicial */
   line-height: 1.2; /* Espaciado de línea consistente */

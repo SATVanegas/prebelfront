@@ -188,7 +188,7 @@ const CrearRol = () => {
           </div>
 
           <div className="form-actions">
-            <button type="submit" className="submit-btn">
+            <button type="submit" className="primary-btn">
               Crear Rol
             </button>
           </div>
