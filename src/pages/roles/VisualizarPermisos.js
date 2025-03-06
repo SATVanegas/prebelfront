@@ -78,45 +78,45 @@ const VisualizarPermisos = () => {
       </div>
       <div className="visualizar-permisos-card">
         <h2 className="title">Visualizar Permisos por Usuario</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="form">
           <div className="form-group">
             <label>Seleccionar Usuario:</label>
             <Select
-  options={userOptions}
-  value={selectedUser}
-  onChange={setSelectedUser}
-  placeholder="Escribe para buscar..."
-  isSearchable
-  className="select-container"
-  classNamePrefix="react-select"
-  styles={{
-    control: (base) => ({
-      ...base,
-      minHeight: '40px',
-      boxShadow: 'none',
-    }),
-    valueContainer: (base) => ({
-      ...base,
-      padding: '0 8px',
-    }),
-    input: (base) => ({
-      ...base,
-      margin: 0,
-      padding: 0,
-    }),
-    option: (base, state) => ({
-      ...base,
-      backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
-      '&:hover': {
-        backgroundColor: '#BDDCF5',
-      }
-    }),
-    singleValue: (base) => ({
-      ...base,
-      color: '#3a8dde',
-    })
-  }}
-/>
+              options={userOptions}
+              value={selectedUser}
+              onChange={setSelectedUser}
+              placeholder="Escribe para buscar..."
+              isSearchable
+              className="select-container"
+              classNamePrefix="react-select"
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  minHeight: '40px',
+                  boxShadow: 'none',
+                }),
+                valueContainer: (base) => ({
+                  ...base,
+                  padding: '0 8px',
+                }),
+                input: (base) => ({
+                  ...base,
+                  margin: 0,
+                  padding: 0,
+                }),
+                option: (base, state) => ({
+                  ...base,
+                  backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                  '&:hover': {
+                    backgroundColor: '#BDDCF5',
+                  }
+                }),
+                singleValue: (base) => ({
+                  ...base,
+                  color: '#3a8dde',
+                })
+              }}
+            />
 
           </div>
           <button type="submit" className="primary-btn">Obtener Permisos</button>

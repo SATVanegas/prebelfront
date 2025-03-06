@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ImprimirReportes.css';
+import Select from 'react-select';
 
 const ImprimirReportes = () => {
     const [productos, setProductos] = useState([]);
@@ -13,7 +14,12 @@ const ImprimirReportes = () => {
     const [errorDetails, setErrorDetails] = useState('');
     
     const navigate = useNavigate();
-    
+
+    const productOptions = productos.map(producto => ({
+        value: producto.id,
+        label: `${producto.productDescription} - ${producto.brand}`
+      }));
+
     useEffect(() => {
         const fetchProductos = async () => {
             try {
@@ -186,7 +192,7 @@ const ImprimirReportes = () => {
     };
     
     return (
-        <div className="reportes-container">
+        <div className="imprimir-reportes-container">
             <div className="nav-container">
                 <button className="nav-btn" onClick={() => navigate(-1)}>
                     🔙 Atrás
@@ -196,7 +202,7 @@ const ImprimirReportes = () => {
                 </button>
             </div>
             
-            <div className="reportes-card">
+            <div className="imprimir-reportes-card">
                 <h2 className="title">Generación de Reportes PDF</h2>
                 
                 {message && (
@@ -211,21 +217,45 @@ const ImprimirReportes = () => {
                 )}
                 
                 <div className="form-container">
-                    <div className="form-group">
-                        <label htmlFor="producto">Seleccionar Producto:</label>
-                        <select 
-                            id="producto" 
-                            value={productoSeleccionado} 
-                            onChange={handleProductoChange}
-                            disabled={loading}
-                        >
-                            <option value="">-- Seleccione un producto --</option>
-                            {productos.map(producto => (
-                                <option key={producto.id} value={producto.id}>
-                                    {producto.productDescription} - {producto.brand}
-                                </option>
-                            ))}
-                        </select>
+                <div className="form-group">
+                    <label>Seleccionar Producto:</label>
+                    <Select
+                        options={productOptions}
+                        value={productOptions.find(option => option.value === productoSeleccionado)}
+                        onChange={(option) => setProductoSeleccionado(option ? option.value : '')}
+                        placeholder="Seleccione un producto"
+                        isSearchable
+                        isDisabled={loading}
+                        className="select-container2"
+                        classNamePrefix="react-select"
+                        styles={{
+                        control: (base) => ({
+                            ...base,
+                            minHeight: '40px',
+                            boxShadow: 'none',
+                        }),
+                        valueContainer: (base) => ({
+                            ...base,
+                            padding: '0 8px',
+                        }),
+                        input: (base) => ({
+                            ...base,
+                            margin: 0,
+                            padding: 0,
+                        }),
+                        option: (base, state) => ({
+                            ...base,
+                            backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                            '&:hover': {
+                            backgroundColor: '#BDDCF5',
+                            }
+                        }),
+                        singleValue: (base) => ({
+                            ...base,
+                            color: '#3a8dde',
+                        })
+                        }}
+                    />
                     </div>
                     
                     <div className="buttons-container">

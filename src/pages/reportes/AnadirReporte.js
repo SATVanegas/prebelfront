@@ -209,7 +209,7 @@ const InspectionForm = () => {
               onChange={handleProductChange}
               placeholder="Seleccione el producto evaluado"
               isSearchable
-              className="select-container"
+              className="select-container2"
               classNamePrefix="react-select"
               styles={{
                 control: (base) => ({

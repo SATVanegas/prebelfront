@@ -195,3 +195,22 @@
   color: #c53030;
   border: 2px solid #fc8181;
 }
+
+.select-container2 {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: none; 
+}
+
+.select-container2 > div {
+  width: 100% !important;
+}
+
+.select-container2 .css-1s2u09g-control {
+  width: 100%;
+}
+
+.select-container2 .css-26l3qy-menu {
+  width: 100%;
+}

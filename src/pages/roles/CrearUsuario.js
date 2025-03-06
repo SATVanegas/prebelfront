@@ -157,7 +157,7 @@ const CrearUsuario = () => {
               onChange={(option) => setRoleName(option ? option.value : '')}
               placeholder="Seleccione un rol"
               isSearchable
-              className="select-container"
+              className="select-container2"
               classNamePrefix="react-select"
               styles={{
                 control: (base) => ({

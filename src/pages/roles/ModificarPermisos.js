@@ -214,7 +214,7 @@ const ModificarPermisos = () => {
               onChange={(option) => setSelectedRoleName(option ? option.value : '')}
               placeholder="Seleccione un rol"
               isSearchable
-              className="select-container"
+              className="select-container2"
               classNamePrefix="react-select"
               styles={selectStyles}
             />

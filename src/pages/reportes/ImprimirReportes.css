@@ -1,4 +1,4 @@
-.reportes-container {
+.imprimir-reportes-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,6 +45,35 @@
 @keyframes flicker {
     0%, 100% { opacity: 0.1; }
     50% { opacity: 0.05; }
+}
+
+.imprimir-reportes-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 3vh 3vw;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    width: min(90vw, 800px);
+    min-height: fit-content; 
+    max-height: none; 
+    backdrop-filter: blur(10px);
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    text-align: center;
+    margin: 60px auto 30px; 
+}
+
+.reportes-card:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+    color: #153354;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
 }
 
 .status-message {
@@ -128,7 +157,6 @@ select:disabled {
     gap: 1rem;
     max-height: none; 
     padding: 1rem;
-    width: 100%;
     overflow-y: visible; 
     flex-grow: 1;
 }
