@@ -201,10 +201,9 @@ const CrearUsuario = () => {
       })
     }}
   />
-</div>
-        <div className='button-container'>
-          <button type="submit" className="primary-btn">Crear Usuario</button>
-        </div>
+<div className='button-container'>
+            <button type="submit" className="primary-btn">Crear Usuario</button>
+          </div>
         </form>
         {message && (
           <div className={`status-message ${message.includes('Error') ? 'error' : 'success'}`}>
@@ -215,5 +214,4 @@ const CrearUsuario = () => {
     </div>
   );
 };
-
 export default CrearUsuario;
