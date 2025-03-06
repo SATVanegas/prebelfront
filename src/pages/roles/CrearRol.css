@@ -31,13 +31,6 @@
   backdrop-filter: blur(8px);
 }
 
-.title {
-  color: #2c3e50;
-  font-size: 2.2rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  text-align: center;
-}
 
 .role-form {
   display: flex;

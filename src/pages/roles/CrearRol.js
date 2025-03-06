@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiCheckSquare, FiPlus, FiEdit } from 'react-icons/fi';
 import './CrearRol.css';
+import Select from 'react-select';
 
 const CrearRol = () => {
   const [roleName, setRoleName] = useState('');
@@ -10,6 +11,11 @@ const CrearRol = () => {
   const [selectedModule, setSelectedModule] = useState('');
   const [expandedModule, setExpandedModule] = useState('');
   const [message, setMessage] = useState('');
+
+  const moduleOptions = modules.map(module => ({
+    value: module,
+    label: module
+  }));
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -124,18 +130,42 @@ const CrearRol = () => {
             <div className="selector-header">
               <h3 className="section-title">Seleccionar Módulos</h3>
               <div className="selector-controls">
-                <select
-                  value={selectedModule}
-                  onChange={(e) => setSelectedModule(e.target.value)}
-                  className="module-dropdown"
-                >
-                  <option value="">Selecciona un módulo</option>
-                  {modules.map((module, index) => (
-                    <option key={index} value={module}>
-                      {module}
-                    </option>
-                  ))}
-                </select>
+              <Select
+                options={moduleOptions}
+                value={moduleOptions.find(option => option.value === selectedModule)}
+                onChange={(option) => setSelectedModule(option ? option.value : '')}
+                placeholder="Selecciona un módulo"
+                isSearchable
+                className="select-container"
+                classNamePrefix="react-select"
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    minHeight: '40px',
+                    boxShadow: 'none',
+                  }),
+                  valueContainer: (base) => ({
+                    ...base,
+                    padding: '0 8px',
+                  }),
+                  input: (base) => ({
+                    ...base,
+                    margin: 0,
+                    padding: 0,
+                  }),
+                  option: (base, state) => ({
+                    ...base,
+                    backgroundColor: state.isSelected ? '#3a8dde' : base.backgroundColor,
+                    '&:hover': {
+                      backgroundColor: '#BDDCF5',
+                    }
+                  }),
+                  singleValue: (base) => ({
+                    ...base,
+                    color: '#3a8dde',
+                  })
+                }}
+              />
                 <button
                   type="button"
                   onClick={addModule}

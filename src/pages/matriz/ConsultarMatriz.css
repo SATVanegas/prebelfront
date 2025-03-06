@@ -10,28 +10,6 @@
     overflow-y: auto;
 }
 
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    width: min(90vw, 500px);
-    margin-bottom: 1rem;
-}
-
-.nav-btn {
-    background-color: white;
-    color: #1a3d6a;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.8rem 1.5rem;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.nav-btn:hover {
-    background-color: #2a5ca0;
-}
-
 .inspecciones-card {
     background: rgba(255, 255, 255, 0.95);
     padding: 3vh 3vw;
@@ -45,11 +23,6 @@
     align-items: center;
     box-sizing: border-box;
     text-align: center;
-}
-
-.title {
-    color: #1a3d6a;
-    margin-bottom: 2rem;
 }
 
 .status-message {

@@ -199,7 +199,7 @@ const InspectionForm = () => {
             {message}
           </div>
         )}
-        <h2 className="title">Crear Reporte</h2>
+        <h2 className="title1">Crear Reporte</h2>
         <form onSubmit={handleSubmit} className="form">
           <label className="form-group">
             <span className="label-text">Producto evaluado</span>
